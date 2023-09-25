@@ -4,6 +4,7 @@ namespace simple_plotting {
 	/// <summary>
 	///  This class is used to build a plot using a fluent API. It is recommended to use this class instead of ScottPlot.Plot
 	///  or CsvPlotter.Plot wrapper directly.
+	/// This is the view model in MVVM.
 	/// </summary>
 	public class PlotBuilderFluent : IPlotBuilderFluent_Configuration,
 	                                 IPlotBuilderFluent_ReadyToProduce,
@@ -20,7 +21,7 @@ namespace simple_plotting {
 
 		/// <summary>
 		/// Create a new PlotBuilderFluent instance. This is the entry point for the fluent API. Requires parsed CSV data
-		/// from <see cref="CsvSource"/>.
+		/// from <see cref="CsvParser"/>.
 		/// </summary>
 		/// <param name="data">Parsed data</param>
 		/// <param name="numOfPlots">Number of plots to generate</param>
@@ -38,7 +39,7 @@ namespace simple_plotting {
 				plot.Width  = container.Width;
 				plot.Height = container.Height;
 			}
-			
+
 			return this;
 		}
 
@@ -303,8 +304,8 @@ namespace simple_plotting {
 		/// <param name="batchedRecord">Current batched record</param>
 		/// <param name="plotTracker">Iteration tracker</param>
 		/// <param name="channel">Current channel being enumerated</param>
-		void ProcessChannelRecord(IEnumerable<PlotChannelRecord> batchedRecord, ref int plotTracker, PlotChannel 
-                channel) {
+		void ProcessChannelRecord(IEnumerable<PlotChannelRecord> batchedRecord, ref int plotTracker, PlotChannel
+			channel) {
 			var batchedArray = batchedRecord.ToArray();
 			var dateTimes    = batchedArray.Select(x => x.DateTime.ToOADate()).ToArray();
 			var values       = batchedArray.Select(v => v.Value).ToArray();
@@ -338,7 +339,7 @@ namespace simple_plotting {
 		}
 
 		bool                                _plotWasProduced;
-		readonly List<Plot>                 _plots;
+		readonly List<Plot>       _plots;
 		readonly IReadOnlyList<PlotChannel> _data;
 	}
 }

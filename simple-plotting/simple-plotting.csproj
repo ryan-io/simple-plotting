@@ -5,6 +5,17 @@
     <RootNamespace>simple_plotting</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.2</Version>
+    <Title>Simple Plotting</Title>
+    <Authors>ryanio</Authors>
+    <Description>A library wrapper for ScottPlot &amp; CsvHelper. This library parses CSV files &amp; interactively plots them in WPF, WinForms, etc.</Description>
+    <Copyright>ryanio</Copyright>
+    <PackageProjectUrl>https://github.com/ryan-io/simple-plotting</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ryan-io/simple-plotting/blob/main/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/ryan-io/simple-plotting</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <Company>ryanio</Company>
   </PropertyGroup>
 
   <ItemGroup>

@@ -6,7 +6,6 @@
 public class PlotChannel {
 	/// <summary>
 	///  The identifier of the channel. Should be parsed from CsvHelper
-	///  Usually in the form of darwin.yokogawa.chxxx
 	/// </summary>
 	public string ChannelIdentifier { get; }
 
@@ -18,7 +17,7 @@ public class PlotChannel {
 	/// <summary>
 	///  The values of the channel. 
 	/// </summary>
-	public ICollection<PlotChannelRecord> Records => _records;
+	public IReadOnlyCollection<PlotChannelRecord> Records => _records;
 	
 	/// <summary>
 	///  Adds a record to the channel.

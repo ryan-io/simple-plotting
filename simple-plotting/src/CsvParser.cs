@@ -2,15 +2,20 @@
 using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
+using static simple_plotting.Constants;
 
 namespace simple_plotting {
-	public class CsvSource : ICsvSourceExtract {
+	/// <summary>
+	///  Parses a CSV file and extracts the data into a collection of <see cref="PlotChannel" /> instances.
+	///  This is the data provider in MVVM.
+	/// </summary>
+	public class CsvParser : IPlotProvider {
 		/// <summary>
-		///  Creates a new <see cref="CsvSource" /> instance.
+		///  Creates a new <see cref="CsvParser" /> instance.
 		/// </summary>
 		/// <param name="path">Path containing the Csv file</param>
 		/// <returns>Fluent instance (CsvSource)</returns>
-		public static ICsvSourceExtract StartNew(string path) => new CsvSource(path);
+		public static IPlotProvider StartNew(string path) => new CsvParser(path);
 
 		/// <summary>
 		///  Parses, extracts, and returns the data from the CSV file.  
@@ -22,7 +27,7 @@ namespace simple_plotting {
 
 			var output = new List<PlotChannel>();
 
-			SkipRows(csvr, Constants.HEADER_START_ROW);
+			SkipRows(csvr, HEADER_START_ROW);
 			csvr.ReadHeader();
 
 			if (csvr.HeaderRecord == null)
@@ -37,11 +42,11 @@ namespace simple_plotting {
 			StringBuilder sb = new StringBuilder();
 
 			var counter = 0;
-			
+
 			while (await csvr.ReadAsync()) {
 				sb.Clear();
 				sb.Append(csvr[0]); // csvr[0] = date
-				sb.Append(Constants.SPACE);
+				sb.Append(SPACE_CHAR);
 				sb.Append(csvr[1]); // csvr[1] = time
 
 				// csvr[2] = IGNORE (mSec)
@@ -49,20 +54,20 @@ namespace simple_plotting {
 				var date = ParseDate(sb);
 
 				// csvr[...] = channel values
-				
+
 				for (var i = 0; i < channelsToParse; i++) {
 					if (string.IsNullOrWhiteSpace(csvr[i]))
 						continue;
 
 					var hasValue = double.TryParse(csvr[3 + i]?.Trim(), out var value);
-					
+
 					if (!hasValue) {
 						Console.WriteLine("Could not parse value: " + csvr[3 + i] + " at index: " + i);
 						Console.WriteLine("Counter total is "       + counter);
 						continue;
 					}
-				
-					output[i].Records.Add( new PlotChannelRecord(date, value));
+
+					output[i].TryAddRecord(new PlotChannelRecord(date, value));
 				}
 
 				counter++;
@@ -95,7 +100,7 @@ namespace simple_plotting {
 		/// </summary>
 		string Path { get; }
 
-		CsvSource(string path) {
+		CsvParser(string path) {
 			if (string.IsNullOrWhiteSpace(path))
 				throw new Exception(Message.EXCEPTION_NO_PATH);
 
@@ -110,7 +115,7 @@ namespace simple_plotting {
 		};
 	}
 
-	public interface ICsvSourceExtract {
+	public interface IPlotProvider {
 		Task<IReadOnlyList<PlotChannel>> ExtractAsync();
 	}
 }
