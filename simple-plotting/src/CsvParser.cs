@@ -77,6 +77,22 @@ namespace SimplePlot {
 		}
 
 		/// <summary>
+		///  Sets the source directory containing the CSV file.
+		/// </summary>
+		/// <param name="path">String to directory containing data</param>
+		/// <returns>True if directory exists, false otherwise</returns>
+		public bool SetSource(string path) {
+			if (string.IsNullOrWhiteSpace(path))
+				throw new Exception(Message.EXCEPTION_NO_PATH);
+
+			if (!Directory.Exists(path))
+				return false;
+
+			Path = path;
+			return true;
+		}
+
+		/// <summary>
 		///  Helper method to parse a date from a string.
 		/// </summary>
 		/// <param name="sb">Pre-allocated StringBuilder</param>
@@ -98,7 +114,7 @@ namespace SimplePlot {
 		/// <summary>
 		///   The path to the CSV file.
 		/// </summary>
-		string Path { get; }
+		string Path { get; set; }
 
 		CsvParser(string path) {
 			if (string.IsNullOrWhiteSpace(path))
