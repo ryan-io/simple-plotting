@@ -1,4 +1,4 @@
-﻿namespace simple_plotting {
+﻿namespace SimplePlot {
 	/// <summary>
 	///  Constant messages used throughout the application. Typical to call when throwing exceptions.
 	/// </summary>

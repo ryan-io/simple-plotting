@@ -1,4 +1,4 @@
-﻿namespace simple_plotting
+﻿namespace SimplePlot
 {
     /// <summary>
     ///  Plotting library extension methods.

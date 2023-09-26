@@ -1,3 +1,3 @@
-﻿namespace simple_plotting {
+﻿namespace SimplePlot {
 	public record PlotChannelRecord(DateTime DateTime, double Value);
 }

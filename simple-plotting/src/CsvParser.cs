@@ -2,20 +2,20 @@
 using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
-using static simple_plotting.Constants;
+using static SimplePlot.Constants;
 
-namespace simple_plotting {
+namespace SimplePlot {
 	/// <summary>
 	///  Parses a CSV file and extracts the data into a collection of <see cref="PlotChannel" /> instances.
 	///  This is the data provider in MVVM.
 	/// </summary>
-	public class CsvParser : IPlotProvider {
+	public class CsvParser : IPlotChannelProvider {
 		/// <summary>
 		///  Creates a new <see cref="CsvParser" /> instance.
 		/// </summary>
 		/// <param name="path">Path containing the Csv file</param>
 		/// <returns>Fluent instance (CsvSource)</returns>
-		public static IPlotProvider StartNew(string path) => new CsvParser(path);
+		public static IPlotChannelProvider StartNew(string path) => new CsvParser(path);
 
 		/// <summary>
 		///  Parses, extracts, and returns the data from the CSV file.  
@@ -113,9 +113,5 @@ namespace simple_plotting {
 		readonly CsvConfiguration _configuration = new(CultureInfo.InvariantCulture) {
 			Delimiter = ","
 		};
-	}
-
-	public interface IPlotProvider {
-		Task<IReadOnlyList<PlotChannel>> ExtractAsync();
 	}
 }

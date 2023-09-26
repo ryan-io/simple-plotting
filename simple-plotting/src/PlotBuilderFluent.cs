@@ -1,6 +1,6 @@
 ﻿using ScottPlot;
 
-namespace simple_plotting {
+namespace SimplePlot {
 	/// <summary>
 	///  This class is used to build a plot using a fluent API. It is recommended to use this class instead of ScottPlot.Plot
 	///  or CsvPlotter.Plot wrapper directly.

@@ -1,6 +1,6 @@
 ﻿using ScottPlot;
 
-namespace simple_plotting {
+namespace SimplePlot {
 	public interface IPlotBuilderFluent_Configuration : IPlotBuilderFluent {
 		/// <summary>
 		///  Sets the size of the plot window.

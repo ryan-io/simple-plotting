@@ -1,4 +1,4 @@
-﻿namespace simple_plotting {
+﻿namespace SimplePlot {
 	/// <summary>
 	///  Maps a <see cref="PlotSize"/> to a <see cref="PlotSizeContainer"/>.
 	/// </summary>

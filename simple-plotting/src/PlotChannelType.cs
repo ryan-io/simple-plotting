@@ -1,4 +1,4 @@
-﻿namespace simple_plotting {
+﻿namespace SimplePlot {
 	public enum PlotChannelType {
 		Temperature, Humidity
 	}

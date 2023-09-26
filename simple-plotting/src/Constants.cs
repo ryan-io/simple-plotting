@@ -1,4 +1,4 @@
-﻿namespace simple_plotting {
+﻿namespace SimplePlot {
 	/// <summary>
 	///  Contains constants used throughout the application.
 	///  THESE CONSTANTS ARE UNIQUE TO QL LAKE ZURICH AND SHOULD BE CHANGED IF USED ELSEWHERE.
