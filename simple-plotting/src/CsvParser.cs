@@ -24,6 +24,11 @@ namespace SimplePlot {
 		public static IPlotChannelProvider StartNew() => new CsvParser();
 
 		/// <summary>
+		///   The path to the CSV file.
+		/// </summary>
+		public string Path { get; private set; }
+		
+		/// <summary>
 		///  Parses, extracts, and returns the data from the CSV file.  
 		/// </summary>
 		/// <exception cref="NotImplementedException"></exception>
@@ -116,11 +121,6 @@ namespace SimplePlot {
 				csvr.Read();
 			}
 		}
-
-		/// <summary>
-		///   The path to the CSV file.
-		/// </summary>
-		string Path { get; set; }
 
 		CsvParser(string path) {
 			if (string.IsNullOrWhiteSpace(path))
