@@ -16,6 +16,12 @@ namespace SimplePlot {
 		/// <param name="path">Path containing the Csv file</param>
 		/// <returns>Fluent instance (CsvSource)</returns>
 		public static IPlotChannelProvider StartNew(string path) => new CsvParser(path);
+		
+		/// <summary>
+		///  Creates a new <see cref="CsvParser" /> instance. Use this is a data source is not known at compile time.
+		/// </summary>
+		/// <returns>Fluent instance (CsvSource)</returns>
+		public static IPlotChannelProvider StartNew() => new CsvParser();
 
 		/// <summary>
 		///  Parses, extracts, and returns the data from the CSV file.  
@@ -121,6 +127,13 @@ namespace SimplePlot {
 				throw new Exception(Message.EXCEPTION_NO_PATH);
 
 			Path = path;
+		}
+
+		/// <summary>
+		///  Default constructor when a path is not provided (must be set later via 'SetSource').
+		/// </summary>
+		CsvParser() {
+			Path = string.Empty;
 		}
 
 		/// <summary>
