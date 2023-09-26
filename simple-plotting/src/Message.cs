@@ -2,7 +2,7 @@
 	/// <summary>
 	///  Constant messages used throughout the application. Typical to call when throwing exceptions.
 	/// </summary>
-	public static class Message {
+	internal static class Message {
 		public const string EXCEPTION_NO_HEADER =
 			"Header record is null. Please provide a valid CSV file with parsable headers. Debugging may be required";
 

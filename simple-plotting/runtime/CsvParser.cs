@@ -4,7 +4,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using static SimplePlot.Constants;
 
-namespace SimplePlot {
+namespace SimplePlot.Runtime {
 	/// <summary>
 	///  Parses a CSV file and extracts the data into a collection of <see cref="PlotChannel" /> instances.
 	///  This is the data provider in MVVM.
