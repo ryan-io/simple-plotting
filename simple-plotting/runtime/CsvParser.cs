@@ -122,7 +122,7 @@ namespace SimplePlot.Runtime {
 			}
 		}
 
-		CsvParser(string path) {
+		public CsvParser(string path) {
 			if (string.IsNullOrWhiteSpace(path))
 				throw new Exception(Message.EXCEPTION_NO_PATH);
 
@@ -132,7 +132,7 @@ namespace SimplePlot.Runtime {
 		/// <summary>
 		///  Default constructor when a path is not provided (must be set later via 'SetSource').
 		/// </summary>
-		CsvParser() {
+		public CsvParser() {
 			Path = string.Empty;
 		}
 
