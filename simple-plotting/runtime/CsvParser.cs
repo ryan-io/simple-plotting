@@ -13,15 +13,16 @@ namespace SimplePlot.Runtime {
 		/// <summary>
 		///  Creates a new <see cref="CsvParser" /> instance.
 		/// </summary>
-		/// <param name="path">Path containing the Csv file</param>
+		/// <param name="sourceProvider">Path wrapper containing the Csv file</param>
 		/// <returns>Fluent instance (CsvSource)</returns>
-		public static IPlotChannelProvider StartNew(string path) => new CsvParser(path);
+		public static IPlotChannelProvider StartNew(IPlotChannelProviderSource sourceProvider) 
+			=> new CsvParser(sourceProvider);
 		
 		/// <summary>
 		///  Creates a new <see cref="CsvParser" /> instance. Use this is a data source is not known at compile time.
 		/// </summary>
 		/// <returns>Fluent instance (CsvSource)</returns>
-		public static IPlotChannelProvider StartNew() => new CsvParser();
+		public static IPlotChannelProvider StartNew() => new CsvParser(new EmptyPlotChannelProviderSource());
 
 		/// <summary>
 		///   The path to the CSV file.
@@ -122,18 +123,11 @@ namespace SimplePlot.Runtime {
 			}
 		}
 
-		public CsvParser(string path) {
-			if (string.IsNullOrWhiteSpace(path))
+		public CsvParser(IPlotChannelProviderSource sourceProvider) {
+			if (string.IsNullOrWhiteSpace(sourceProvider.Path))
 				throw new Exception(Message.EXCEPTION_NO_PATH);
 
-			Path = path;
-		}
-
-		/// <summary>
-		///  Default constructor when a path is not provided (must be set later via 'SetSource').
-		/// </summary>
-		public CsvParser() {
-			Path = string.Empty;
+			Path = sourceProvider.Path;
 		}
 
 		/// <summary>
