@@ -91,9 +91,6 @@ namespace SimplePlot.Runtime {
 		/// <param name="path">String to directory containing data</param>
 		/// <returns>True if directory exists, false otherwise</returns>
 		public bool SetSource(string path) {
-			if (string.IsNullOrWhiteSpace(path))
-				throw new Exception(Message.EXCEPTION_NO_PATH);
-
 			if (!Directory.Exists(path))
 				return false;
 
