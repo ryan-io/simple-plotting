@@ -5,5 +5,5 @@ namespace SimplePlot;
 ///  The Path property is used to identify the source.
 /// </summary>
 public interface IPlotChannelProviderSource {
-	string Path { get; }
+	string? Path { get; }
 }

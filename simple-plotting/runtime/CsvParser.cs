@@ -27,13 +27,16 @@ namespace SimplePlot.Runtime {
 		/// <summary>
 		///   The path to the CSV file.
 		/// </summary>
-		public string Path { get; private set; }
+		public string? Path { get; private set; }
 		
 		/// <summary>
 		///  Parses, extracts, and returns the data from the CSV file.  
 		/// </summary>
 		/// <exception cref="NotImplementedException"></exception>
-		public async Task<IReadOnlyList<PlotChannel>> ExtractAsync() {
+		public async Task<IReadOnlyList<PlotChannel>?> ExtractAsync() {
+			if (string.IsNullOrWhiteSpace(Path))
+				return default;
+			
 			using var sr   = new StreamReader(Path);
 			using var csvr = new CsvReader(sr, _configuration);
 
@@ -52,8 +55,6 @@ namespace SimplePlot.Runtime {
 			}
 
 			StringBuilder sb = new StringBuilder();
-
-			var counter = 0;
 
 			while (await csvr.ReadAsync()) {
 				sb.Clear();
@@ -74,15 +75,11 @@ namespace SimplePlot.Runtime {
 					var hasValue = double.TryParse(csvr[3 + i]?.Trim(), out var value);
 
 					if (!hasValue) {
-						Console.WriteLine("Could not parse value: " + csvr[3 + i] + " at index: " + i);
-						Console.WriteLine("Counter total is "       + counter);
 						continue;
 					}
 
 					output[i].TryAddRecord(new PlotChannelRecord(date, value));
 				}
-
-				counter++;
 			}
 
 			return output;
@@ -124,9 +121,6 @@ namespace SimplePlot.Runtime {
 		}
 
 		public CsvParser(IPlotChannelProviderSource sourceProvider) {
-			if (string.IsNullOrWhiteSpace(sourceProvider.Path))
-				throw new Exception(Message.EXCEPTION_NO_PATH);
-
 			Path = sourceProvider.Path;
 		}
 
