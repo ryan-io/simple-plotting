@@ -97,6 +97,12 @@ namespace SimplePlot.Runtime {
 			Path = path;
 			return true;
 		}
+		
+		/// <summary>
+		///  Sets the source directory containing the CSV file.
+		/// </summary>
+		/// <param name="path">string to set Path to</param>
+		public void ForceSetSource(string? path) => Path = path;
 
 		/// <summary>
 		///  Helper method to parse a date from a string.
