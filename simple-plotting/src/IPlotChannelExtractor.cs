@@ -3,5 +3,5 @@
 namespace SimplePlot;
 
 public interface IPlotChannelExtractor {
-	Task<IReadOnlyList<PlotChannel>?> ExtractAsync();
+	Task<IReadOnlyList<PlotChannel>?> ExtractAsync(string fileName);
 }
