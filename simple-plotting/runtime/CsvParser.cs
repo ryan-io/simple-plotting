@@ -9,7 +9,7 @@ namespace SimplePlot.Runtime {
 	///  Parses a CSV file and extracts the data into a collection of <see cref="PlotChannel" /> instances.
 	///  This is the data provider in MVVM.
 	/// </summary>
-	public class CsvParser : IPlotChannelProvider {
+	public class CsvParser : IPlotChannelProvider, IPlotChannelExtractor {
 		/// <summary>
 		///  Creates a new <see cref="CsvParser" /> instance.
 		/// </summary>
