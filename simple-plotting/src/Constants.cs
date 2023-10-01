@@ -3,7 +3,7 @@
 	///  Contains constants used throughout the application.
 	///  THESE CONSTANTS ARE UNIQUE TO QL LAKE ZURICH AND SHOULD BE CHANGED IF USED ELSEWHERE.
 	/// </summary>
-	internal static class Constants {
+	public static class Constants {
 		public const string SPACE_STRING           = " ";                         // space character (string)
 		public const char   SPACE_CHAR             = ' ';                         // space character (char)
 		public const string Y_AXIS_LABEL_TEMP      = "Temperature (°C)";          // X axis label for temperature plots
