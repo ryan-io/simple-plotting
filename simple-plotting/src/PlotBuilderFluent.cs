@@ -338,8 +338,31 @@ namespace SimplePlot {
 			SetInitialState(numOfPlots);
 		}
 
+		/// <summary>
+		///  Create a new PlotBuilderFluent instance. This is the entry point for the fluent API. Requires parsed CSV data
+		///  and a pre-allocated collection of plots. Use this constructor when working with Avalonia, WPF, or WinForms.
+		///  This will throw an <see cref="ArgumentException"/> if the data is null or empty.
+		/// </summary>
+		/// <param name="data">Parsed data</param>
+		/// <param name="plotInitializer">Pre-allocated collection of plots</param>
+		/// <exception cref="ArgumentException">Thrown if data is null or empty</exception>
+		PlotBuilderFluent(IReadOnlyList<PlotChannel> data, IReadOnlyCollection<Plot> plotInitializer) {
+			if (data == null || !data.Any())
+				throw new ArgumentException("Data cannot be null or empty.");
+
+			_data  = data;
+			_plots = new List<Plot>(plotInitializer);
+
+			foreach (var p in _plots) {
+				p.Width  = Constants.DEFAULT_WIDTH;
+				p.Height = Constants.DEFAULT_HEIGHT;
+			}
+
+			SetInitialState(plotInitializer.Count);
+		}
+
 		bool                                _plotWasProduced;
-		readonly List<Plot>       _plots;
+		readonly List<Plot>                 _plots;
 		readonly IReadOnlyList<PlotChannel> _data;
 	}
 }
