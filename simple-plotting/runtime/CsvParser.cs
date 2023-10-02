@@ -5,7 +5,6 @@ using CsvHelper.Configuration;
 using simple_plotting.runtime;
 
 // https://github.com/CarlVerret/csFastFloat
-// https://github.com/CarlVerret/csFastFloat
 namespace SimplePlot.Runtime {
     /// <summary>
     ///  Parses a CSV file and extracts the data into a collection of <see cref="PlotChannel" /> instances.
@@ -18,6 +17,7 @@ namespace SimplePlot.Runtime {
         ///  Creates a new <see cref="CsvParser" /> instance.
         /// </summary>
         /// <param name="sourceProvider">Path wrapper containing the Csv file</param>
+        /// <param name="strategy">Logic for parsing through Csv files</param>
         /// <returns>Fluent instance (CsvSource)</returns>
         public static IPlotChannelProvider StartNew(IPlotChannelProviderSource sourceProvider, ICsvParseStrategy strategy)
             => new CsvParser(sourceProvider, strategy);
@@ -26,7 +26,8 @@ namespace SimplePlot.Runtime {
         ///  Creates a new <see cref="CsvParser" /> instance. Use this is a data source is not known at compile time.
         /// </summary>
         /// <returns>Fluent instance (CsvSource)</returns>
-        public static IPlotChannelProvider StartNew(ICsvParseStrategy strategy) => new CsvParser(new EmptyPlotChannelProviderSource(), strategy);
+        public static IPlotChannelProvider StartNew(ICsvParseStrategy strategy) 
+            => new CsvParser(new EmptyPlotChannelProviderSource(), strategy);
 
         /// <summary>
         ///  Creates a new <see cref="CsvParser" /> instance. Use this is a data source is not known at compile time.
@@ -93,7 +94,16 @@ namespace SimplePlot.Runtime {
         };
     }
 
+    /// <summary>
+    ///  Abstraction for implementing a very simple strategy pattern to parse CSV files.
+    /// </summary>
     public interface ICsvParseStrategy {
+        /// <summary>
+        ///  Parses the CSV file and extracts the data into a collection of <see cref="PlotChannel" /> instances.
+        /// </summary>
+        /// <param name="output">Pre-allocated collection of PlotChannel</param>
+        /// <param name="csvr">Instance of Csv Reader</param>
+        /// <returns>An awaitable task</returns>
         Task Strategy(List<PlotChannel> output, CsvReader csvr);
     }
 }

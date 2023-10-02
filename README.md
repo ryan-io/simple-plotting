@@ -9,7 +9,10 @@ A library wrapper for ScottPlot &amp; CsvHelper. This library parses CSV files &
     - Microsoft.NETCore.Platforms.3.1.4
     - Microsoft.Win32.SystemEvents.4.7.0
     - System.Drawing.Common.4.7.2
-    - System.NUmerics.Vectors.4.5.0
+    - System.Numerics.Vectors.4.5.0
+	- System.Buffers.4.5.1
+	- System.Memory.4.5.5
+	- System.Runtime.CompilerServices.Unsafe.5.0.0
 
 ### Simple Use Case
     - Can be used with the following application environments: WPF, WinForms, Blazor, Console Apps

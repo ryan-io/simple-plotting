@@ -24,5 +24,11 @@
     <PackageReference Include="ScottPlot" Version="4.1.67" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="csFastFloat">
+      <HintPath>..\dll-root\csFastFloat.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 
 </Project>
