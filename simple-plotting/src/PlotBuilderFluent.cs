@@ -1,4 +1,5 @@
 ﻿using ScottPlot;
+using SimplePlot.Runtime;
 
 namespace SimplePlot {
 	/// <summary>
@@ -18,6 +19,17 @@ namespace SimplePlot {
 		///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.
 		/// </summary>
 		public IEnumerable<Plot> GetPlots() => _plots;
+
+		/// <summary>
+		/// Create a new PlotBuilderFluent instance. This is the entry point for the fluent API. Requires parsed CSV data
+		/// from <see cref="CsvParser"/>. This static method also requires a pre-allocated collection of plots.
+		/// </summary>
+		/// <param name="data">Parsed data</param>
+		/// <param name="plotInitializer">Collection of ScottPlot.Plot</param>
+		/// <returns>New instance of PlotBuilderFluent (this)</returns>
+		public static IPlotBuilderFluent_Configuration StartNew(
+			IReadOnlyList<PlotChannel> data, IReadOnlyCollection<Plot> plotInitializer)
+			=> new PlotBuilderFluent(data, plotInitializer);
 
 		/// <summary>
 		/// Create a new PlotBuilderFluent instance. This is the entry point for the fluent API. Requires parsed CSV data
