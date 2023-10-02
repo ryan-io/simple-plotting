@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
+using csFastFloat;
 using CsvHelper;
 using SimplePlot;
 using SimplePlot.Runtime;
@@ -22,14 +23,17 @@ namespace simple_plotting.runtime {
                 output.Add(new PlotChannel(csvr.HeaderRecord[3 + i], PlotChannelType.Temperature));
             }
 
+            DateTime date     = DateTime.Now;
+            bool     hasValue = false;
+            double   value    = 0.0d;
+            
             while (await csvr.ReadAsync()) {
                 Sb.Clear();
                 Sb.Append(csvr[0]); // csvr[0] = date
                 Sb.Append(SPACE_CHAR);
                 Sb.Append(csvr[1]); // csvr[1] = time
 
-
-                DateTime date = DateTime.Now;
+                date = DateTime.Now;
                 // csvr[2] = IGNORE (mSec)
 
                 date = ParseDate();
@@ -40,7 +44,8 @@ namespace simple_plotting.runtime {
                     if (string.IsNullOrWhiteSpace(csvr[i]))
                         continue;
 
-                    bool hasValue = double.TryParse(csvr[3 + i]?.Trim(), out var value);
+                    hasValue = FastDoubleParser.TryParseDouble(csvr[3 + i], out value);
+                   // bool hasValue = double.TryParse(csvr[3 + i]?.Trim(), out value);
                     if (!hasValue) {
                         continue;
                     }
