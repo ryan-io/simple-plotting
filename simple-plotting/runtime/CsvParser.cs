@@ -34,10 +34,10 @@ namespace SimplePlot.Runtime {
 		/// </summary>
 		/// <exception cref="NotImplementedException"></exception>
 		public async Task<IReadOnlyList<PlotChannel>?> ExtractAsync(string fileName) {
-			if (string.IsNullOrWhiteSpace(Path) || string.IsNullOrWhiteSpace(fileName))
+			if (string.IsNullOrWhiteSpace(fileName))
 				return default;
 			
-			using var sr   = new StreamReader(Path + "\" + fileName");
+			using var sr   = new StreamReader(fileName);
 			using var csvr = new CsvReader(sr, _configuration);
 
 			var output = new List<PlotChannel>();
