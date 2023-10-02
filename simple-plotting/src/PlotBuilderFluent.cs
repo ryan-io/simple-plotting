@@ -269,6 +269,13 @@ namespace SimplePlot {
 		/// <returns>ScottPlot.Plot instance (private)</returns>
 		public IPlotBuilderFluent_Product Produce() {
 			_plotWasProduced = true;
+
+			if (!Observables.Any())
+				return this;
+
+			foreach (var o in Observables)
+				o.Invoke();
+
 			return this;
 		}
 
@@ -280,6 +287,21 @@ namespace SimplePlot {
 		public IPlotBuilderFluent_Configuration Reset(IReadOnlyList<PlotChannel> data) {
 			return StartNew(data);
 		}
+
+		/// <summary>
+		///  Register an action to be invoked when the plot is produced.
+		/// </summary>
+		/// <param name="action">Callback</param>
+		/// <returns>Fluent builder</returns>
+		public IPlotBuilderFluent_Configuration WithObservable(Action action) {
+			Observables.Add(action);
+			return this;
+		}
+
+		/// <summary>
+		///  Hashset containing the actions to be observed by the view model. This is invoked when Produce() is called.
+		/// </summary>
+		HashSet<Action> Observables { get; } = new();
 
 		/// <summary>
 		///  Helper method to set the initial state of the plot. This is called in the constructor.

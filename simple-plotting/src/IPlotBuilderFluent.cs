@@ -134,6 +134,13 @@ namespace SimplePlot {
 		/// <param name="data">New data to populate the builder with</param>
 		/// <returns>Fluent builder in a reset state</returns>
 		IPlotBuilderFluent_Configuration Reset(IReadOnlyList<PlotChannel> data);
+
+		/// <summary>
+		///  Register an action to be invoked when the plot is produced.
+		/// </summary>
+		/// <param name="action">Callback</param>
+		/// <returns>Fluent builder</returns>
+		IPlotBuilderFluent_Configuration WithObservable(Action action);
 	}
 
 	public interface IPlotBuilderFluent {
