@@ -44,8 +44,9 @@ namespace simple_plotting.runtime {
                         continue;
 
                     hasValue = FastDoubleParser.TryParseDouble(csvr[3 + i], out value);
+                    bool isOutside = value is < -60d or > 200d;
                    // bool hasValue = double.TryParse(csvr[3 + i]?.Trim(), out value);
-                    if (!hasValue) {
+                    if (!hasValue || isOutside) {
                         continue;
                     }
 
