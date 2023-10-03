@@ -8,7 +8,7 @@ using static SimplePlot.Constants;
 
 namespace simple_plotting.runtime {
     public class DefaultCsvParseStrategy : ICsvParseStrategy {
-        StringBuilder Sb { get; } = new StringBuilder();
+        StringBuilder Sb { get; } = new ();
 
         public async Task Strategy(List<PlotChannel> output, CsvReader csvr) {
             SkipRows(csvr, HEADER_START_ROW);
@@ -33,7 +33,6 @@ namespace simple_plotting.runtime {
                 Sb.Append(SPACE_CHAR);
                 Sb.Append(csvr[1]); // csvr[1] = time
 
-                date = DateTime.Now;
                 // csvr[2] = IGNORE (mSec)
 
                 date = ParseDate();
@@ -58,7 +57,6 @@ namespace simple_plotting.runtime {
         /// <summary>
         ///  Helper method to parse a date from a string.
         /// </summary>
-        /// <param name="sb">Pre-allocated StringBuilder</param>
         /// <returns>ParsedDate</returns>
         DateTime ParseDate()
             => DateTime.ParseExact(Sb.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);

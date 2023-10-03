@@ -9,6 +9,7 @@ namespace SimplePlot {
 	/// </summary>
 	public class PlotBuilderFluent : IPlotBuilderFluent_Configuration,
 	                                 IPlotBuilderFluent_ReadyToProduce,
+	                                 IPlotBuilderFluent_Tools,
 	                                 IPlotBuilderFluent_Product {
 		/// <summary>
 		///  This ensures a the Produce() method has been invoked before allowing you to save a plot.
@@ -242,25 +243,48 @@ namespace SimplePlot {
 		///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
 		/// </summary>
 		/// <param name="savePath"></param>
+		/// <param name="name">Name to give the graph. If there are multiple graphs, an integer will be appended.</param>
 		/// <returns></returns>
 		/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-		public bool TrySave(string savePath) {
-			if (string.IsNullOrWhiteSpace(savePath))
+		public bool TrySave(string savePath, string name) {
+			if (string.IsNullOrWhiteSpace(savePath) || string.IsNullOrWhiteSpace(name))
 				throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
 			try {
 				var plotTracker = 1;
 				foreach (var plot in _plots) {
-					plot.SaveFig(savePath + plotTracker + Constants.PNG_EXTENSION);
+					plot.SaveFig($@"{savePath}\{name}{plotTracker}{Constants.PNG_EXTENSION}");
 					plotTracker++;
 				}
 
 				return true;
 			}
-			catch (Exception e) {
-				Console.WriteLine(e);
+			catch (Exception) {
 				return false;
 			}
+		}
+
+		/// <summary>
+		///  Helper method to return this instance of the fluent builder. 
+		/// </summary>
+		/// <returns></returns>
+		public IPlotBuilderFluent_Product GoToProduct() => this;
+
+		/// <summary>
+		///  Adds an annotation to the plot as specified coordinates (typically fed by the mouse position).
+		/// </summary>
+		/// <param name="annotation">Text to annotate</param>
+		/// <param name="plot">Plot the annotation goes on</param>
+		/// <param name="xOff">x-offset ('x' mouse position)</param>
+		/// <param name="yOff">y-offset ('y' mouse position)</param>
+		public IPlotBuilderFluent_Tools WithAnnotationAt(string annotation, Plot plot, float xOff, float yOff) {
+			var a =plot.AddAnnotation(annotation, Alignment.LowerLeft);
+			a.Border  = true;
+			a.BorderWidth = 1;
+			a.MarginX = xOff;
+			a.MarginY = yOff;
+
+			return this;
 		}
 
 		/// <summary>

@@ -54,7 +54,6 @@ namespace SimplePlot.Runtime {
             using var sr = new StreamReader(fileName);
             using var csvr = new CsvReader(sr, _configuration);
 
-            //csvr.GetType().GetProperty("FieldCount")?.SetValue(csvr, 1);
             await _strategy.Strategy(output, csvr);
 
             return output;
@@ -66,8 +65,10 @@ namespace SimplePlot.Runtime {
         /// <param name="path">String to directory containing data</param>
         /// <returns>True if directory exists, false otherwise</returns>
         public bool SetSource(string path) {
-            if (!Directory.Exists(path))
+            if (!Directory.Exists(path)) {
+                Path = string.Empty;
                 return false;
+            }
 
             Path = path;
             return true;

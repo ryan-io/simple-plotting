@@ -131,9 +131,10 @@ namespace SimplePlot {
 		///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
 		/// </summary>
 		/// <param name="savePath"></param>
+		/// <param name="name"></param>
 		/// <returns></returns>
 		/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-		bool TrySave(string savePath);
+		bool TrySave(string savePath, string name);
 
 		/// <summary>
 		///  Resets the builder to an initial state. This is useful if you want to reuse the builder with new data.
@@ -141,7 +142,11 @@ namespace SimplePlot {
 		/// <param name="data">New data to populate the builder with</param>
 		/// <returns>Fluent builder in a reset state</returns>
 		IPlotBuilderFluent_Configuration Reset(IReadOnlyList<PlotChannel> data);
+	}
 
+	public interface IPlotBuilderFluent_Tools {
+		IPlotBuilderFluent_Product GoToProduct();
+		IPlotBuilderFluent_Tools   WithAnnotationAt(string annotation, Plot plot, float xOff, float yOff);
 	}
 
 	public interface IPlotBuilderFluent {
