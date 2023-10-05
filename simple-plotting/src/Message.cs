@@ -15,5 +15,8 @@
 		public const string EXCEPTION_TITLE_INVALID = "Title cannot be null, empty or whitespace.";
 		
 		public const string EXCEPTION_AXIS_LABEL_INVALID = "An axis label cannot be null, empty or whitespace.";
+
+		public const string EXCEPTION_INTERFACE_COMPARER_NOT_SAME =
+			"Interface comparer is not the same as the comparer used in the collection.";
 	}
 }
