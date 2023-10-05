@@ -1,6 +1,9 @@
 ﻿using ScottPlot;
 
-namespace SimplePlot {
+namespace simple_plotting.src {
+	/// <summary>
+	///  Core abstraction for fluent API. All configuration methods should be defined here.
+	/// </summary>
 	public interface IPlotBuilderFluent_Configuration : IPlotBuilderFluent {
 		/// <summary>
 		///  Register an action to be invoked when the plot is produced.
@@ -113,6 +116,9 @@ namespace SimplePlot {
 		IPlotBuilderFluent_ReadyToProduce FinalizeConfiguration();
 	}
 
+	/// <summary>
+	///  This abstraction finalizes the configuration of the plot. This should be the last call in the fluent API.
+	/// </summary>
 	public interface IPlotBuilderFluent_ReadyToProduce : IPlotBuilderFluent {
 		/// <summary>
 		///  Returns the generated Plot instance. This should be the last call in the fluent API.
@@ -121,6 +127,9 @@ namespace SimplePlot {
 		IPlotBuilderFluent_Product Produce();
 	}
 
+	/// <summary>
+	///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.
+	/// </summary>
 	public interface IPlotBuilderFluent_Product : IPlotBuilderFluent {
 		/// <summary>
 		///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.
@@ -144,11 +153,30 @@ namespace SimplePlot {
 		IPlotBuilderFluent_Configuration Reset(IReadOnlyList<PlotChannel> data);
 	}
 
+	/// <summary>
+	///  Provides the consumer with additional tools to manipulate the plot. Any interactive plot features should be defined here.
+	/// </summary>
 	public interface IPlotBuilderFluent_Tools {
+		/// <summary>
+		///  Helper method to return back to the product.
+		/// </summary>
+		/// <returns>Instance product</returns>
 		IPlotBuilderFluent_Product GoToProduct();
+		
+		/// <summary>
+		///  Adds an annotation to a plot at xOff, yOff.
+		/// </summary>
+		/// <param name="annotation">String text to display in annotation</param>
+		/// <param name="plot">Plot to annotate</param>
+		/// <param name="xOff">x-offset (from lower-left of plot)</param>
+		/// <param name="yOff">y-offset (from the lower-left of the plot)</param>
+		/// <returns></returns>
 		IPlotBuilderFluent_Tools   WithAnnotationAt(string annotation, Plot plot, float xOff, float yOff);
 	}
 
+	/// <summary>
+	///  The base abstraction for the fluent API.
+	/// </summary>
 	public interface IPlotBuilderFluent {
 		/// <summary>
 		///  This ensures a the Produce() method has been invoked before allowing you to save a plot.

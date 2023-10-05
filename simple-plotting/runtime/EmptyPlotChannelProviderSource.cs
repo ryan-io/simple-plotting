@@ -1,6 +1,9 @@
 // simple-plotting
 
-namespace SimplePlot.Runtime;
+using simple_plotting.src;
+using SimplePlot;
+
+namespace simple_plotting.runtime;
 
 /// <summary>
 ///  Simple default implementation of <see cref="IPlotChannelProviderSource"/> that returns an empty string.

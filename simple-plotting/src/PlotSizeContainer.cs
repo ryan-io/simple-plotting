@@ -1,6 +1,6 @@
 ﻿// CSV-Plotter
 
-namespace SimplePlot {
+namespace simple_plotting.src {
 	/// <summary>
 	///  Simple container that defines the width and height of a plot.
 	/// </summary>

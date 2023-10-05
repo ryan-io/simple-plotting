@@ -1,4 +1,4 @@
-﻿namespace SimplePlot; 
+﻿namespace simple_plotting.src; 
 
 public readonly struct PlotAxisRotationContainer {
 	public int Rotation { get; }

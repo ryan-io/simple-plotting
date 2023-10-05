@@ -1,4 +1,4 @@
-﻿namespace SimplePlot;
+﻿namespace simple_plotting.src;
 
 /// <summary>
 ///  Defines characteristics for a channel in a plot.

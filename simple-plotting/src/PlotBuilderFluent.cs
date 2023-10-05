@@ -1,7 +1,7 @@
 ﻿using ScottPlot;
-using SimplePlot.Runtime;
+using simple_plotting.runtime;
 
-namespace SimplePlot {
+namespace simple_plotting.src {
 	/// <summary>
 	///  This class is used to build a plot using a fluent API. It is recommended to use this class instead of ScottPlot.Plot
 	///  or CsvPlotter.Plot wrapper directly.
@@ -23,9 +23,9 @@ namespace SimplePlot {
 
 		/// <summary>
 		/// Create a new PlotBuilderFluent instance. This is the entry point for the fluent API. Requires parsed CSV data
-		/// from <see cref="CsvParser"/>. This static method also requires a pre-allocated collection of plots.
+		/// from <see cref="data"/>. This static method also requires a pre-allocated collection of plots.
 		/// </summary>
-		/// <param name="data">Parsed data</param>
+		/// <param name="plotInitializer">Parsed data</param>
 		/// <param name="plotInitializer">Collection of ScottPlot.Plot</param>
 		/// <returns>New instance of PlotBuilderFluent (this)</returns>
 		public static IPlotBuilderFluent_Configuration StartNew(
@@ -265,18 +265,19 @@ namespace SimplePlot {
 		}
 
 		/// <summary>
-		///  Helper method to return this instance of the fluent builder. 
+		///  Helper method to return back to the product.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>Instance product</returns>
 		public IPlotBuilderFluent_Product GoToProduct() => this;
 
 		/// <summary>
-		///  Adds an annotation to the plot as specified coordinates (typically fed by the mouse position).
+		///  Adds an annotation to a plot at xOff, yOff.
 		/// </summary>
-		/// <param name="annotation">Text to annotate</param>
-		/// <param name="plot">Plot the annotation goes on</param>
-		/// <param name="xOff">x-offset ('x' mouse position)</param>
-		/// <param name="yOff">y-offset ('y' mouse position)</param>
+		/// <param name="annotation">String text to display in annotation</param>
+		/// <param name="plot">Plot to annotate</param>
+		/// <param name="xOff">x-offset (from lower-left of plot)</param>
+		/// <param name="yOff">y-offset (from the lower-left of the plot)</param>
+		/// <returns></returns>
 		public IPlotBuilderFluent_Tools WithAnnotationAt(string annotation, Plot plot, float xOff, float yOff) {
 			var a =plot.AddAnnotation(annotation, Alignment.LowerLeft);
 			a.Border  = true;

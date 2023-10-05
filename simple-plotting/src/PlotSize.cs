@@ -1,6 +1,6 @@
 ﻿// CSV-Plotter
 
-namespace SimplePlot {
+namespace simple_plotting.src {
 	/// <summary>
 	///  Standard plot/display sizes.
 	/// </summary>

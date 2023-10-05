@@ -1,4 +1,4 @@
-namespace SimplePlot;
+namespace simple_plotting.src;
 
 public interface IPlotChannelProvider {
 	string? Path { get; }
