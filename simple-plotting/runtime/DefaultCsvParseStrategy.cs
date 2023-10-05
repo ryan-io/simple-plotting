@@ -43,7 +43,7 @@ namespace simple_plotting.runtime {
 						continue;
 
 					hasValue = FastDoubleParser.TryParseDouble(csvr[3 + i], out value);
-					bool isOutside = value < _lowerValueLimit || _upperValueLimit > 200d;
+					bool isOutside = value < _lowerValueLimit || value > _upperValueLimit;
 					
 					if (!hasValue || isOutside) {
 						continue;
