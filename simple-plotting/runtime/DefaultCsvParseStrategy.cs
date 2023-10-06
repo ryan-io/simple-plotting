@@ -27,6 +27,7 @@ namespace simple_plotting.runtime {
 			double   value    = 0.0d;
 
 			while (await csvr.ReadAsync()) {
+				
 				Sb.Clear();
 				Sb.Append(csvr[0]); // csvr[0] = date
 				Sb.Append(SPACE_CHAR);
