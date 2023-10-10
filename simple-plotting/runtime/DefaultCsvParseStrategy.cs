@@ -50,8 +50,9 @@ namespace simple_plotting.runtime {
 						continue;
 					}
 
-					var record = new PlotChannelRecord(date, value);
-					PlotEvent.OnRecordEnumerated(record);
+					var record    = new PlotChannelRecord(date, value);
+					var eventData = new PlotEventData(output[i].ChannelIdentifier, record);
+					PlotEvent.OnRecordEnumerated(eventData);
 					
 					output[i].AddRecord(record);
 				}
