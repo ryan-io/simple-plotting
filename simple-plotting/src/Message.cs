@@ -23,5 +23,11 @@
 			"Cannot save via TrySaveAtSource without defining a source path. Call DefineSource first.";
 
 		public const string EXCEPTION_INVALID_SOURCE = "Source cannot be null, empty or whitespace.";
+
+		public const string EXCEPTION_PARSE_FAILED = "Could not extract data from CSV file.";
+		
+		public const string EXCEPTION_STRATEGY_FAILED = "Failed to complete parsing strategy.";
+		
+		public const string EXCEPTION_FILE_NOT_FOUND = "Could not find the file name ";
 	}
 }

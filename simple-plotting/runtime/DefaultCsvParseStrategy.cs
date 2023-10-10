@@ -10,52 +10,57 @@ namespace simple_plotting.runtime {
 		StringBuilder Sb { get; } = new();
 
 		public async Task Strategy(List<PlotChannel> output, CsvReader csvr) {
-			SkipRows(csvr, HEADER_START_ROW);
-			csvr.ReadHeader();
+			try {
+				SkipRows(csvr, HEADER_START_ROW);
+				csvr.ReadHeader();
 
-			if (csvr.HeaderRecord == null)
-				throw new Exception(Message.EXCEPTION_NO_HEADER);
+				if (csvr.HeaderRecord == null)
+					throw new Exception(Message.EXCEPTION_NO_HEADER);
 
-			var channelsToParse = csvr.HeaderRecord.Length - 3;
-
-			for (var i = 0; i < channelsToParse; i++) {
-				output.Add(new PlotChannel(csvr.HeaderRecord[3 + i], PlotChannelType.Temperature));
-			}
-
-			DateTime date     = DateTime.Now;
-			bool     hasValue = false;
-			double   value    = 0.0d;
-
-			while (await csvr.ReadAsync()) {
-				
-				Sb.Clear();
-				Sb.Append(csvr[0]); // csvr[0] = date
-				Sb.Append(SPACE_CHAR);
-				Sb.Append(csvr[1]); // csvr[1] = time
-
-				// csvr[2] = IGNORE (mSec)
-
-				date = ParseDate();
-
-				// csvr[...] = channel values
+				var channelsToParse = csvr.HeaderRecord.Length - 3;
 
 				for (var i = 0; i < channelsToParse; i++) {
-					if (string.IsNullOrWhiteSpace(csvr[i]))
-						continue;
-
-					hasValue = FastDoubleParser.TryParseDouble(csvr[3 + i], out value);
-					bool isOutside = value < _lowerValueLimit || value > _upperValueLimit;
-					
-					if (!hasValue || isOutside) {
-						continue;
-					}
-
-					var record    = new PlotChannelRecord(date, value);
-					var eventData = new PlotEventData(output[i].ChannelIdentifier, record);
-					PlotEvent.OnRecordEnumerated(eventData);
-					
-					output[i].AddRecord(record);
+					output.Add(new PlotChannel(csvr.HeaderRecord[3 + i], PlotChannelType.Temperature));
 				}
+
+				DateTime date     = DateTime.Now;
+				bool     hasValue = false;
+				double   value    = 0.0d;
+
+				while (await csvr.ReadAsync()) {
+					Sb.Clear();
+					Sb.Append(csvr[0]); // csvr[0] = date
+					Sb.Append(SPACE_CHAR);
+					Sb.Append(csvr[1]); // csvr[1] = time
+
+					// csvr[2] = IGNORE (mSec)
+
+					date = ParseDate();
+
+					// csvr[...] = channel values
+
+					for (var i = 0; i < channelsToParse; i++) {
+						if (string.IsNullOrWhiteSpace(csvr[i]))
+							continue;
+
+						hasValue = FastDoubleParser.TryParseDouble(csvr[3 + i], out value);
+						bool isOutside = value < _lowerValueLimit || value > _upperValueLimit;
+
+						if (!hasValue || isOutside) {
+							continue;
+						}
+
+						var record    = new PlotChannelRecord(date, value);
+						var eventData = new PlotEventData(output[i].ChannelIdentifier, record);
+
+						PlotEvent.OnRecordEnumerated(eventData);
+
+						output[i].AddRecord(record);
+					}
+				}
+			}
+			catch (Exception e) {
+				throw new Exception(Message.EXCEPTION_STRATEGY_FAILED, e);
 			}
 		}
 
@@ -81,7 +86,7 @@ namespace simple_plotting.runtime {
 			_lowerValueLimit = lowerValueLimit;
 			_upperValueLimit = upperValueLimit;
 		}
-		
+
 		readonly double _lowerValueLimit;
 		readonly double _upperValueLimit;
 	}

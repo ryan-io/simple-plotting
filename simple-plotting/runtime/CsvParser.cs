@@ -14,92 +14,6 @@ namespace simple_plotting.runtime {
 		StringBuilder Sb { get; } = new StringBuilder();
 
 		/// <summary>
-		///  Creates a new <see cref="CsvParser" /> instance.
-		/// </summary>
-		/// <param name="sourceProvider">Path wrapper containing the Csv file</param>
-		/// <param name="strategy">Logic for parsing through Csv files</param>
-		/// <returns>Fluent instance (CsvSource)</returns>
-		public static ICsvParser StartNew(IPlotChannelProviderSource sourceProvider,
-			ICsvParseStrategy strategy)
-			=> new CsvParser(sourceProvider, strategy);
-
-		/// <summary>
-		///  Creates a new <see cref="CsvParser" /> instance.
-		/// </summary>
-		/// <param name="sourceProvider">Path wrapper containing the Csv file</param>
-		/// <param name="strategy">Logic for parsing through Csv files</param>
-		/// <param name="source">Directory to extract Csv files from</param>
-		/// <returns>Fluent instance (CsvSource)</returns>
-		public static ICsvParser StartNew(IPlotChannelProviderSource sourceProvider,
-			ICsvParseStrategy strategy, string? source) {
-			if (string.IsNullOrWhiteSpace(source))
-				throw new Exception(Message.EXCEPTION_INVALID_SOURCE);
-
-			var parser = new CsvParser(sourceProvider, strategy);
-			parser.SetSource(source);
-
-			return parser;
-		}
-
-		/// <summary>
-		///  Creates a new <see cref="CsvParser" /> instance. Use this is a data source is not known at compile time.
-		/// </summary>
-		/// <returns>Fluent instance (CsvSource)</returns>
-		public static ICsvParser StartNew(ICsvParseStrategy strategy)
-			=> new CsvParser(new EmptyPlotChannelProviderSource(), strategy);
-
-		/// <summary>
-		///  Creates a new <see cref="CsvParser" /> instance. Use this is a data source is not known at compile time.
-		/// </summary>
-		/// <param name="strategy">Logic for parsing through Csv files</param>
-		/// <param name="source">Directory to extract Csv files from</param>
-		/// <returns>Fluent instance (CsvSource)</returns>
-		/// <exception cref="Exception">Thrown if source is null or whitespace</exception>
-		public static ICsvParser StartNew(ICsvParseStrategy strategy, string? source) {
-			if (string.IsNullOrWhiteSpace(source))
-				throw new Exception(Message.EXCEPTION_INVALID_SOURCE);
-
-			var parser = new CsvParser(new EmptyPlotChannelProviderSource(), strategy);
-			parser.SetSource(source);
-
-			return parser;
-		}
-
-		/// <summary>
-		///  Creates a new <see cref="CsvParser" /> instance. Use this is a data source is not known at compile time.
-		///  This constructor uses a default implementation for CsvParseStrategy (DefaultCsvParseStrategy).
-		///  This method requires you to pass two values: lowerValueLimit and upperValueLimit.
-		///  These two values will be used to ignore any values that are outside of these limits.
-		/// </summary>
-		/// <returns>Fluent instance (CsvSource)</returns>
-		public static ICsvParser StartNewDefaultStrategy(
-			IPlotChannelProviderSource sourceProvider,
-			double lowerValueLimit,
-			double upperValueLimit)
-			=> new CsvParser(sourceProvider, new DefaultCsvParseStrategy(lowerValueLimit, upperValueLimit));
-
-		/// <summary>
-		///  Creates a new <see cref="CsvParser" /> instance. Use this is a data source is not known at compile time.
-		///  This constructor uses a default implementation for CsvParseStrategy (DefaultCsvParseStrategy).
-		///  This method requires you to pass two values: lowerValueLimit and upperValueLimit.
-		///  These two values will be used to ignore any values that are outside of these limits.
-		/// </summary>
-		/// <returns>Fluent instance (CsvSource)</returns>
-		public static ICsvParser StartNewDefaultStrategy(
-			IPlotChannelProviderSource sourceProvider,
-			string? source,
-			double lowerValueLimit,
-			double upperValueLimit) {
-			if (string.IsNullOrWhiteSpace(source))
-				throw new Exception(Message.EXCEPTION_INVALID_SOURCE);
-			
-			var parser = new CsvParser(sourceProvider, new DefaultCsvParseStrategy(lowerValueLimit, upperValueLimit));
-			parser.SetSource(source);
-			
-			return parser;
-		}
-
-		/// <summary>
 		///   The path to the CSV file.
 		/// </summary>
 		public string? Path { get; private set; }
@@ -110,17 +24,25 @@ namespace simple_plotting.runtime {
 		/// <param name="fileName">Name of file to parse</param>
 		/// <returns>Readonly list of PlotChannel</returns>
 		public async Task<IReadOnlyList<PlotChannel>?> ExtractAsync(string fileName) {
-			if (string.IsNullOrWhiteSpace(fileName))
-				return default;
+			try {
+				if (string.IsNullOrWhiteSpace(fileName))
+					return default;
 
-			var output = new List<PlotChannel>();
+				var output = new List<PlotChannel>();
 
-			using var sr   = new StreamReader($@"{Path}\{fileName}");
-			using var csvr = new CsvReader(sr, _configuration);
+				using var sr   = new StreamReader($@"{Path}\{fileName}");
+				using var csvr = new CsvReader(sr, _configuration);
 
-			await _strategy.Strategy(output, csvr);
+				await _strategy.Strategy(output, csvr);
 
-			return output;
+				return output;
+			}
+			catch (FileNotFoundException e) {
+				throw new Exception($"{Message.EXCEPTION_FILE_NOT_FOUND}{fileName}", e);
+			}
+			catch (Exception e) {
+				throw new Exception(Message.EXCEPTION_PARSE_FAILED, e);
+			}
 		}
 
 		/*	----> This method is not used, but is kept for reference. <----
@@ -158,8 +80,8 @@ namespace simple_plotting.runtime {
 		/// <param name="path">string to set Path to</param>
 		public void ForceSetSource(string? path) => Path = path;
 
-		public CsvParser(IPlotChannelProviderSource sourceProvider, ICsvParseStrategy strategy) {
-			Path      = sourceProvider.Path;
+		internal CsvParser(string? source, ICsvParseStrategy strategy) {
+			Path      = source;
 			_strategy = strategy;
 		}
 
