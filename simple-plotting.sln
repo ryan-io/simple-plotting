@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.34003.232
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "simple-plotting", "simple-plotting\simple-plotting.csproj", "{D7F7DFE8-0BE0-43EB-B6CF-A8568057F8B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "simple-plotting-console", "simple-plotting-console\simple-plotting-console.csproj", "{9C53B870-B8AA-4F3D-BFFF-06D5FF02EE48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D7F7DFE8-0BE0-43EB-B6CF-A8568057F8B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7F7DFE8-0BE0-43EB-B6CF-A8568057F8B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7F7DFE8-0BE0-43EB-B6CF-A8568057F8B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C53B870-B8AA-4F3D-BFFF-06D5FF02EE48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C53B870-B8AA-4F3D-BFFF-06D5FF02EE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C53B870-B8AA-4F3D-BFFF-06D5FF02EE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C53B870-B8AA-4F3D-BFFF-06D5FF02EE48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

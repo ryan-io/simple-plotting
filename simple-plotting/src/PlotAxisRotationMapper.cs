@@ -1,6 +1,6 @@
 ﻿namespace simple_plotting.src {
-	public static class PlotAxisRotationMapper {
-		public static PlotAxisRotationContainer Map(PlotAxisRotation plotAxisRotation) {
+	internal static class PlotAxisRotationMapper {
+		internal static int Map(PlotAxisRotation plotAxisRotation) {
 			var rotation = 0;
 			
 			switch (plotAxisRotation) {
@@ -18,7 +18,7 @@
 					break;
 			}
 
-			return new PlotAxisRotationContainer(rotation);
+			return rotation;
 		}
 	}
 }

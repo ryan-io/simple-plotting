@@ -19,37 +19,60 @@ A library wrapper for ScottPlot &amp; CsvHelper. This library parses CSV files &
         ** Interactive plots are currently only support in WPF, WinForms and Console Apps
 
 ```cs
-var path =
-@"C:\Development\rider-projects\POC_plotting\generated-plots\c71_hrl_therm_cycling_9222023_92144_AM.csv";
+using simple_plotting.src;
+using simple_plotting.runtime;
 
+var path = @"c:\your_directory";
+var file = "your_file.csv";
+
+// this API throws exceptions, so you must wrap it in a try-catch block
 try {
 	const int numOfPlots = 5;
-	var source = CsvSource.StartNew(path);
-	var output = await source.ExtractAsync();
+
+	// can use CsvParser.StartNew(path) to skip SetSource(path)
+	var initialStrategy = new DefaultCsvParseStrategy(-65d, 165d);
+	var source          = CsvParser.StartNew(initialStrategy, path);
 	
+	// if you prefer to set the pat manually, you can do the following
+	// var initialStrategy = new DefaultCsvParseStrategy(-65d, 165d);
+	// var source          = CsvParser.StartNew(initialStrategy);
+	// source.SetSource(path);
+	
+	// invoke source.ExtractAsync(file) to generate output
+	var output = await source.ExtractAsync(file);
+
+	// check if output is null
+	if (output == null) {
+		Console.WriteLine("Could not extract data from CSV file...");
+		return -1;
+	}
+
+	// begin building the plot via fluent builder
 	var product = PlotBuilderFluent.StartNew(output, numOfPlots)
 	                               .WithTitle("Test title")
-	                               .WithSize(PlotSizeMapper.Map(PlotSize.s1024x768))
+	                               .WithSize(PlotSize.S1280X800)
 	                               .WithPrimaryXAxisLabel(Constants.X_AXIS_LABEL_DATE_TIME)
 	                               .WithSecondaryYAxisLabel(Constants.Y_AXIS_LABEL_RH)
-	                               .ShowLegend(Alignment.UpperRight)
+	                               .ShowLegend(PlotAlignment.UpperRight)
 	                               .SetDataPadding(percentY: 0.2)
-	                               .RotatePrimaryXAxisTicks(PlotAxisRotationMapper.Map(PlotAxisRotation.Zero))
-	                               .RotatePrimaryYAxisTicks(PlotAxisRotationMapper.Map(PlotAxisRotation.Zero))
-	                               .WithPrimaryYAxisLabel(Constants.Y_AXIS_LABEL_TEMP).FinalizeConfiguration().Produce();
+	                               .DefineSource(source)
+	                               .RotatePrimaryXAxisTicks(PlotAxisRotation.Zero)
+	                               .RotatePrimaryYAxisTicks(PlotAxisRotation.Zero)
+	                               .WithPrimaryYAxisLabel(Constants.Y_AXIS_LABEL_TEMP).FinalizeConfiguration()
+	                               .Produce();
 
-	var plot    = product.GetPlots().ToArray()[0];
+	// can also define a path in by invoking product.TrySave()
+	// var canSave = product.TrySave(@"c:\your-directory", "output");
 	
+	// you could invoke product.TrySave if you call PlotBuilderFluent.DefineSource
+	var canSaveAtSource = product.TrySaveAtSource("output");
 	
-	var canSave = product.TrySave(@"C:\Development\rider-projects\POC_plotting\generated-plots\output");
-	if (canSave)
-		Console.WriteLine("Successfully saved plot!");
-	else {
-		Console.WriteLine("Could not save plot...");
-	}
+	Console.WriteLine(canSaveAtSource ? "Successfully saved plot!" : "Could not save plot...");
 }
 catch (Exception e) {
 	Console.WriteLine(e);
 	throw;
 }
+
+return 0;
 ```

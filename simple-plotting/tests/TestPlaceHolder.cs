@@ -1,4 +1,4 @@
-namespace SimplePlot.Tests.Unit {
+namespace simple_plotting.tests {
 	public class TestPlaceHolder {
 		
 	}

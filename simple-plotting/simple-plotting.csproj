@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <Title>Simple Plotting</Title>
     <Authors>ryanio</Authors>
     <Description>A library wrapper for ScottPlot &amp; CsvHelper. This library parses CSV files &amp; interactively plots them in WPF, WinForms, etc.</Description>
@@ -16,7 +16,7 @@
     <RepositoryUrl>https://github.com/ryan-io/simple-plotting</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Company>ryanio</Company>
-    <PackageReleaseNotes>Added a default constructor to CsvParser for when StartNew is invoked without a path.</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

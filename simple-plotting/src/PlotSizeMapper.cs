@@ -2,13 +2,13 @@
 	/// <summary>
 	///  Maps a <see cref="PlotSize"/> to a <see cref="PlotSizeContainer"/>.
 	/// </summary>
-	public static class PlotSizeMapper {
+	internal static class PlotSizeMapper {
 		/// <summary>
 		///  Maps a <see cref="PlotSize"/> to a <see cref="PlotSizeContainer"/>.
 		/// </summary>
 		/// <param name="plotSize">Enum defining a standard size to use for the plot</param>
 		/// <returns>A container with the appropriate width & height</returns>
-		public static PlotSizeContainer Map(PlotSize plotSize) {
+		internal static PlotSizeContainer Map(PlotSize plotSize) {
 			int width  = 1920;
 			int height = 1080;
 			

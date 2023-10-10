@@ -1,7 +1,6 @@
 // simple-plotting
 
 using simple_plotting.src;
-using SimplePlot;
 
 namespace simple_plotting.runtime;
 

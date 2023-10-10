@@ -22,10 +22,20 @@ namespace simple_plotting.src {
 		public IEnumerable<Plot> GetPlots() => _plots;
 
 		/// <summary>
+		///  Hashset containing the actions to be observed by the view model. This is invoked when Produce() is called.
+		/// </summary>
+		HashSet<Action> Observables { get; } = new();
+		
+		/// <summary>
+		///  The path to the CSV file.
+		/// </summary>
+		string SourcePath { get; set; } = string.Empty;
+
+		/// <summary>
 		/// Create a new PlotBuilderFluent instance. This is the entry point for the fluent API. Requires parsed CSV data
 		/// from <see cref="data"/>. This static method also requires a pre-allocated collection of plots.
 		/// </summary>
-		/// <param name="plotInitializer">Parsed data</param>
+		/// <param name="data">Parsed data</param>
 		/// <param name="plotInitializer">Collection of ScottPlot.Plot</param>
 		/// <returns>New instance of PlotBuilderFluent (this)</returns>
 		public static IPlotBuilderFluent_Configuration StartNew(
@@ -45,9 +55,11 @@ namespace simple_plotting.src {
 		/// <summary>
 		/// Sets the size of the plot window.
 		/// </summary>
-		/// <param name="container">Container that defines width & height</param>
+		/// <param name="plotSize">Container that defines width & height</param>
 		/// <returns>PlotBuilderFluent (this)</returns>
-		public IPlotBuilderFluent_Configuration WithSize(PlotSizeContainer container) {
+		public IPlotBuilderFluent_Configuration WithSize(PlotSize plotSize) {
+			var container = PlotSizeMapper.Map(plotSize);
+			
 			foreach (var plot in _plots) {
 				plot.Width  = container.Width;
 				plot.Height = container.Height;
@@ -110,11 +122,11 @@ namespace simple_plotting.src {
 		/// <summary>
 		///  Sets the rotation of the primary Y axis ticks.
 		/// </summary>
-		/// <param name="container">Container for rotation of axis</param>
+		/// <param name="rotation">Rotation of axis</param>
 		/// <returns>Fluent builder</returns>
-		public IPlotBuilderFluent_Configuration RotatePrimaryYAxisTicks(PlotAxisRotationContainer container) {
+		public IPlotBuilderFluent_Configuration RotatePrimaryYAxisTicks(PlotAxisRotation rotation) {
 			foreach (var plot in _plots) {
-				plot.YAxis.TickLabelStyle(rotation: container.Rotation);
+				plot.YAxis.TickLabelStyle(rotation: PlotAxisRotationMapper.Map(rotation));
 			}
 
 			return this;
@@ -123,11 +135,11 @@ namespace simple_plotting.src {
 		/// <summary>
 		///  Sets the rotation of the primary X axis ticks.
 		/// </summary>
-		/// <param name="container">Container for rotation of axis</param>
+		/// <param name="rotation">Rotation of axis</param>
 		/// <returns>Fluent builder</returns>
-		public IPlotBuilderFluent_Configuration RotatePrimaryXAxisTicks(PlotAxisRotationContainer container) {
+		public IPlotBuilderFluent_Configuration RotatePrimaryXAxisTicks(PlotAxisRotation rotation) {
 			foreach (var plot in _plots) {
-				plot.XAxis.TickLabelStyle(rotation: container.Rotation);
+				plot.XAxis.TickLabelStyle(rotation: PlotAxisRotationMapper.Map(rotation));
 			}
 
 			return this;
@@ -198,9 +210,9 @@ namespace simple_plotting.src {
 		/// </summary>
 		/// <param name="alignment">Where on the plot to display the legend</param>
 		/// <returns>Fluent builder</returns>
-		public IPlotBuilderFluent_Configuration ShowLegend(Alignment alignment) {
+		public IPlotBuilderFluent_Configuration ShowLegend(PlotAlignment alignment) {
 			foreach (var plot in _plots) {
-				plot.Legend(true, alignment);
+				plot.Legend(true, PlotAlignmentMapper.Map(alignment));
 			}
 
 			return this;
@@ -233,6 +245,32 @@ namespace simple_plotting.src {
 		}
 
 		/// <summary>
+		///  Sets the SourcePath property to Source.Path. This is used to save the plot(s) to the same directory as the source.
+		/// </summary>
+		/// <param name="source">IPlotChannelProviderSource, typically derivation of CsvParser.Path</param>
+		/// <returns>Fluent builder</returns>
+		public IPlotBuilderFluent_Configuration DefineSource(IPlotChannelProvider source) {
+			if (string.IsNullOrWhiteSpace(source.Path))
+				throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
+			
+			SourcePath = source.Path;
+			return this;
+		}
+
+		/// <summary>
+		///  Sets the SourcePath property to the specified path. This is used to save the plot(s) to a specific directory.
+		/// </summary>
+		/// <param name="path">Standalone file path to try-save plots at</param>
+		/// <returns>Fluent builder</returns>
+		public IPlotBuilderFluent_Configuration DefineSource(string path) {
+			if (string.IsNullOrWhiteSpace(path))
+				throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
+			
+			SourcePath = path;
+			return this;
+		}
+
+		/// <summary>
 		///  Finalizes the configuration of the plot. This should be the last call in the fluent API.
 		///  This allows you to call Produce().
 		/// </summary>
@@ -242,9 +280,9 @@ namespace simple_plotting.src {
 		/// <summary>
 		///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
 		/// </summary>
-		/// <param name="savePath"></param>
-		/// <param name="name">Name to give the graph. If there are multiple graphs, an integer will be appended.</param>
-		/// <returns></returns>
+		/// <param name="savePath">Directory to save plots</param>
+		/// <param name="name">Name of each plot</param>
+		/// <returns>True if could write (save) to directory, otherwise false</returns>
 		/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
 		public bool TrySave(string savePath, string name) {
 			if (string.IsNullOrWhiteSpace(savePath) || string.IsNullOrWhiteSpace(name))
@@ -261,6 +299,29 @@ namespace simple_plotting.src {
 			}
 			catch (Exception) {
 				return false;
+			}
+		}
+
+		/// <summary>
+		///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
+		///  This method requires you to call DefineSource.
+		/// </summary>
+		/// <param name="name">Name of each plot</param>
+		/// <returns>True if could write (save) to directory, otherwise false</returns>
+		/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
+		public bool TrySaveAtSource(string name) {
+			if (string.IsNullOrWhiteSpace(name))
+				throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
+
+			if (string.IsNullOrWhiteSpace(SourcePath))
+				throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
+			
+			try {
+				return TrySave(SourcePath, name);
+			}
+			catch (Exception e) {
+				Console.WriteLine(e);
+				throw;
 			}
 		}
 
@@ -322,11 +383,6 @@ namespace simple_plotting.src {
 			Observables.Add(action);
 			return this;
 		}
-
-		/// <summary>
-		///  Hashset containing the actions to be observed by the view model. This is invoked when Produce() is called.
-		/// </summary>
-		HashSet<Action> Observables { get; } = new();
 
 		/// <summary>
 		///  Helper method to set the initial state of the plot. This is called in the constructor.

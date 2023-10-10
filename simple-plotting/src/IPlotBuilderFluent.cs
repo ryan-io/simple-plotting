@@ -15,9 +15,9 @@ namespace simple_plotting.src {
 		/// <summary>
 		///  Sets the size of the plot window.
 		/// </summary>
-		/// <param name="container">Container that defines width & height</param>
+		/// <param name="plotSize">Container that defines width & height</param>
 		/// <returns>Fluent builder</returns>
-		IPlotBuilderFluent_Configuration WithSize(PlotSizeContainer container);
+		IPlotBuilderFluent_Configuration WithSize(PlotSize plotSize);
 
 		/// <summary>
 		///  Sets the title of the plot.
@@ -46,16 +46,16 @@ namespace simple_plotting.src {
 		/// <summary>
 		///  Sets the rotation of the primary Y axis ticks.
 		/// </summary>
-		/// <param name="container">Container for rotation of axis</param>
+		/// <param name="rotation">Rotation of axis</param>
 		/// <returns>Fluent builder</returns>
-		IPlotBuilderFluent_Configuration RotatePrimaryYAxisTicks(PlotAxisRotationContainer container);
+		IPlotBuilderFluent_Configuration RotatePrimaryYAxisTicks(PlotAxisRotation rotation);
 
 		/// <summary>
 		///  Sets the rotation of the primary X axis ticks.
 		/// </summary>
-		/// <param name="container">Container for rotation of axis</param>
+		/// <param name="rotation">Rotation of axis</param>
 		/// <returns>Fluent builder</returns>
-		IPlotBuilderFluent_Configuration RotatePrimaryXAxisTicks(PlotAxisRotationContainer container);
+		IPlotBuilderFluent_Configuration RotatePrimaryXAxisTicks(PlotAxisRotation rotation);
 
 		/// <summary>
 		///  Sets the label for the secondary X axis.
@@ -92,7 +92,7 @@ namespace simple_plotting.src {
 		/// </summary>
 		/// <param name="alignment">Where on the plot to display the legend</param>
 		/// <returns>Fluent builder</returns>
-		IPlotBuilderFluent_Configuration ShowLegend(Alignment alignment);
+		IPlotBuilderFluent_Configuration ShowLegend(PlotAlignment alignment);
 
 		/// <summary>
 		///  Hides the legend.
@@ -108,6 +108,20 @@ namespace simple_plotting.src {
 		/// <returns>Fluent builder</returns>
 		IPlotBuilderFluent_Configuration SetDataPadding(double percentX = 0.05, double percentY = 0.05);
 
+		/// <summary>
+		///  Sets the SourcePath property to Source.Path. This is used to save the plot(s) to the same directory as the source.
+		/// </summary>
+		/// <param name="source">IPlotChannelProviderSource, typically derivation of CsvParser.Path</param>
+		/// <returns>Fluent builder</returns>
+		IPlotBuilderFluent_Configuration DefineSource(IPlotChannelProvider source);
+		
+		/// <summary>
+		///  Sets the SourcePath property to the specified path. This is used to save the plot(s) to a specific directory.
+		/// </summary>
+		/// <param name="path">Standalone file path to try-save plots at</param>
+		/// <returns>Fluent builder</returns>
+		IPlotBuilderFluent_Configuration DefineSource(string path);
+		
 		/// <summary>
 		///  Finalizes the configuration of the plot. This should be the last call in the fluent API.
 		///  This allows you to call Produce().
@@ -139,11 +153,20 @@ namespace simple_plotting.src {
 		/// <summary>
 		///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
 		/// </summary>
-		/// <param name="savePath"></param>
-		/// <param name="name"></param>
-		/// <returns></returns>
+		/// <param name="savePath">Directory to save plots</param>
+		/// <param name="name">Name of each plot</param>
+		/// <returns>True if could write (save) to directory, otherwise false</returns>
 		/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
 		bool TrySave(string savePath, string name);
+		
+		/// <summary>
+		///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
+		///  This method requires you to call DefineSource.
+		/// </summary>
+		/// <param name="name">Name of each plot</param>
+		/// <returns>True if could write (save) to directory, otherwise false</returns>
+		/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
+		bool TrySaveAtSource(string name);
 
 		/// <summary>
 		///  Resets the builder to an initial state. This is useful if you want to reuse the builder with new data.
