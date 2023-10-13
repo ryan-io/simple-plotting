@@ -5,7 +5,7 @@ using ScottPlot;
 namespace simple_plotting.src;
 
 internal static class PlotAlignmentMapper {
-	internal static Alignment Map (PlotAlignment alignment) {
+	internal static Alignment Map(PlotAlignment alignment) {
 		switch (alignment) {
 			case PlotAlignment.LowerCenter:
 				return Alignment.LowerCenter;

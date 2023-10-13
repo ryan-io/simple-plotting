@@ -2,7 +2,7 @@
 	internal static class PlotAxisRotationMapper {
 		internal static int Map(PlotAxisRotation plotAxisRotation) {
 			var rotation = 0;
-			
+
 			switch (plotAxisRotation) {
 				case PlotAxisRotation.Zero:
 					rotation = 0;

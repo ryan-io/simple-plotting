@@ -18,13 +18,13 @@ public class PlotChannel {
 	///  The values of the channel. 
 	/// </summary>
 	public IReadOnlyCollection<PlotChannelRecord> Records => _records;
-	
+
 	/// <summary>
 	///  Adds a record to the channel.
 	/// </summary>
 	/// <param name="record">Record to add to internal collection</param>
 	public void AddRecord(PlotChannelRecord record) => _records.Add(record);
-	
+
 	/// <summary>
 	///  Adds a record to the channel. Returns true if the record was added, false if it already exists.
 	/// </summary>
@@ -33,7 +33,7 @@ public class PlotChannel {
 	public bool TryAddRecord(PlotChannelRecord record) {
 		if (_records.Contains(record))
 			return false;
-		
+
 		_records.Add(record);
 		return true;
 	}
