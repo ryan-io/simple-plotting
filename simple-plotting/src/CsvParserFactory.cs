@@ -5,7 +5,7 @@ namespace simple_plotting.src {
 		/// <summary>
 		///  Creates a new <see cref="CsvParser" /> instance.
 		/// </summary>
-		/// <param name="sourceProvider">Path wrapper containing the Csv file</param>
+		/// <param name="source">Directory to extract Csv files from</param>
 		/// <param name="strategy">Logic for parsing through Csv files</param>
 		/// <returns>Fluent instance (CsvSource)</returns>
 		public static ICsvParser StartNew(string? source,
@@ -15,7 +15,6 @@ namespace simple_plotting.src {
 		/// <summary>
 		///  Creates a new <see cref="CsvParser" /> instance.
 		/// </summary>
-		/// <param name="sourceProvider">Path wrapper containing the Csv file</param>
 		/// <param name="strategy">Logic for parsing through Csv files</param>
 		/// <param name="source">Directory to extract Csv files from</param>
 		/// <returns>Fluent instance (CsvSource)</returns>

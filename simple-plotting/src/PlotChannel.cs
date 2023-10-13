@@ -7,7 +7,7 @@ public class PlotChannel {
 	/// <summary>
 	///  The identifier of the channel. Should be parsed from CsvHelper
 	/// </summary>
-	public string ChannelIdentifier { get; }
+	public string ChannelIdentifier { get; set; }
 
 	/// <summary>
 	/// Typically temperature or humidity
