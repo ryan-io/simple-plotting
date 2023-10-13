@@ -26,7 +26,7 @@ namespace simple_plotting.src {
 		///  Hashset containing the actions to be observed by the view model. This is invoked when Produce() is called.
 		/// </summary>
 		HashSet<Action> Observables { get; } = new();
-		
+
 		/// <summary>
 		///  The path to the CSV file.
 		/// </summary>
@@ -60,7 +60,7 @@ namespace simple_plotting.src {
 		/// <returns>PlotBuilderFluent (this)</returns>
 		public IPlotBuilderFluent_Configuration WithSize(PlotSize plotSize) {
 			var container = PlotSizeMapper.Map(plotSize);
-			
+
 			foreach (var plot in _plots) {
 				plot.Width  = container.Width;
 				plot.Height = container.Height;
@@ -255,7 +255,7 @@ namespace simple_plotting.src {
 		public IPlotBuilderFluent_Configuration DefineSource(IPlotChannelProvider source) {
 			if (string.IsNullOrWhiteSpace(source.Path))
 				throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
-			
+
 			SourcePath = source.Path;
 			return this;
 		}
@@ -268,7 +268,7 @@ namespace simple_plotting.src {
 		public IPlotBuilderFluent_Configuration DefineSource(string path) {
 			if (string.IsNullOrWhiteSpace(path))
 				throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
-			
+
 			SourcePath = path;
 			return this;
 		}
@@ -318,7 +318,7 @@ namespace simple_plotting.src {
 
 			if (string.IsNullOrWhiteSpace(SourcePath))
 				throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
-			
+
 			try {
 				return TrySave(SourcePath, name);
 			}
@@ -349,11 +349,11 @@ namespace simple_plotting.src {
 		/// <param name="yOff">y-offset (from the lower-left of the plot)</param>
 		/// <returns></returns>
 		public IPlotBuilderFluent_PostProcess WithAnnotationAt(string annotation, Plot plot, float xOff, float yOff) {
-			var a =plot.AddAnnotation(annotation, Alignment.LowerLeft);
-			a.Border  = true;
+			var a = plot.AddAnnotation(annotation, Alignment.LowerLeft);
+			a.Border      = true;
 			a.BorderWidth = 1;
-			a.MarginX = xOff;
-			a.MarginY = yOff;
+			a.MarginX     = xOff;
+			a.MarginY     = yOff;
 
 			return this;
 		}
@@ -448,7 +448,7 @@ namespace simple_plotting.src {
 			_plots[plotTracker].XAxis.DateTimeFormat(true);
 			_plots[plotTracker].YAxis2.SetSizeLimit(min: 40);
 			var tst = _plots[plotTracker].GetPlottables();
-			
+
 			plotTracker++;
 		}
 
@@ -462,12 +462,12 @@ namespace simple_plotting.src {
 		public IPlotBuilderFluent_PostProcess SetScatterLabel(IPlottable? plot, string newLabel) {
 			if (plot is null)
 				return this;
-			
+
 			var scatterPlot = (ScatterPlot)plot;
 			scatterPlot.Label = newLabel;
 			return this;
 		}
-		
+
 		/// <summary>
 		///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
 		///  This method will invoke Render() on the plot.
@@ -477,29 +477,21 @@ namespace simple_plotting.src {
 		/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
 		/// <exception cref="NullReferenceException">Thrown if plottable cast fails</exception>
 		public IPlotBuilderFluent_PostProcess TrySetScatterLabel(string newLabel, params int[] plottableIndex) {
-			var plotList = new List<Plot>();
-			
-			foreach (var index in plottableIndex) {
-				if (index > _plots.Count)
-					throw new IndexOutOfRangeException();
-				
-				plotList.Add(_plots[index]);
-			}
+			foreach (var p in _plots) {
+				var plottables = p.GetPlottables().Select(plottable => plottable as ScatterPlot).ToList();
 
-			if (!plotList.Any())
-				throw new Exception(Message.EXCEPTION_CANNOT_FIND_PLOTS);
-			
-			foreach (var p in plotList) {
-				var scatterPlot = (ScatterPlot)p.GetPlottables()[0];
-				
-				if (scatterPlot == null) {
-					throw new NullReferenceException($"{Message.EXCEPTION_CANNOT_CAST_PLOTTABLE} {plottableIndex}");
+				foreach (var index in plottableIndex) {
+					var scatter = plottables[index];
+
+					if (scatter is null)
+						continue;
+
+					scatter.Label = newLabel;
 				}
 
-				scatterPlot.Label = newLabel;
 				p.Render();
-			}	
-			
+			}
+
 			return this;
 		}
 
