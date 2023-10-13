@@ -478,14 +478,13 @@ namespace simple_plotting.src {
 		/// <exception cref="NullReferenceException">Thrown if plottable cast fails</exception>
 		public IPlotBuilderFluent_PostProcess TrySetScatterLabel(string newLabel, params int[] plottableIndex) {
 			foreach (var p in _plots) {
-				var plottables = p.GetPlottables().Select(plottable => plottable as ScatterPlot).ToList();
+				var plottables = p.GetPlottables().OfType<ScatterPlot>().ToList();
 
 				foreach (var index in plottableIndex) {
-					var scatter = plottables[index];
-
-					if (scatter is null)
+					if (index > plottables.Count)
 						continue;
-
+					
+					var scatter = plottables[index];
 					scatter.Label = newLabel;
 				}
 
