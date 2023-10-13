@@ -28,6 +28,12 @@
 		
 		public const string EXCEPTION_STRATEGY_FAILED = "Failed to complete parsing strategy.";
 		
-		public const string EXCEPTION_FILE_NOT_FOUND = "Could not find the file name ";
+		public const string EXCEPTION_FILE_NOT_FOUND        = "Could not find the file name ";
+
+		public const string EXCEPTION_NO_PLOTTABLE_ON_PLOT = "Could not find a plottable at index ";
+		
+		public const string EXCEPTION_CANNOT_CAST_PLOTTABLE = "Could not cast as plottable at index ";
+
+		public const string EXCEPTION_CANNOT_FIND_PLOTS = "No plots were found for the specified index(es).";
 	}
 }

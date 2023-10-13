@@ -1,4 +1,5 @@
 ﻿using ScottPlot;
+using ScottPlot.Plottable;
 
 namespace simple_plotting.src {
 	/// <summary>
@@ -169,6 +170,12 @@ namespace simple_plotting.src {
 		bool TrySaveAtSource(string name);
 
 		/// <summary>
+		///  Exposes post processing API.
+		/// </summary>
+		/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+		IPlotBuilderFluent_PostProcess PostProcess();
+		
+		/// <summary>
 		///  Resets the builder to an initial state. This is useful if you want to reuse the builder with new data.
 		/// </summary>
 		/// <param name="data">New data to populate the builder with</param>
@@ -177,9 +184,9 @@ namespace simple_plotting.src {
 	}
 
 	/// <summary>
-	///  Provides the consumer with additional tools to manipulate the plot. Any interactive plot features should be defined here.
+	///  Provides the consumer with additional tools to manipulate the plots. Any interactive plot features should be defined here.
 	/// </summary>
-	public interface IPlotBuilderFluent_Tools {
+	public interface IPlotBuilderFluent_PostProcess {
 		/// <summary>
 		///  Helper method to return back to the product.
 		/// </summary>
@@ -193,8 +200,33 @@ namespace simple_plotting.src {
 		/// <param name="plot">Plot to annotate</param>
 		/// <param name="xOff">x-offset (from lower-left of plot)</param>
 		/// <param name="yOff">y-offset (from the lower-left of the plot)</param>
-		/// <returns></returns>
-		IPlotBuilderFluent_Tools   WithAnnotationAt(string annotation, Plot plot, float xOff, float yOff);
+		/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+		IPlotBuilderFluent_PostProcess   WithAnnotationAt(string annotation, Plot plot, float xOff, float yOff);
+
+		/// <summary>
+		///  Sets the size of all plots.
+		/// </summary>
+		/// <param name="size">New plot size</param>
+		/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+		IPlotBuilderFluent_PostProcess SetSizeOfAll(PlotSize size);
+
+		/// <summary>
+		///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
+		/// </summary>
+		/// <param name="plot">IPlottable to change the label fro</param>
+		/// <param name="newLabel">New label</param>
+		/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+		IPlotBuilderFluent_PostProcess SetScatterLabel(IPlottable? plot, string newLabel);
+
+		/// <summary>
+		///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
+		///  This method will invoke Render() on the plot.
+		/// </summary>
+		/// <param name="newLabel">New label</param>
+		/// <param name="plottableIndex">Plottable index to adjust label for</param>
+		/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+		/// <exception cref="NullReferenceException">Thrown if plottable cast fails</exception>
+		IPlotBuilderFluent_PostProcess TrySetScatterLabel(string newLabel, params int[] plottableIndex);
 	}
 
 	/// <summary>

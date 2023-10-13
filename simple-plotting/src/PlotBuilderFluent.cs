@@ -1,4 +1,5 @@
 ﻿using ScottPlot;
+using ScottPlot.Plottable;
 using simple_plotting.runtime;
 
 namespace simple_plotting.src {
@@ -9,7 +10,7 @@ namespace simple_plotting.src {
 	/// </summary>
 	public class PlotBuilderFluent : IPlotBuilderFluent_Configuration,
 	                                 IPlotBuilderFluent_ReadyToProduce,
-	                                 IPlotBuilderFluent_Tools,
+	                                 IPlotBuilderFluent_PostProcess,
 	                                 IPlotBuilderFluent_Product {
 		/// <summary>
 		///  This ensures a the Produce() method has been invoked before allowing you to save a plot.
@@ -78,8 +79,10 @@ namespace simple_plotting.src {
 			if (string.IsNullOrWhiteSpace(title))
 				throw new Exception(Message.EXCEPTION_TITLE_INVALID);
 
+			var plotTracker = 1;
 			foreach (var plot in _plots) {
-				plot.Title(title);
+				plot.Title($"{title}_{plotTracker}");
+				plotTracker++;
 			}
 
 			return this;
@@ -291,7 +294,7 @@ namespace simple_plotting.src {
 			try {
 				var plotTracker = 1;
 				foreach (var plot in _plots) {
-					plot.SaveFig($@"{savePath}\{name}{plotTracker}{Constants.PNG_EXTENSION}");
+					plot.SaveFig($@"{savePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
 					plotTracker++;
 				}
 
@@ -326,6 +329,12 @@ namespace simple_plotting.src {
 		}
 
 		/// <summary>
+		///  Exposes post processing API.
+		/// </summary>
+		/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+		public IPlotBuilderFluent_PostProcess PostProcess() => this;
+
+		/// <summary>
 		///  Helper method to return back to the product.
 		/// </summary>
 		/// <returns>Instance product</returns>
@@ -339,13 +348,23 @@ namespace simple_plotting.src {
 		/// <param name="xOff">x-offset (from lower-left of plot)</param>
 		/// <param name="yOff">y-offset (from the lower-left of the plot)</param>
 		/// <returns></returns>
-		public IPlotBuilderFluent_Tools WithAnnotationAt(string annotation, Plot plot, float xOff, float yOff) {
+		public IPlotBuilderFluent_PostProcess WithAnnotationAt(string annotation, Plot plot, float xOff, float yOff) {
 			var a =plot.AddAnnotation(annotation, Alignment.LowerLeft);
 			a.Border  = true;
 			a.BorderWidth = 1;
 			a.MarginX = xOff;
 			a.MarginY = yOff;
 
+			return this;
+		}
+
+		/// <summary>
+		///  Sets the size of all plots.
+		/// </summary>
+		/// <param name="size">New plot size</param>
+		/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+		public IPlotBuilderFluent_PostProcess SetSizeOfAll(PlotSize size) {
+			PlotHelper.SetSizeOfAll(_plots, size);
 			return this;
 		}
 
@@ -428,8 +447,60 @@ namespace simple_plotting.src {
 			_plots[plotTracker].AddScatterLines(dateTimes, values, label: channel.ChannelIdentifier);
 			_plots[plotTracker].XAxis.DateTimeFormat(true);
 			_plots[plotTracker].YAxis2.SetSizeLimit(min: 40);
-
+			var tst = _plots[plotTracker].GetPlottables();
+			
 			plotTracker++;
+		}
+
+		/// <summary>
+		///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
+		///  This version REQUIRES you call Render() on the appropriate plot.
+		/// </summary>
+		/// <param name="plot">IPlottable to change the label fro</param>
+		/// <param name="newLabel">New label</param>
+		/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+		public IPlotBuilderFluent_PostProcess SetScatterLabel(IPlottable? plot, string newLabel) {
+			if (plot is null)
+				return this;
+			
+			var scatterPlot = (ScatterPlot)plot;
+			scatterPlot.Label = newLabel;
+			return this;
+		}
+		
+		/// <summary>
+		///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
+		///  This method will invoke Render() on the plot.
+		/// </summary>
+		/// <param name="newLabel">New label</param>
+		/// <param name="plottableIndex">Plottable index to adjust label for</param>
+		/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+		/// <exception cref="NullReferenceException">Thrown if plottable cast fails</exception>
+		public IPlotBuilderFluent_PostProcess TrySetScatterLabel(string newLabel, params int[] plottableIndex) {
+			var plotList = new List<Plot>();
+			
+			foreach (var index in plottableIndex) {
+				if (index > _plots.Count)
+					throw new IndexOutOfRangeException();
+				
+				plotList.Add(_plots[index]);
+			}
+
+			if (!plotList.Any())
+				throw new Exception(Message.EXCEPTION_CANNOT_FIND_PLOTS);
+			
+			foreach (var p in plotList) {
+				var scatterPlot = (ScatterPlot)p.GetPlottables()[0];
+				
+				if (scatterPlot == null) {
+					throw new NullReferenceException($"{Message.EXCEPTION_CANNOT_CAST_PLOTTABLE} {plottableIndex}");
+				}
+
+				scatterPlot.Label = newLabel;
+				p.Render();
+			}	
+			
+			return this;
 		}
 
 		/// <summary>
