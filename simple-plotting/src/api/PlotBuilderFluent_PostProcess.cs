@@ -91,11 +91,19 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
+	/// <summary>
+	///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
+	///  This method will invoke Render() on the plot.
+	///  This version will set the label for all plots.
+	/// </summary>
+	/// <param name="newLabel">New label</param>
+	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+	/// <exception cref="NullReferenceException">Thrown if plottable cast fails</exception>
 	public IPlotBuilderFluentPostProcess TrySetScatterLabelAll(string newLabel) {
-		var indices = new int[_plots.Count];
+		var indices = new int[_data.Count];
 
 		for (var i = 0; i < indices.Length; i++) {
-			indices[0] = i;
+			indices[i] = i;
 		}
 
 		return TrySetScatterLabel(newLabel, indices);
