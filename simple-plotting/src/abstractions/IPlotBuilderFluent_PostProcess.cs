@@ -49,4 +49,19 @@ public interface IPlotBuilderFluentPostProcess {
 	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
 	/// <exception cref="NullReferenceException">Thrown if plottable cast fails</exception>
 	IPlotBuilderFluentPostProcess TrySetScatterLabel(string newLabel, params int[] plottableIndex);
+
+	/// <summary>
+	///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
+	///  This method will invoke Render() on the plot.
+	///  This version will set the label for all plots.
+	/// </summary>
+	/// <param name="newLabel">New label</param>
+	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+	/// <exception cref="NullReferenceException">Thrown if plottable cast fails</exception>
+	IPlotBuilderFluentPostProcess TrySetScatterLabelAll(string newLabel);
+    
+	/// <summary>
+	/// Invokes Render on all plots.
+	/// </summary>
+	IPlotBuilderFluentPostProcess RefreshRenderers();
 }

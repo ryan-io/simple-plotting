@@ -136,15 +136,6 @@ namespace simple_plotting.src {
 		}
 
 		/// <summary>
-		/// Invokes Render on all plots.
-		/// </summary>
-		void RefreshRender() {
-			foreach (var plot in _plots) {
-				plot.Render();
-			}
-		}
-
-		/// <summary>
 		///  Create a new PlotBuilderFluent instance. This is the entry point for the fluent API. Requires parsed CSV data
 		///  This will throw an <see cref="ArgumentException"/> if the data is null or empty.
 		/// </summary>

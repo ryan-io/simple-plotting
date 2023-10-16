@@ -53,26 +53,30 @@ public partial class PlotBuilderFluent {
 
 		var scatterPlot = (ScatterPlot)plot;
 		scatterPlot.Label = newLabel;
-		RefreshRender();
-		
+		RefreshRenderers();
+
 		return this;
 	}
 
 	/// <summary>
 	///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
 	///  This method will invoke Render() on the plot.
+	///  Plottable index is 0-based and is in sequential order of generated plots
 	/// </summary>
 	/// <param name="newLabel">New label</param>
 	/// <param name="plottableIndex">Plottable index to adjust label for</param>
 	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
 	/// <exception cref="NullReferenceException">Thrown if plottable cast fails</exception>
 	public IPlotBuilderFluentPostProcess TrySetScatterLabel(string newLabel, params int[] plottableIndex) {
+		if (string.IsNullOrWhiteSpace(newLabel))
+			throw new NullReferenceException(Message.EXCEPTION_NO_PLOT_LABEL_SPECIFIED);
+		
 		var plottables = GetPlottablesAs<ScatterPlot>();
 
 		foreach (var plotty in plottables) {
 			if (plotty.IsNullOrEmpty())
 				continue;
-			
+
 			foreach (var index in plottableIndex) {
 				if (index > plotty.Count)
 					continue;
@@ -81,9 +85,30 @@ public partial class PlotBuilderFluent {
 				scatter.Label = newLabel;
 			}
 		}
-		
-		RefreshRender();
-		
+
+		RefreshRenderers();
+
+		return this;
+	}
+
+	public IPlotBuilderFluentPostProcess TrySetScatterLabelAll(string newLabel) {
+		var indices = new int[_plots.Count];
+
+		for (var i = 0; i < indices.Length; i++) {
+			indices[0] = i;
+		}
+
+		return TrySetScatterLabel(newLabel, indices);
+	}
+
+	/// <summary>
+	/// Invokes Render on all plots.
+	/// </summary>	
+	public IPlotBuilderFluentPostProcess RefreshRenderers() {
+		foreach (var plot in _plots) {
+			plot.Render();
+		}
+
 		return this;
 	}
 }

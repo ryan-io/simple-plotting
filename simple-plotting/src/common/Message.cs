@@ -37,5 +37,7 @@
 		public const string EXCEPTION_CANNOT_FIND_PLOTS = "No plots were found for the specified index(es).";
 		
 		public const string EXCEPTION_INDEX_OUT_OF_RANGE = "Index is out of range.";
+		
+		public const string EXCEPTION_NO_PLOT_LABEL_SPECIFIED = "No plot label was specified.";
 	}
 }
