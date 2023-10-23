@@ -22,8 +22,9 @@ namespace simple_plotting.runtime {
 		///  Parses, extracts, and returns the data from the CSV file.  
 		/// </summary>
 		/// <param name="fileName">Name of file to parse</param>
+		/// <param name="cancellationToken">Optional cancelltation token to stop the task</param>
 		/// <returns>Readonly list of PlotChannel</returns>
-		public async Task<IReadOnlyList<PlotChannel>?> ExtractAsync(string fileName) {
+		public async Task<IReadOnlyList<PlotChannel>?> ExtractAsync(string fileName, CancellationToken? cancellationToken = default) {
 			try {
 				if (string.IsNullOrWhiteSpace(fileName))
 					return default;
@@ -33,7 +34,7 @@ namespace simple_plotting.runtime {
 				using var sr   = new StreamReader($@"{Path}\{fileName}");
 				using var csvr = new CsvReader(sr, _configuration);
 
-				await _strategy.Strategy(output, csvr);
+				await _strategy.StrategyAsync(output, csvr, cancellationToken);
 
 				return output;
 			}
@@ -104,8 +105,9 @@ namespace simple_plotting.runtime {
 		/// </summary>
 		/// <param name="output">Pre-allocated collection of PlotChannel</param>
 		/// <param name="csvr">Instance of Csv Reader</param>
+		/// <param name="cancellationToken">Cancellation token for cancelling the awaitable task</param>
 		/// <returns>An awaitable task</returns>
-		Task Strategy(List<PlotChannel> output, CsvReader csvr);
+		Task StrategyAsync(List<PlotChannel> output, CsvReader csvr, CancellationToken? cancellationToken = default);
 	}
 
 	/// <summary>

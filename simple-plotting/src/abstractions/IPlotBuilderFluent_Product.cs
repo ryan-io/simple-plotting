@@ -1,6 +1,7 @@
 // simple-plotting
 
 using ScottPlot;
+using ScottPlot.Plottable;
 
 namespace simple_plotting.src;
 
@@ -19,14 +20,23 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent {
 	/// <returns>Enumerable of strings containing names extracted from plots</returns>
 	IEnumerable<string> GetScatterPlotLabels(int plotIndex);
 
-	/// <summary>
-	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
-	/// </summary>
-	/// <param name="savePath">Directory to save plots</param>
-	/// <param name="name">Name of each plot</param>
-	/// <returns>True if could write (save) to directory, otherwise false</returns>
-	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	bool TrySave(string savePath, string name);
+    /// <summary>
+    ///  Helper method that returns an enumerable of an enumerable of type T
+    ///  This is used to extract the plottables from the plots.
+    ///  This method invokes OfType with the generic type T.
+    /// </summary>
+    /// <typeparam name="T">Class that implements IPlottable</typeparam>
+    /// <returns>Enumerable of enumerables containing the plottables as type T</returns>
+    IEnumerable<T> GetPlottablesAs<T> (int plotIndex) where T : class, IPlottable;
+
+    /// <summary>
+    ///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
+    /// </summary>
+    /// <param name="savePath">Directory to save plots</param>
+    /// <param name="name">Name of each plot</param>
+    /// <returns>True if could write (save) to directory, otherwise false</returns>
+    /// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
+    bool TrySave(string savePath, string name);
 
 	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.

@@ -31,7 +31,7 @@ public partial class PlotBuilderFluent {
 
 		var plotTracker = 1;
 		foreach (var plot in _plots) {
-			plot.Title($"{title}_{plotTracker}");
+			plot.Title($"{title} - #{plotTracker}");
 			plotTracker++;
 		}
 
@@ -198,6 +198,23 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <summary>
+	///  Sets the margins of the plot. This affects the actual data area of the plot.
+	///  This overload takes four parameters for each side of the plot
+	/// </summary>
+	/// <param name="right">Float-right padding</param>
+	/// <param name="top">Float-top padding</param>
+	/// <param name="bottom">Float-bottom padding</param>
+	/// <param name="left">Float-left padding</param>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration SetDataPadding(float right, float top , float bottom , float left ) {
+		foreach (var plot in _plots) {
+			plot.Layout(left, right, bottom, top);
+		}
+
+		return this;
+	}
+
+	/// <summary>
 	///  Sets the SourcePath property to Source.Path. This is used to save the plot(s) to the same directory as the source.
 	/// </summary>
 	/// <param name="source">IPlotChannelProviderSource, typically derivation of CsvParser.Path</param>
@@ -215,7 +232,7 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <param name="path">Standalone file path to try-save plots at</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration DefineSource(string path) {
+	public IPlotBuilderFluentConfiguration DefineSource (string path) {
 		if (string.IsNullOrWhiteSpace(path))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -223,12 +240,46 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
-	/// <summary>
-	///  Finalizes the configuration of the plot. This should be the last call in the fluent API.
-	///  This allows you to call Produce().
-	/// </summary>
-	/// <returns>Fluent interface allowing consumer to Produce()</returns>
-	public IPlotBuilderFluentReadyToProduce FinalizeConfiguration() => this;
+    /// <summary>
+    ///  Determines the uppwer and lower y-axis limits
+    ///  </summary>	
+    ///  <returns>Fluent builder</returns>
+    public IPlotBuilderFluentConfiguration SetPlotLimits () {
+        /// </summary>
+        var calc = new PlotLimitCalculator();
+        var limits = calc.Calculate(_data);
+
+        foreach (var plot in _plots) {
+            plot.SetAxisLimitsY(limits.Lower, limits.Upper);
+        }
+
+        return this;
+    }
+
+    /// <summary>
+	///  Determines the uppwer and lower y-axis limits
+	///  This overload takes into account default upper and lower values
+	///  </summary>
+	///  <param name="lower">Nullable lower limit; calculator will not go above this value (if not null)</param>
+	///  <param name="upper">Nullable upper limit; calculator will not go below this value (if not null)</param>
+    public IPlotBuilderFluentConfiguration SetPlotLimits (double? upper, double? lower) {
+        /// </summary>
+        var calc = new PlotLimitCalculator(upper, lower);
+        var limits = calc.Calculate(_data);
+
+        foreach (var plot in _plots) {
+            plot.SetAxisLimitsY(limits.Lower, limits.Upper);
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    ///  Finalizes the configuration of the plot. This should be the last call in the fluent API.
+    ///  This allows you to call Produce().
+    /// </summary>
+    /// <returns>Fluent interface allowing consumer to Produce()</returns>
+    public IPlotBuilderFluentReadyToProduce FinalizeConfiguration() => this;
 
 	/// <summary>
 	///  Register an action to be invoked when the plot is produced.

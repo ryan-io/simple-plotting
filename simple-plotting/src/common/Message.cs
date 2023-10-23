@@ -1,4 +1,6 @@
-﻿namespace simple_plotting.src {
+﻿using System.Reflection.Metadata;
+
+namespace simple_plotting.src {
 	/// <summary>
 	///  Constant messages used throughout the application. Typical to call when throwing exceptions.
 	/// </summary>
@@ -39,5 +41,15 @@
 		public const string EXCEPTION_INDEX_OUT_OF_RANGE = "Index is out of range.";
 		
 		public const string EXCEPTION_NO_PLOT_LABEL_SPECIFIED = "No plot label was specified.";
-	}
+
+		public const string EXCEPTION_NO_PLOT_ENUMERABLES_LIMIT_CAL = "'Channels' parameter was empty. Cannot determine limits";
+
+		public const string EXCEPTION_CANNOT_CREATE_GENERIC_PLOTTABLE = "Could not create a new plottable through reflection. Check " +
+			"the provided 'constructorArgs' and ensure the type you are trying to instantiate contains a constructor with identical " +
+			"provided objects in 'constructorArgs'.";
+
+        public const string EXCEPTION_CAST_PLOTTABLE_ACTIVATOR_INSTANCES = "Cannot cast the object created via Activator.CreateInstance(). Ensure an appropriate type & object constructor has been passed.";
+
+		public const string EXCEPTION_SUPPLIED_TOKEN_NULL = "Supplied token is null.";
+    }
 }

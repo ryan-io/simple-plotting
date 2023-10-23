@@ -26,14 +26,35 @@ public partial class PlotBuilderFluent {
 		return output;
 	}
 
-	/// <summary>
-	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
-	/// </summary>
-	/// <param name="savePath">Directory to save plots</param>
-	/// <param name="name">Name of each plot</param>
-	/// <returns>True if could write (save) to directory, otherwise false</returns>
-	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	public bool TrySave(string savePath, string name) {
+    /// <summary>
+    ///  Helper method that returns an enumerable of type T that implements IPlottable.
+    ///  This method invokes OfType with the generic type T.
+    ///  It requires an index to the plot to extract the plottables from.
+    /// </summary>
+    /// <param name="plotIndex">Index of plot to get</param>
+    /// <typeparam name="T">Class that implements IPlottable</typeparam>
+    /// <returns>Enumerable containing the plottables as type T</returns>
+    /// <exception cref="IndexOutOfRangeException">Thrown if index > plot count</exception>
+    public IEnumerable<T> GetPlottablesAs<T> (int plotIndex) where T : class, IPlottable {
+        if (plotIndex > _plots.Count)
+            throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
+
+        var plottables = new List<T>();
+        var plot = _plots[plotIndex];
+
+        plottables.AddRange(plot.GetPlottables().OfType<T>().ToList());
+
+        return plottables;
+    }
+
+    /// <summary>
+    ///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
+    /// </summary>
+    /// <param name="savePath">Directory to save plots</param>
+    /// <param name="name">Name of each plot</param>
+    /// <returns>True if could write (save) to directory, otherwise false</returns>
+    /// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
+    public bool TrySave(string savePath, string name) {
 		if (string.IsNullOrWhiteSpace(savePath) || string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 

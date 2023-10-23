@@ -16,6 +16,7 @@
 		public const int DEFAULT_HEIGHT   = 1080; // default height of the plot
 		public const int HEADER_START_ROW = 11;   // index of the header row in the CSV file
 		public const int DATA_START_ROW   = 12;   // index of the first data row in the CSV file
+		public const int DATA_INTERVAL_ROW = 6;   // index of the row containing sample rate
 
 		public const double MAX_DATA_VALUE = 200; // maximum value for data
 		public const double MIN_DATA_VALUE = -80; // minimum value for data

@@ -72,7 +72,7 @@ namespace simple_plotting.src {
 					if (batchedRecord == null)
 						continue;
 
-					ProcessChannelRecord(batchedRecord, ref plotTracker, channel);
+					ProcessChannelRecord<ScatterPlot>(batchedRecord, ref plotTracker, channel);
 				}
 			}
 		}
@@ -83,18 +83,68 @@ namespace simple_plotting.src {
 		/// <param name="batchedRecord">Current batched record</param>
 		/// <param name="plotTracker">Iteration tracker</param>
 		/// <param name="channel">Current channel being enumerated</param>
-		void ProcessChannelRecord(IEnumerable<PlotChannelRecord> batchedRecord, ref int plotTracker, PlotChannel
-			channel) {
+		void ProcessChannelRecord<T>(
+			IEnumerable<PlotChannelRecord> batchedRecord,
+			ref int plotTracker,
+			PlotChannel channel) where T : class, IPlottable {
 			var batchedArray = batchedRecord.ToArray();
 			var dateTimes    = batchedArray.Select(x => x.DateTime.ToOADate()).ToArray();
 			var values       = batchedArray.Select(v => v.Value).ToArray();
 
-			_plots[plotTracker].AddScatterLines(dateTimes, values, label: channel.ChannelIdentifier);
-			_plots[plotTracker].XAxis.DateTimeFormat(true);
-			_plots[plotTracker].YAxis2.SetSizeLimit(min: 40);
+			var objs = new object[] { dateTimes, values, null, null };
 
+			var plottableFactory = PlottableFactory.StartNew().PrimeProduct(_plots[plotTracker], ref objs);
+			plottableFactory.AddScatterPlot(channel.Color, channel.ChannelIdentifier);
+			// var callback = (T p) => {
+			//     if (typeof(T) != typeof(ScatterPlot))
+			//         return;
+			//     
+			//     if (p is not ScatterPlot sPlot)
+			//         throw new InvalidCastException(Message.EXCEPTION_CAST_PLOTTABLE_ACTIVATOR_INSTANCES);
+			//
+			//     sPlot.Color = channel.Color;
+			//     sPlot.LineWidth = 1;
+			//     sPlot.MarkerSize = 0;
+			//     sPlot.Label = channel.ChannelIdentifier;
+			//     sPlot.LineStyle = LineStyle.Solid;
+			// };
+			//
+			// AddPlotOfType(_plots[plotTracker], objs, callback);
+
+			_plots[plotTracker].XAxis.DateTimeFormat(true);
+			_plots[plotTracker].YAxis2.SetSizeLimit();
 
 			plotTracker++;
+		}
+
+		/// <summary>
+		///  Adds a generic plot of type T.
+		///  object[] elements should match a constructor overload of type T for the plot you are trying to add.
+		/// </summary>
+		/// <param name="plot">Plot to add a graph to</param>
+		/// <param name="constructorArgs">object array matching a constructor signature</param>
+		/// <param name="creationCallback"></param>
+		/// <typeparam name="T">Class & implements IPlottable</typeparam>
+		/// <exception cref="Exception">Thrown if plottable T cannot be created</exception>
+		/// <exception cref="InvalidCastException">Thrown if the cast to IPlottable fails</exception>
+		void AddPlotOfType<T>(Plot plot, object[] constructorArgs, Action<T>? creationCallback = null)
+			where T : class, IPlottable {
+			if (constructorArgs.Length == 0)
+				return;
+
+			var plottable = Activator.CreateInstance(typeof(T), constructorArgs);
+
+			if (plottable == null)
+				throw new Exception(Message.EXCEPTION_CANNOT_CREATE_GENERIC_PLOTTABLE);
+
+			var castedPlottable = (T)plottable;
+
+			if (castedPlottable == null)
+				throw new InvalidCastException(Message.EXCEPTION_CANNOT_CREATE_GENERIC_PLOTTABLE);
+
+			creationCallback?.Invoke(castedPlottable);
+			plot.Add(castedPlottable);
+			plot.Render();
 		}
 
 		/// <summary>
@@ -110,27 +160,6 @@ namespace simple_plotting.src {
 			foreach (var p in _plots) {
 				plottables.Add(p.GetPlottables().OfType<T>().ToList());
 			}
-
-			return plottables;
-		}
-
-		/// <summary>
-		///  Helper method that returns an enumerable of type T that implements IPlottable.
-		///  This method invokes OfType with the generic type T.
-		///  It requires an index to the plot to extract the plottables from.
-		/// </summary>
-		/// <param name="plotIndex">Index of plot to get</param>
-		/// <typeparam name="T">Class that implements IPlottable</typeparam>
-		/// <returns>Enumerable containing the plottables as type T</returns>
-		/// <exception cref="IndexOutOfRangeException">Thrown if index > plot count</exception>
-		IEnumerable<T> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable {
-			if (plotIndex > _plots.Count)
-				throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
-
-			var plottables = new List<T>();
-			var plot       = _plots[plotIndex];
-
-			plottables.AddRange(plot.GetPlottables().OfType<T>().ToList());
 
 			return plottables;
 		}

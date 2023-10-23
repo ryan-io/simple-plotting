@@ -6,88 +6,123 @@ using simple_plotting.src;
 using static simple_plotting.src.Constants;
 
 namespace simple_plotting.runtime {
-	public class DefaultCsvParseStrategy : ICsvParseStrategy {
-		StringBuilder Sb { get; } = new();
+    /// <summary>
+    ///  Base class for implementing Csv parsing logic. This class implements ICsvParseStrategy
+    /// </summary>
+    public abstract class CsvParseStrategy : ICsvParseStrategy {
+        /// <summary>
+        ///  The core method to override and provide implementation details for
+        /// </summary>
+        /// <param name="output">Awaitable task</param>
+        /// <param name="csvr">CsvReader that is supplied by the CsvParser</param>
+        /// <returns></returns>
+        public abstract Task StrategyAsync (List<PlotChannel> output, CsvReader csvr, CancellationToken? cancellationToken = default);
+    }
 
-		public async Task Strategy(List<PlotChannel> output, CsvReader csvr) {
-			try {
-				SkipRows(csvr, HEADER_START_ROW);
-				csvr.ReadHeader();
+    public class DefaultCsvParseStrategy : CsvParseStrategy {
+        StringBuilder Sb { get; } = new();
 
-				if (csvr.HeaderRecord == null)
-					throw new Exception(Message.EXCEPTION_NO_HEADER);
+        double? SampleRate { get; set; }
 
-				var channelsToParse = csvr.HeaderRecord.Length - 3;
+        public async override Task StrategyAsync (List<PlotChannel> output, CsvReader csvr, CancellationToken? cancellationToken = default) {
+            try {
+                const int SkipFourRows = 4;
+                const int SkipSixRows = 6;
 
-				for (var i = 0; i < channelsToParse; i++) {
-					output.Add(new PlotChannel(csvr.HeaderRecord[3 + i], PlotChannelType.Temperature));
-				}
+                SkipRowsNumberOfRows(csvr, SkipSixRows);
 
-				DateTime date     = DateTime.Now;
-				bool     hasValue = false;
-				double   value    = 0.0d;
+                csvr.Read();
+                SampleRate = CsvParserHelper.ExtractSampleRate(csvr[1]);
 
-				while (await csvr.ReadAsync()) {
-					Sb.Clear();
-					Sb.Append(csvr[0]); // csvr[0] = date
-					Sb.Append(SPACE_CHAR);
-					Sb.Append(csvr[1]); // csvr[1] = time
+                SkipRowsNumberOfRows(csvr, SkipFourRows);
 
-					// csvr[2] = IGNORE (mSec)
+                csvr.ReadHeader();
 
-					date = ParseDate();
+                if (csvr.HeaderRecord == null)
+                    throw new Exception(Message.EXCEPTION_NO_HEADER);
 
-					// csvr[...] = channel values
+                var channelsToParse = csvr.HeaderRecord.Length - 3;
 
-					for (var i = 0; i < channelsToParse; i++) {
-						if (string.IsNullOrWhiteSpace(csvr[i]))
-							continue;
+                for (var i = 0; i < channelsToParse; i++) {
+                    if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested) {
+                        break;
+                    }
 
-						hasValue = FastDoubleParser.TryParseDouble(csvr[3 + i], out value);
-						bool isOutside = value < _lowerValueLimit || value > _upperValueLimit;
+                    output.Add(new PlotChannel(csvr.HeaderRecord[3 + i], PlotChannelType.Temperature, SampleRate));
+                }
 
-						if (!hasValue || isOutside) {
-							continue;
-						}
+                const double EPSILON = 5E-6d;
 
-						var record    = new PlotChannelRecord(date, value);
-						var eventData = new PlotEventData(output[i].ChannelIdentifier, record);
+                while (await csvr.ReadAsync()) {
+                    if (cancellationToken.WasCancelled()) {
+                        break;
+                    }
 
-						PlotEvent.OnRecordEnumerated(eventData);
+                    Sb.Clear();
+                    Sb.Append(csvr[0]); // csvr[0] = date
+                    Sb.Append(SPACE_CHAR);
+                    Sb.Append(csvr[1]); // csvr[1] = time
 
-						output[i].AddRecord(record);
-					}
-				}
-			}
-			catch (Exception e) {
-				throw new Exception(Message.EXCEPTION_STRATEGY_FAILED, e);
-			}
-		}
+                    // csvr[2] = IGNORE (mSec)
 
-		/// <summary>
-		///  Helper method to parse a date from a string.
-		/// </summary>
-		/// <returns>ParsedDate</returns>
-		DateTime ParseDate()
-			=> DateTime.ParseExact(Sb.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+                    var date = ParseDate();
 
-		/// <summary>
-		///  Helper method to skip rows in a CSV file.
-		/// </summary>
-		/// <param name="csvr">Pre-allocated Csv reader instance</param>
-		/// <param name="numRows">The number of rows to skip (up to you to manage where this is invoked</param>
-		static void SkipRows(IReader csvr, int numRows) {
-			for (var i = 0; i < numRows; i++) {
-				csvr.Read();
-			}
-		}
+                    // csvr[...] = channel values
 
-		public DefaultCsvParseStrategy(double lowerValueLimit, double upperValueLimit) {
-			_lowerValueLimit = lowerValueLimit;
-			_upperValueLimit = upperValueLimit;
-		}
+                    for (var i = 0; i < channelsToParse; i++) {
+                        if (string.IsNullOrWhiteSpace(csvr[i]))
+                            continue;
 
-		readonly double _lowerValueLimit;
-		readonly double _upperValueLimit;
-	}
+                        if (cancellationToken.WasCancelled()) {
+                            break;
+                        }
+
+                        double value             = FastDoubleParser.ParseDouble(csvr[3 + i]);
+                        bool   isOutside         = value < _lowerValueLimit || value > _upperValueLimit;
+                        bool   isEssentiallyZero = value >= 0.0d - EPSILON && value  <= 0.0d + EPSILON;
+
+                        if ( isOutside || isEssentiallyZero) {
+                            continue;
+                        }
+
+                        var record = new PlotChannelRecord(date, value);
+                        var eventData = new PlotEventData(output[i].ChannelIdentifier, record);
+
+                        PlotEvent.OnRecordEnumerated(eventData);
+
+                        output[i].AddRecord(record);
+                    }
+                }
+            }
+            catch (Exception e) {
+                throw new Exception(Message.EXCEPTION_STRATEGY_FAILED, e);
+            }
+        }
+
+        /// <summary>
+        ///  Helper method to parse a date from a string.
+        /// </summary>
+        /// <returns>ParsedDate</returns>
+        DateTime ParseDate ()
+            => DateTime.ParseExact(Sb.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+
+        /// <summary>
+        ///  Helper method to skip rows in a CSV file.
+        /// </summary>
+        /// <param name="csvr">Pre-allocated Csv reader instance</param>
+        /// <param name="numRows">The number of rows to skip (up to you to manage where this is invoked</param>
+        static void SkipRowsNumberOfRows (IReader csvr, int numRows) {
+            for (var i = 0; i < numRows; i++) {
+                csvr.Read();
+            }
+        }
+
+        public DefaultCsvParseStrategy (double lowerValueLimit, double upperValueLimit) {
+            _lowerValueLimit = lowerValueLimit;
+            _upperValueLimit = upperValueLimit;
+        }
+
+        readonly double _lowerValueLimit;
+        readonly double _upperValueLimit;
+    }
 }

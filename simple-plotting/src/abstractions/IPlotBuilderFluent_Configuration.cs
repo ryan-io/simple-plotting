@@ -123,10 +123,35 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <returns>Fluent builder</returns>
 	IPlotBuilderFluentConfiguration DefineSource(string path);
 
+    /// <summary>
+    ///  Determines the uppwer and lower y-axis limits
+    ///  </summary>	
+	///  <returns>Fluent builder</returns>
+    IPlotBuilderFluentConfiguration SetPlotLimits ();
+
 	/// <summary>
-	///  Finalizes the configuration of the plot. This should be the last call in the fluent API.
-	///  This allows you to call Produce().
+	///  Determines the uppwer and lower y-axis limits
+	///  This overload takes into account default upper and lower values
+	///  </summary>
+	///  <param name="lower">Nullable lower limit; calculator will not go above this value (if not null)</param>
+	///  <param name="upper">Nullable upper limit; calculator will not go below this value (if not null)</param>
+	IPlotBuilderFluentConfiguration SetPlotLimits (double? upper, double? lower);
+
+	/// <summary>
+	///  Sets the margins of the plot. This affects the actual data area of the plot.
+	///  This overload takes four parameters for each side of the plot
 	/// </summary>
-	/// <returns>Fluent interface allowing consumer to Produce()</returns>
-	IPlotBuilderFluentReadyToProduce FinalizeConfiguration();
+	/// <param name="right">Float-right padding</param>
+	/// <param name="top">Float-top padding</param>
+	/// <param name="bottom">Float-bottom padding</param>
+	/// <param name="left">Float-left padding</param>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentConfiguration SetDataPadding(float right, float top, float bottom, float left);
+
+    /// <summary>
+    ///  Finalizes the configuration of the plot. This should be the last call in the fluent API.
+    ///  This allows you to call Produce().
+    /// </summary>
+    /// <returns>Fluent interface allowing consumer to Produce()</returns>
+    IPlotBuilderFluentReadyToProduce FinalizeConfiguration();
 }
