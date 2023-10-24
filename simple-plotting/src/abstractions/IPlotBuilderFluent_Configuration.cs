@@ -1,5 +1,7 @@
 // simple-plotting
 
+using simple_plotting.src.common;
+
 namespace simple_plotting.src;
 
 /// <summary>

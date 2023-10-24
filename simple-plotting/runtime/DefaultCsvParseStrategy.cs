@@ -77,11 +77,11 @@ namespace simple_plotting.runtime {
                             break;
                         }
 
-                        double value             = FastDoubleParser.ParseDouble(csvr[3 + i]);
+                        var hasValue = FastDoubleParser.TryParseDouble(csvr[3 + i], out var value);
                         bool   isOutside         = value < _lowerValueLimit || value > _upperValueLimit;
                         bool   isEssentiallyZero = value >= 0.0d - EPSILON && value  <= 0.0d + EPSILON;
 
-                        if ( isOutside || isEssentiallyZero) {
+                        if ( isOutside || isEssentiallyZero || !hasValue) {
                             continue;
                         }
 

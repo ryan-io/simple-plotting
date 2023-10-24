@@ -3,14 +3,16 @@ using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
 using simple_plotting.src;
+using simple_plotting.src.common;
 
-namespace simple_plotting.runtime {
-	/// <summary>
-	///  Parses a CSV file and extracts the data into a collection of <see cref="PlotChannel" /> instances.
-	///  This is the data provider in MVVM.
-	///  https://github.com/CarlVerret/csFastFloat is used for parsing double values.
-	/// </summary>
-	public class CsvParser : ICsvParser {
+namespace simple_plotting.runtime
+{
+    /// <summary>
+    ///  Parses a CSV file and extracts the data into a collection of <see cref="PlotChannel" /> instances.
+    ///  This is the data provider in MVVM.
+    ///  https://github.com/CarlVerret/csFastFloat is used for parsing double values.
+    /// </summary>
+    public class CsvParser : ICsvParser {
 		StringBuilder Sb { get; } = new StringBuilder();
 
 		/// <summary>

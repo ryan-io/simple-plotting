@@ -38,7 +38,7 @@ public static class Callbacks  {
 		int lineWidth = 1, 
 		int markerSize = 10, 
 		LineStyle lineStyle = LineStyle.Solid) {
-		return new ScatterPlotCallback {
+		return new SignalPlotCallback {
 			LineStyle  = lineStyle,
 			LineWidth  = lineWidth,
 			MarkerSize = markerSize

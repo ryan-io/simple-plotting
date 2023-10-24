@@ -1,5 +1,7 @@
 // simple-plotting
 
+using simple_plotting.src.common;
+
 namespace simple_plotting.src;
 
 public partial class PlotBuilderFluent {
@@ -15,7 +17,7 @@ public partial class PlotBuilderFluent {
 			plot.Width  = container.Width;
 			plot.Height = container.Height;
 		}
-
+		
 		return this;
 	}
 

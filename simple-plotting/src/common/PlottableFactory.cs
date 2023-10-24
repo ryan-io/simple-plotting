@@ -3,164 +3,206 @@ using ScottPlot;
 using ScottPlot.Plottable;
 
 namespace simple_plotting.src {
-	/// <summary>
-	///  Fluent API for resetting the PlottableFactory for creating a plottable
-	/// </summary>
-	public interface IPlottableFactoryReset {
-		/// <summary>
-		///  Resets the factory to an initial state
-		/// </summary>
-		/// <returns>Fluent factory as IPlottablePrime</returns>
-		IPlottablePrime Reset();
-	}
+    /// <summary>
+    ///  Base abstraction for PlottableFactory
+    /// </summary>
+    public interface IPlottableFactory {
+        /// <summary>
+        ///  The type of plottable to graph
+        /// </summary>
+        Type? PlottableType { get; }
+    }
 
-	/// <summary>
-	///  Fluent API for prepping the PlottableFactory for creating a plottable
-	/// </summary>
-	public interface IPlottablePrime {
-		/// <summary>
-		///  Populates the Plot property and constructorArgs in preparation for creating a plottable
-		/// </summary>
-		/// <param name="plot">Plot to add the graph to</param>
-		/// <param name="constructorArgs">object[] with parameters matching your choice of plottable graph construction</param>
-		/// <returns>Fluent factory</returns>
-		IPlottableProduct PrimeProduct(Plot? plot, ref object[] constructorArgs);
-	}
+    /// <summary>
+    ///  Fluent API for resetting the PlottableFactory for creating a plottable
+    /// </summary>
+    public interface IPlottableFactoryReset : IPlottableFactory {
+        /// <summary>
+        ///  Resets the factory to an initial state
+        /// </summary>
+        /// <returns>Fluent factory as IPlottablePrime</returns>
+        IPlottablePrime Reset ();
+    }
 
-	/// <summary>
-	///  Fluent API for adding plottable products to a graph
-	/// </summary>
-	public interface IPlottableProduct {
-		/// <summary>
-		///  Adds a ScatterPlot to plot Plot.
-		/// </summary>
-		/// <param name="color">Color of the line</param>
-		/// <param name="channelName">Legend label for this channel</param>
-		/// <returns>Product containing the scatter plot & factory reference</returns>
-		ScatterPlotProduct? AddScatterPlot(Color color, string channelName);
-		
-		/// <summary>
-		///  Adds a SignalPlot to plot Plot.
-		/// </summary>
-		/// <param name="color">Color of the line</param>
-		/// <param name="channelName">Legend label for this channel</param>
-		/// <returns>Product containing the signal plot & factory reference</returns>
-		SignalPlotProduct?  AddSignalPlot(Color color, string channelName);
-	}
+    /// <summary>
+    ///  Fluent API for prepping the PlottableFactory for creating a plottable
+    /// </summary>
+    public interface IPlottablePrime : IPlottableFactory {
+        /// <summary>
+        ///  Populates the Plot property and constructorArgs in preparation for creating a plottable
+        /// </summary>
+        /// <param name="plot">Plot to add the graph to</param>
+        /// <param name="constructorArgs">object[] with parameters matching your choice of plottable graph construction</param>
+        /// <returns>Fluent factory</returns>
+        IPlottableProduct PrimeProduct (Plot? plot, ref object[] constructorArgs);
+    }
 
-	public class PlottableFactory : IPlottableFactoryReset, IPlottablePrime, IPlottableProduct {
-		Plot? Plot { get; set; }
+    /// <summary>
+    ///  Fluent API for adding plottable products to a graph
+    /// </summary>
+    public interface IPlottableProduct : IPlottableFactory {
+        /// <summary>
+        ///  Use when you want to let the API determine what kind of plottable to graph when OfType is used
+        ///  This method will perform type-checking and determine what factory method from below to call
+        /// </summary>
+        /// <param name="action">Factory method delegatet to invoke</param>
+        /// <returns>Fluent factory</returns>
+        IPlottableFactoryReset AddViaFactoryMethod (Action action);
 
-		bool WasRun { get; set; }
+        /// <summary>
+        ///  Adds a ScatterPlot to plot Plot.
+        /// </summary>
+        /// <param name="color">Color of the line</param>
+        /// <param name="channelName">Legend label for this channel</param>
+        /// <returns>Product containing the scatter plot & factory reference</returns>
+        ScatterPlotProduct? AddScatterPlot (Color color, string channelName);
 
-		object[] ConstructorArgs { get; set; } = Array.Empty<object>();
+        /// <summary>
+        ///  Adds a SignalPlot to plot Plot.
+        /// </summary>
+        /// <param name="color">Color of the line</param>
+        /// <param name="channelName">Legend label for this channel</param>
+        /// <returns>Product containing the signal plot & factory reference</returns>
+        SignalPlotProduct? AddSignalPlotXY (Color color, string channelName);
+    }
 
-		/// <summary>
-		///  Entry point for the plottable factory.
-		/// </summary>
-		/// <returns>Fluent PlottableFactory as IPlottableFactory</returns>
-		public static IPlottablePrime StartNew() => new PlottableFactory();
+    public class PlottableFactory : IPlottableFactory, IPlottableFactoryReset, IPlottablePrime, IPlottableProduct {
+        public Type? PlottableType { get; }
 
-		/// <summary>
-		///  Brings back to the beginning; allows chain calling PrimeProduct
-		/// </summary>
-		/// <returns>Fluent factory</returns>
-		public IPlottablePrime Reset() {
-			WasRun = false;
-			return this;
-		}
+        Plot? Plot { get; set; }
 
-		/// <summary>
-		///  Populates the Plot property and constructorArgs in preparation for creating a plottable
-		/// </summary>
-		/// <param name="plot">Plot to add the graph to</param>
-		/// <param name="constructorArgs">object[] with parameters matching your choice of plottable graph construction</param>
-		/// <returns>Fluent factory</returns>
-		public IPlottableProduct PrimeProduct(Plot? plot, ref object[] constructorArgs) {
-			Plot            = plot;
-			ConstructorArgs = constructorArgs;
-			return this;
-		}
 
-		/// <summary>
-		///  Adds a ScatterPlot to plot Plot.
-		/// </summary>
-		/// <param name="color">Color of the line</param>
-		/// <param name="channelName">Legend label for this channel</param>
-		/// <returns>Product containing the scatter plot & factory reference</returns>
-		public ScatterPlotProduct? AddScatterPlot(Color color, string channelName) {
-			if (WasRun)
-				return new  ScatterPlotProduct(this, default);
-			
-			var scatterPlot = AddPlotOfType<ScatterPlot>(new ScatterPlotCallback());
+        bool WasRun { get; set; }
 
-			if (scatterPlot == null)
-				return default;
+        object[] ConstructorArgs { get; set; } = Array.Empty<object>();
 
-			scatterPlot.Color = color;
-			scatterPlot.Label = channelName;
+        /// <summary>
+        ///  Entry point for the plottable factory.
+        /// </summary>
+        /// <param name="plotType">Type of graph to add to each plot (signal, scatter, etc.)</param>
+        /// <returns>Fluent PlottableFactory as IPlottableFactory</returns>
+        public static IPlottablePrime StartNew<T> () where T : class, IPlottable => new PlottableFactory(typeof(T));
 
-			Finish();
-			return new ScatterPlotProduct(this, scatterPlot);
-		}
+        /// <summary>
+        ///  Brings back to the beginning; allows chain calling PrimeProduct
+        /// </summary>
+        /// <returns>Fluent factory</returns>
+        public IPlottablePrime Reset () {
+            WasRun = false;
+            return this;
+        }
 
-		/// <summary>
-		///  Adds a SignalPlot to plot Plot.
-		/// </summary>
-		/// <param name="color">Color of the line</param>
-		/// <param name="channelName">Legend label for this channel</param>
-		/// <returns>Product containing the signal plot & factory reference</returns>
-		public SignalPlotProduct? AddSignalPlot(Color color, string channelName) {
-			if (WasRun)
-				return new SignalPlotProduct(this, default);
-				
-			var signalPlot = AddPlotOfType<SignalPlot>(new SignalPlotCallback());
+        /// <summary>
+        ///  Populates the Plot property and constructorArgs in preparation for creating a plottable
+        /// </summary>
+        /// <param name="plot">Plot to add the graph to</param>
+        /// <param name="constructorArgs">object[] with parameters matching your choice of plottable graph construction</param>
+        /// <returns>Fluent factory</returns>
+        public IPlottableProduct PrimeProduct (Plot? plot, ref object[] constructorArgs) {
+            Plot = plot;
+            ConstructorArgs = constructorArgs;
+            return this;
+        }
 
-			if (signalPlot == null)
-				return default;
-			
-			signalPlot.Color = color;
-			signalPlot.Label = channelName;
+        /// <summary>
+        ///  Use when you want to let the API determine what kind of plottable to graph when OfType is used
+        ///  This method will perform type-checking and determine what factory method from below to call
+        /// </summary>
+        /// <param name="action">Factory method delegatet to invoke</param>
+        /// <returns>Fluent factory</returns>
+        public IPlottableFactoryReset AddViaFactoryMethod (Action action) {
+            action.Invoke();
+            return this;
+        }
 
-			Finish();
-			return new SignalPlotProduct(this, signalPlot);
-		}
+        /// <summary>
+        ///  Adds a ScatterPlot to plot Plot.
+        /// </summary>
+        /// <param name="color">Color of the line</param>
+        /// <param name="channelName">Legend label for this channel</param>
+        /// <returns>Product containing the scatter plot & factory reference</returns>
+        public ScatterPlotProduct? AddScatterPlot (Color color, string channelName) {
+            if (WasRun)
+                return new ScatterPlotProduct(this, default);
 
-		/// <summary>
-		///  Sets WasRun to true. This is to prevent the factory from being run more than once.
-		/// </summary>
-		void Finish() {
-			WasRun = true;
-		}
+            var scatterPlot = AddPlotOfType<ScatterPlot>(new ScatterPlotCallback());
 
-		/// <summary>
-		///  Adds a generic plot of type T.
-		///  object[] elements should match a constructor overload of type T for the plot you are trying to add.
-		/// </summary>
-		/// <param name="creationCallback">Callback logic specific to the type of graph being added to Plot</param>
-		/// <typeparam name="T">Class & implements IPlottable</typeparam>
-		/// <exception cref="Exception">Thrown if plottable T cannot be created</exception>
-		/// <exception cref="InvalidCastException">Thrown if the cast to IPlottable fails</exception>
-		public T? AddPlotOfType<T>(IPlotCallback? creationCallback = null)
-			where T : class, IPlottable {
-			if (ConstructorArgs.Length == 0 || Plot == null)
-				return default;
+            if (scatterPlot == null)
+                return default;
 
-			var plottable = Activator.CreateInstance(typeof(T), ConstructorArgs);
+            scatterPlot.Color = color;
+            scatterPlot.Label = channelName;
 
-			if (plottable == null)
-				throw new Exception(Message.EXCEPTION_CANNOT_CREATE_GENERIC_PLOTTABLE);
+            Finish();
+            return new ScatterPlotProduct(this, scatterPlot);
+        }
 
-			var castedPlottable = (T)plottable;
+        /// <summary>
+        ///  Adds a SignalPlot to plot Plot. This method (suffix 'XY') will adjust the sample rate b
+        /// </summary>
+        /// <param name="color">Color of the line</param>
+        /// <param name="channelName">Legend label for this channel</param>
+        /// <returns>Product containing the signal plot & factory reference</returns>
+        public SignalPlotProduct? AddSignalPlotXY (Color color, string channelName) {
+            if (WasRun)
+                return new SignalPlotProduct(this, default);
 
-			if (castedPlottable == null)
-				throw new InvalidCastException(Message.EXCEPTION_CANNOT_CREATE_GENERIC_PLOTTABLE);
+            var signalPlot = AddPlotOfType<SignalPlotXY>(new SignalPlotCallback());
+            
+            if (signalPlot == null)
+                return default;
 
-			creationCallback?.Callback(castedPlottable);
-			Plot.Add(castedPlottable);
-			Plot.Render();
+            signalPlot.Color = color;
+            signalPlot.Label = channelName;
 
-			return castedPlottable;
-		}
-	}
+            Finish();
+            return new SignalPlotProduct(this, signalPlot);
+        }
+
+        /// <summary>
+        ///  Sets WasRun to true. This is to prevent the factory from being run more than once.
+        /// </summary>
+        void Finish () {
+            WasRun = true;
+        }
+
+        /// <summary>
+        ///  Adds a generic plot of type T.
+        ///  object[] elements should match a constructor overload of type T for the plot you are trying to add.
+        /// </summary>
+        /// <param name="creationCallback">Callback logic specific to the type of graph being added to Plot</param>
+        /// <typeparam name="T">Class & implements IPlottable</typeparam>
+        /// <exception cref="Exception">Thrown if plottable T cannot be created</exception>
+        /// <exception cref="InvalidCastException">Thrown if the cast to IPlottable fails</exception>
+        public T? AddPlotOfType<T> (IPlotCallback? creationCallback = null)
+            where T : class, IPlottable {
+            if (ConstructorArgs.Length == 0 || Plot == null)
+                return default;
+
+            var plottable = Activator.CreateInstance(typeof(T), ConstructorArgs);
+
+            if (plottable == null)
+                throw new Exception(Message.EXCEPTION_CANNOT_CREATE_GENERIC_PLOTTABLE);
+
+            var castedPlottable = (T)plottable;
+
+            if (castedPlottable == null)
+                throw new InvalidCastException(Message.EXCEPTION_CANNOT_CREATE_GENERIC_PLOTTABLE);
+            
+            creationCallback?.Callback(castedPlottable);
+            Plot.Add(castedPlottable);
+            Plot.Render();
+
+            return castedPlottable;
+        }
+
+        /// <summary>
+        ///  Base constructor. Sets PlottableType
+        /// </summary>
+        /// <param name="plotType"></param>
+        public PlottableFactory (Type plotType) {
+            PlottableType = plotType;
+        }
+
+    }
 }

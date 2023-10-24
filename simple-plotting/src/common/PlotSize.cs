@@ -15,6 +15,7 @@ namespace simple_plotting.src {
 		S1280X800,
 		S1280X720,
 		S1024X768,
+		S900x600,
 		S800X480,
 		S640X480,
 		S480X320,

@@ -1,6 +1,7 @@
 using ScottPlot.Plottable;
 
 namespace simple_plotting.src {
+	// TODO: Add documentation
 	public readonly struct ScatterPlotProduct  {
 		public IPlottableFactoryReset Factory     { get; }
 		public ScatterPlot?           ScatterPlot { get; }
@@ -13,11 +14,11 @@ namespace simple_plotting.src {
 
 	public readonly struct SignalPlotProduct {
 		public IPlottableFactoryReset Factory    { get; }
-		public SignalPlot?            SignalPlot { get; }
+		public SignalPlotXY?            SignalPlot { get; }
 
-		public SignalPlotProduct(IPlottableFactoryReset factory, SignalPlot? scatterPlot) {
+		public SignalPlotProduct(IPlottableFactoryReset factory, SignalPlotXY? signalPlot) {
 			Factory    = factory;
-			SignalPlot = scatterPlot;
+			SignalPlot = signalPlot;
 		}
 	}
 }

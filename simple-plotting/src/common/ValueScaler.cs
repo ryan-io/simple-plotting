@@ -1,4 +1,6 @@
 ﻿namespace simple_plotting.src {
+    // TODO: Add documentation
+
     public static class ValueScaler {
         public static void ScaleByRef (ref double? value, double percentScale) {
             if (value == null)

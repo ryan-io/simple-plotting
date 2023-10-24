@@ -53,7 +53,11 @@
 					width  = 1024;
 					height = 768;
 					break;
-				case PlotSize.S800X480:
+				case PlotSize.S900x600:
+					width = 900;
+					height = 600;
+					break;
+                case PlotSize.S800X480:
 					width  = 800;
 					height = 480;
 					break;

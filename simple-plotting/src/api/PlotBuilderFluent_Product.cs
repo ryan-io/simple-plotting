@@ -112,7 +112,7 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <param name="data">New data to populate the builder with</param>
 	/// <returns>Fluent builder in a reset state</returns>
-	public IPlotBuilderFluentConfiguration Reset(IReadOnlyList<PlotChannel> data) {
+	public IPlotBuilderFluentOfType Reset(IReadOnlyList<PlotChannel> data) {
 		return StartNew(data);
 	}
 }

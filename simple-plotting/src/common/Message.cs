@@ -51,5 +51,7 @@ namespace simple_plotting.src {
         public const string EXCEPTION_CAST_PLOTTABLE_ACTIVATOR_INSTANCES = "Cannot cast the object created via Activator.CreateInstance(). Ensure an appropriate type & object constructor has been passed.";
 
 		public const string EXCEPTION_SUPPLIED_TOKEN_NULL = "Supplied token is null.";
+
+		public const string EXCEPTION_NO_PLOTTABLE_FAC_METHOD = "Could not determine an appropraite factory delegate for the provided plottable type";
     }
 }

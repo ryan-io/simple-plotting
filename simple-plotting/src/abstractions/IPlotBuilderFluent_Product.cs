@@ -64,5 +64,5 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent {
 	/// </summary>
 	/// <param name="data">New data to populate the builder with</param>
 	/// <returns>Fluent builder in a reset state</returns>
-	IPlotBuilderFluentConfiguration Reset(IReadOnlyList<PlotChannel> data);
+	IPlotBuilderFluentOfType Reset(IReadOnlyList<PlotChannel> data);
 }
