@@ -3,7 +3,6 @@ using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
 using simple_plotting.src;
-using simple_plotting.src.common;
 
 namespace simple_plotting.runtime
 {
