@@ -1,5 +1,4 @@
-﻿using NAMESPACE;
-using ScottPlot;
+﻿using ScottPlot;
 
 namespace simple_plotting.src;
 
