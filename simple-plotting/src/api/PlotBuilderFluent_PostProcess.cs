@@ -13,24 +13,6 @@ public partial class PlotBuilderFluent {
 	public IPlotBuilderFluentProduct GoToProduct() => this;
 
 	/// <summary>
-	///  Adds an annotation to a plot at xOff, yOff.
-	/// </summary>
-	/// <param name="annotation">String text to display in annotation</param>
-	/// <param name="plot">Plot to annotate</param>
-	/// <param name="xOff">x-offset (from lower-left of plot)</param>
-	/// <param name="yOff">y-offset (from the lower-left of the plot)</param>
-	/// <returns></returns>
-	public IPlotBuilderFluentPostProcess WithAnnotationAt(string annotation, Plot plot, float xOff, float yOff) {
-		var a = plot.AddAnnotation(annotation, Alignment.LowerLeft);
-		a.Border      = true;
-		a.BorderWidth = 1;
-		a.MarginX     = xOff;
-		a.MarginY     = yOff;
-
-		return this;
-	}
-
-	/// <summary>
 	///  Sets the size of all plots.
 	/// </summary>
 	/// <param name="size">New plot size</param>

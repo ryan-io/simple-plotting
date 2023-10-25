@@ -12,10 +12,18 @@ public partial class PlotBuilderFluent {
 	public IEnumerable<Plot> GetPlots() => _plots;
 
 	/// <summary>
-	///  Extracts actual channel names from the plots. 
+	///  The generated plots. Queries the plot collection and returns the plot at the specified index.
 	/// </summary>
-	/// <returns>Enumerable of strings containing names extracted from plots</returns>
-	public IEnumerable<string> GetScatterPlotLabels(int plotIndex) {
+	public Plot GetPlot(int plotIndex) {
+		plotIndex.ValidateInRange(_plots);
+		return _plots[plotIndex];
+	}
+
+	/// <summary>
+    ///  Extracts actual channel names from the plots. 
+    /// </summary>
+    /// <returns>Enumerable of strings containing names extracted from plots</returns>
+    public IEnumerable<string> GetScatterPlotLabels(int plotIndex) {
 		List<string> output = new();
 		var plottables = GetPlottablesAs<ScatterPlot>(plotIndex);
 		
@@ -99,13 +107,19 @@ public partial class PlotBuilderFluent {
 	///  Exposes post processing API.
 	/// </summary>
 	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
-	public IPlotBuilderFluentPostProcess PostProcess() => this;
+	public IPlotBuilderFluentPostProcess GotoPostProcess() => this;
 
-	/// <summary>
-	///  Exposes configuration API.
-	/// </summary>
-	/// <returns>Fluent builder as IPlotBuilderFluent_Configuration</returns>
-	public IPlotBuilderFluentConfiguration Configure() => this;
+    /// <summary>
+    ///  Exposes plottables API
+    /// </summary>
+    /// <returns>Fluent builder as  IPlotBuilderFluent_Plottables</returns>
+    public IPlotBuilderFluentPlottables GotoPlottables () => this;
+
+    /// <summary>
+    ///  Exposes configuration API.
+    /// </summary>
+    /// <returns>Fluent builder as IPlotBuilderFluent_Configuration</returns>
+    public IPlotBuilderFluentConfiguration GotoConfiguration() => this;
 
 	/// <summary>
 	///  Resets the builder to an initial state. This is useful if you want to reuse the builder with new data.

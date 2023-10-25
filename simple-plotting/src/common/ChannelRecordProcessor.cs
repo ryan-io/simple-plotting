@@ -17,6 +17,10 @@ public class ChannelRecordProcessor {
 		int plotTracker,
 		PlotChannel channel) {
 		var batchedArray = batchedRecord.ToArray();
+		
+		// the line of code below this comment is opinionated. I prefer to use the OADate format for the x-axis.
+		// this of course is not applicable to all use cases, so you can remove this cast if you wish.
+		// leaving this is as-is as of 25 October 2023.
 		var dateTimes    = batchedArray.Select(x => x.DateTime.ToOADate()).ToArray();
 		var values       = batchedArray.Select(v => v.Value).ToArray();
 

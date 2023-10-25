@@ -16,16 +16,6 @@ public interface IPlotBuilderFluentPostProcess {
 	IPlotBuilderFluentProduct GoToProduct();
 
 	/// <summary>
-	///  Adds an annotation to a plot at xOff, yOff.
-	/// </summary>
-	/// <param name="annotation">String text to display in annotation</param>
-	/// <param name="plot">Plot to annotate</param>
-	/// <param name="xOff">x-offset (from lower-left of plot)</param>
-	/// <param name="yOff">y-offset (from the lower-left of the plot)</param>
-	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
-	IPlotBuilderFluentPostProcess WithAnnotationAt(string annotation, Plot plot, float xOff, float yOff);
-
-	/// <summary>
 	///  Sets the size of all plots.
 	/// </summary>
 	/// <param name="size">New plot size</param>

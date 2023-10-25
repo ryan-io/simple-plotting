@@ -4,6 +4,23 @@
 	/// </summary>
 	internal static class Extensions {
 		/// <summary>
+		///  Ensures a provided integer is within the range of a collection and greater than or equal to zero.
+		/// </summary>
+		/// <param name="integer">Integer to check</param>
+		/// <param name="collection">Collection to compare against</param>
+		/// <typeparam name="T">Generic type parameter 'T'</typeparam>
+		public static void ValidateInRange<T>(this ref int integer, ICollection<T> collection) {
+			if (collection.IsNullOrEmpty())
+				return;
+
+			if (integer < 0)
+				integer = 0;
+
+			else if (integer >= collection.Count)
+				integer = collection.Count - 1;
+		}
+
+		/// <summary>
 		///  Queries a nullable CancellationToken to see if it was cancelled or if it has a value.
 		/// </summary>
 		/// <param name="token">Instance of CancellationToken</param>

@@ -13,6 +13,11 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent {
 	///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.
 	/// </summary>
 	IEnumerable<Plot> GetPlots();
+	
+	/// <summary>
+	///  The generated plots. Queries the plot collection and returns the plot at the specified index.
+	/// </summary>
+	Plot GetPlot(int plotIndex);
 
 	/// <summary>
 	///  Extracts actual channel names from the plots. 
@@ -51,13 +56,15 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent {
 	///  Exposes post processing API.
 	/// </summary>
 	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
-	IPlotBuilderFluentPostProcess PostProcess();
+	IPlotBuilderFluentPostProcess GotoPostProcess();
 
-	/// <summary>
-	///  Exposes configuration API.
-	/// </summary>
-	/// <returns>Fluent builder as IPlotBuilderFluent_Configuration</returns>
-	IPlotBuilderFluentConfiguration Configure();
+	IPlotBuilderFluentPlottables GotoPlottables ();
+
+    /// <summary>
+    ///  Exposes configuration API.
+    /// </summary>
+    /// <returns>Fluent builder as IPlotBuilderFluent_Configuration</returns>
+    IPlotBuilderFluentConfiguration GotoConfiguration();
 
 	/// <summary>
 	///  Resets the builder to an initial state. This is useful if you want to reuse the builder with new data.

@@ -1,34 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <RootNamespace>simple_plotting</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.6</Version>
-    <Title>Simple Plotting</Title>
-    <Authors>ryanio</Authors>
-    <Description>A library wrapper for ScottPlot &amp; CsvHelper. This library parses CSV files &amp; interactively plots them in WPF, WinForms, etc.</Description>
-    <Copyright>ryanio</Copyright>
-    <PackageProjectUrl>https://github.com/ryan-io/simple-plotting</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/ryan-io/simple-plotting/blob/main/LICENSE</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/ryan-io/simple-plotting</RepositoryUrl>
-    <RepositoryType>GitHub</RepositoryType>
-    <Company>ryanio</Company>
-    <PackageReleaseNotes></PackageReleaseNotes>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <RootNamespace>simple_plotting</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>1.0.17</Version>
+        <Title>Simple Plotting</Title>
+        <Authors>ryanio</Authors>
+        <Description>A library wrapper for ScottPlot &amp; CsvHelper. This library parses CSV files &amp; interactively plots them in WPF, WinForms, etc.</Description>
+        <Copyright>ryanio</Copyright>
+        <PackageProjectUrl>https://github.com/ryan-io/simple-plotting</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/ryan-io/simple-plotting/blob/main/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/ryan-io/simple-plotting</RepositoryUrl>
+        <RepositoryType>GitHub</RepositoryType>
+        <Company>ryanio</Company>
+        <PackageReleaseNotes></PackageReleaseNotes>
+        <AssemblyVersion>1.0.17</AssemblyVersion>
+        <FileVersion>1.0.17</FileVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="30.0.1" />
-    <PackageReference Include="ScottPlot" Version="4.1.67" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="CsvHelper" Version="30.0.1"/>
+        <PackageReference Include="ScottPlot" Version="4.1.67"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="csFastFloat">
-      <HintPath>..\dll-root\csFastFloat.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+    <ItemGroup>
+        <Reference Include="csFastFloat">
+            <HintPath>..\dll-root\csFastFloat.dll</HintPath>
+        </Reference>
+    </ItemGroup>
 
 
 </Project>

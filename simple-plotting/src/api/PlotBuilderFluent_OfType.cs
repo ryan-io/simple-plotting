@@ -15,6 +15,7 @@ public partial class PlotBuilderFluent {
 
 		SetInitialState(new ChannelRecordProcessor(_plots, FactoryPrime).Process);
 
+		
 		return this;
 	}
 }
