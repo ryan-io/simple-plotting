@@ -45,7 +45,7 @@ namespace simple_plotting.src {
         ///  Use when you want to let the API determine what kind of plottable to graph when OfType is used
         ///  This method will perform type-checking and determine what factory method from below to call
         /// </summary>
-        /// <param name="action">Factory method delegatet to invoke</param>
+        /// <param name="action">Factory method delegate to invoke</param>
         /// <returns>Fluent factory</returns>
         IPlottableFactoryReset AddViaFactoryMethod (Action action);
 
@@ -54,16 +54,18 @@ namespace simple_plotting.src {
         /// </summary>
         /// <param name="color">Color of the line</param>
         /// <param name="channelName">Legend label for this channel</param>
+        /// <param name="data">POCO containing plot data</param>
         /// <returns>Product containing the scatter plot & factory reference</returns>
-        ScatterPlotProduct? AddScatterPlot (Color color, string channelName);
+        ScatterPlotProduct? AddScatterPlot (Color color, string channelName , PlottableData data);
 
         /// <summary>
         ///  Adds a SignalPlot to plot Plot.
         /// </summary>
         /// <param name="color">Color of the line</param>
         /// <param name="channelName">Legend label for this channel</param>
+        /// <param name="data">POCO containing plot data</param>
         /// <returns>Product containing the signal plot & factory reference</returns>
-        SignalPlotProduct? AddSignalPlotXY (Color color, string channelName);
+        SignalPlotProduct? AddSignalPlot (Color color, string channelName , PlottableData data);
     }
 
     public class PlottableFactory : IPlottableFactory, IPlottableFactoryReset, IPlottablePrime, IPlottableProduct {
@@ -120,12 +122,13 @@ namespace simple_plotting.src {
         /// </summary>
         /// <param name="color">Color of the line</param>
         /// <param name="channelName">Legend label for this channel</param>
+        /// <param name="data">POCO containing plot data</param>
         /// <returns>Product containing the scatter plot & factory reference</returns>
-        public ScatterPlotProduct? AddScatterPlot (Color color, string channelName) {
+        public ScatterPlotProduct? AddScatterPlot (Color color, string channelName, PlottableData data) {
             if (WasRun)
                 return new ScatterPlotProduct(this, default);
 
-            var scatterPlot = AddPlotOfType<ScatterPlot>(new ScatterPlotCallback());
+            var scatterPlot = AddPlotOfType<ScatterPlot>(ref data, new ScatterPlotCallback());
 
             if (scatterPlot == null)
                 return default;
@@ -142,19 +145,20 @@ namespace simple_plotting.src {
         /// </summary>
         /// <param name="color">Color of the line</param>
         /// <param name="channelName">Legend label for this channel</param>
+        /// <param name="data">POCO containing plot data</param>
         /// <returns>Product containing the signal plot & factory reference</returns>
-        public SignalPlotProduct? AddSignalPlotXY (Color color, string channelName) {
+        public SignalPlotProduct? AddSignalPlot (Color color, string channelName, PlottableData data) {
             if (WasRun)
                 return new SignalPlotProduct(this, default);
 
-            var signalPlot = AddPlotOfType<SignalPlotXY>(new SignalPlotCallback());
+            var signalPlot = AddPlotOfType<SignalPlotXY>(ref data, new SignalPlotCallback());
             
             if (signalPlot == null)
                 return default;
-
+            
             signalPlot.Color = color;
             signalPlot.Label = channelName;
-
+            
             Finish();
             return new SignalPlotProduct(this, signalPlot);
         }
@@ -170,13 +174,14 @@ namespace simple_plotting.src {
         ///  Adds a generic plot of type T.
         ///  object[] elements should match a constructor overload of type T for the plot you are trying to add.
         /// </summary>
+        /// <param name="data">POCO containing plot data</param>
         /// <param name="creationCallback">Callback logic specific to the type of graph being added to Plot</param>
         /// <typeparam name="T">Class & implements IPlottable</typeparam>
         /// <exception cref="Exception">Thrown if plottable T cannot be created</exception>
         /// <exception cref="InvalidCastException">Thrown if the cast to IPlottable fails</exception>
-        public T? AddPlotOfType<T> (IPlotCallback? creationCallback = null)
-            where T : class, IPlottable {
-            if (ConstructorArgs.Length == 0 || Plot == null)
+        public T? AddPlotOfType<T> (ref PlottableData data, IPlotCallback? creationCallback = null)
+            where                                            T : class, IPlottable {
+            if (Plot == null)
                 return default;
 
             var plottable = Activator.CreateInstance(typeof(T), ConstructorArgs);
@@ -189,7 +194,7 @@ namespace simple_plotting.src {
             if (castedPlottable == null)
                 throw new InvalidCastException(Message.EXCEPTION_CANNOT_CREATE_GENERIC_PLOTTABLE);
             
-            creationCallback?.Callback(castedPlottable);
+            creationCallback?.Callback(castedPlottable, ref data);
             Plot.Add(castedPlottable);
             Plot.Render();
 
@@ -203,6 +208,5 @@ namespace simple_plotting.src {
         public PlottableFactory (Type plotType) {
             PlottableType = plotType;
         }
-
     }
 }

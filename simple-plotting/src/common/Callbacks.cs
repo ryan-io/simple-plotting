@@ -53,22 +53,28 @@ public class SignalPlotCallback : IPlotCallback {
 	public int       LineWidth  { get; set; } = 1;
 	public int       MarkerSize { get; set; } = 10;
 	public LineStyle LineStyle  { get; set; } = LineStyle.Solid;
-	
+
 	/// <summary>
 	///  Sets LineWidth, MarkerSize, & LineStyle for a signal plot.
 	/// </summary>
 	/// <param name="plot">Plot to add signal plot to</param>
+	/// <param name="data">POCO containing plot data</param>
 	/// <typeparam name="T">Signal plot</typeparam>
 	/// <exception cref="InvalidCastException">Thrown if cannot cast plottable to SignalPlot</exception>
-	public void Callback<T>(T plot) where T : class, IPlottable {
-		if (typeof(T) != typeof(SignalPlot))
+	public void Callback<T>(T plot, ref PlottableData data) where T : class, IPlottable {
+		if (typeof(T) != typeof(SignalPlotXY))
 			return;
 
-		if (plot is not SignalPlot sPlot)
+		if (plot is not SignalPlotXY sPlot)
 			throw new InvalidCastException(Message.EXCEPTION_CAST_PLOTTABLE_ACTIVATOR_INSTANCES);
-
+		
+		sPlot.Ys = data.Y;
+		sPlot.Xs = data.X;
+		data.SampleRate  ??= 1.0;
+		sPlot.SampleRate =   data.SampleRate.Value;
+		
 		sPlot.LineWidth  = 1;
-		sPlot.MarkerSize = 0;
+		sPlot.MarkerSize = 10;
 		sPlot.LineStyle  = LineStyle.Solid;
 	}
 }
@@ -77,14 +83,15 @@ public class ScatterPlotCallback : IPlotCallback {
 	public int       LineWidth  { get; set; } = 1;
 	public int       MarkerSize { get; set; } = 10;
 	public LineStyle LineStyle  { get; set; } = LineStyle.Solid;
-		
+
 	/// <summary>
 	///  Sets LineWidth, MarkerSize, & LineStyle for a scatter plot.
 	/// </summary>
 	/// <param name="plot">Plot to add scatter plot to</param>
+	/// <param name="data">POCO containing plot data</param>
 	/// <typeparam name="T">Scatter plot</typeparam>
 	/// <exception cref="InvalidCastException">Thrown if cannot cast plottable to ScatterPlot</exception>
-	public void Callback<T>(T plot) where T : class, IPlottable {
+	public void Callback<T>(T plot, ref PlottableData data) where T : class, IPlottable {
 		if (typeof(T) != typeof(ScatterPlot))
 			return;
 

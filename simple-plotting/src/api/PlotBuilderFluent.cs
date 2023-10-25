@@ -3,21 +3,6 @@ using ScottPlot.Plottable;
 using simple_plotting.runtime;
 
 namespace simple_plotting.src {
-    public partial class PlotBuilderFluent {
-        /// <summary>
-        ///  Creates a new instance of PlotBuilderFluent and PlottableFactory using type defined in 'T'
-        /// </summary>
-        /// <typeparam name="T">Is a class that implements IPlottable (SignalPlot, ScatterPlot, etc.)</typeparam>
-        /// <returns>Fluent builder</returns>
-        public IPlotBuilderFluentConfiguration OfType<T> () where T : class, IPlottable {
-            FactoryPrime = PlottableFactory.StartNew<T>();
-
-            SetInitialState(new ChannelRecordProcessor(_plots, FactoryPrime).Process);
-
-            return this;
-        }
-
-    }
     /// <summary>
     ///  This class is used to build a plot using a fluent API. It is recommended to use this class instead of ScottPlot.Plot
     ///  or CsvPlotter.Plot wrapper directly.

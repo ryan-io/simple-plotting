@@ -12,6 +12,7 @@ public interface IPlotCallback {
 	///  Callback for a plot object creation. This is passed to the fluent builder when creating a plot.
 	/// </summary>
 	/// <param name="plot">Plot to add a graph too</param>
+	/// <param name="data">POCO containing plot data</param>
 	/// <typeparam name="T">Type T, class & implements IPlottable</typeparam>
-	void Callback<T>(T plot) where T : class, IPlottable;
+	void Callback<T>(T plot, ref PlottableData data) where T : class, IPlottable;
 }

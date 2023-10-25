@@ -52,6 +52,9 @@ namespace simple_plotting.src {
 
 		public const string EXCEPTION_SUPPLIED_TOKEN_NULL = "Supplied token is null.";
 
-		public const string EXCEPTION_NO_PLOTTABLE_FAC_METHOD = "Could not determine an appropraite factory delegate for the provided plottable type";
-    }
+		public const string EXCEPTION_NO_PLOTTABLE_FAC_METHOD = "Could not determine an appropriate factory delegate for the provided plottable type";
+
+		public const string EXCEPTION_PLOTTABLE_TYPE_CONSTRUCTOR_NOT_DEFINED =
+			"There is no plottable factory method constructor defined for the type of IPlottable you provided";
+	}
 }

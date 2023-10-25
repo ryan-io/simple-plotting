@@ -1,23 +1,22 @@
 ﻿using ScottPlot.Plottable;
 
 //TODO: add documentation
-namespace simple_plotting.src; 
+namespace simple_plotting.src;
 
-public class PlottleTypeMapper {
-    public Action? Determine (IPlottableProduct factory, PlotChannel channel) {
-        if (_plottableType == typeof(ScatterPlot))
-            return () => factory.AddScatterPlot(channel.Color, channel.ChannelIdentifier);
+public class PlottableFactoryTypeMapper {
+	public Action? Determine(IPlottableProduct factory, PlotChannel channel, PlottableData data) {
+		if (_plottableType == typeof(ScatterPlot))
+			return () => factory.AddScatterPlot(channel.Color, channel.ChannelIdentifier, data);
 
-        if (_plottableType == typeof(SignalPlotXY))
-            return () => factory.AddSignalPlotXY(channel.Color, channel.ChannelIdentifier);
+		if (_plottableType == typeof(SignalPlotXY))
+			return () => factory.AddSignalPlot(channel.Color, channel.ChannelIdentifier, data);
 
-        return default;
-    }
+		return default;
+	}
 
-    public PlottleTypeMapper (Type? plottableType) {
-        _plottableType = plottableType;
+	public PlottableFactoryTypeMapper(Type? plottableType) {
+		_plottableType = plottableType;
+	}
 
-    }
-
-    readonly Type? _plottableType;
+	readonly Type? _plottableType;
 }
