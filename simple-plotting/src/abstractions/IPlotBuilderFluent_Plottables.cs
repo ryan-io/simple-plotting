@@ -37,6 +37,18 @@ public interface IPlotBuilderFluentPlottables : IPlotBuilderFluent {
 		annotation);
 
 	/// <summary>
+	///  Adds a text plottable to the plot at xCoord, yCoord.
+	/// </summary>
+	/// <param name="plotIndex">Index of your plot</param>
+	/// <param name="text">"String to display</param>
+	/// <param name="xCoord">X coordinate (relative to data)</param>
+	/// <param name="yCoord">Y coordinate (relative to data)</param>
+	/// <param name="textPlottable">Instance of Text plottable</param>
+	/// <returns>Fluent builder as IPlotBuilderFluent_Plottable</returns>
+	IPlotBuilderFluentPlottables WithText(int plotIndex, string text, double xCoord, double yCoord,
+		out Text textPlottable);
+
+	/// <summary>
 	///  Adds a crosshair plottable to the plot.
 	/// </summary>
 	/// <param name="plotIndex">Index of your plot</param>
@@ -44,7 +56,7 @@ public interface IPlotBuilderFluentPlottables : IPlotBuilderFluent {
 	/// <param name="isXDataDate">OPTIONAL; default = false; formats x-axis data for date time if true</param>
 	/// <param name="positionX">OPTIONAL; default = 0.0; x-offset from bottom-left of plot</param>
 	/// <param name="positionY">OPTIONAL; default = 0.0; y-offset from bottom-left of plot</param>
-	/// <returns></returns>
+	/// <returns>Fluent builder as IPlotBuilderFluent_Plottable</returns>s
 	IPlotBuilderFluentPlottables WithCrosshair(int plotIndex, out Crosshair crosshair, bool isXDataDate = false,
 		double positionX = 0.0, double positionY = 0.0);
 
@@ -53,6 +65,6 @@ public interface IPlotBuilderFluentPlottables : IPlotBuilderFluent {
 	/// </summary>
 	/// <param name="plotIndex">Plot index to add marker to</param>
 	/// <param name="marker">Instance of MarkerPlot plottable</param>
-	/// <returns></returns>
+	/// <returns>Fluent builder as IPlotBuilderFluent_Plottable</returns>
 	IPlotBuilderFluentPlottables WithMarker(int plotIndex, out MarkerPlot marker);
 }

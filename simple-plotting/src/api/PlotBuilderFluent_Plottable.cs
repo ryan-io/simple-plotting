@@ -74,6 +74,15 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
+	public IPlotBuilderFluentPlottables WithText(int plotIndex, string text, double xCoord, double yCoord, out Text textPlottable) {
+		plotIndex.ValidateInRange(_plots);
+
+		var plot = _plots[plotIndex];
+		textPlottable = plot.AddText(text, xCoord, yCoord);
+		
+		return this;
+	}
+
 	/// <summary>
 	///  Static method for adding an annotation to a plot at xOff, yOff.
 	/// </summary>
