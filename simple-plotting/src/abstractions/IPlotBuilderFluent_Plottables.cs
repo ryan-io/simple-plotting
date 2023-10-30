@@ -67,4 +67,41 @@ public interface IPlotBuilderFluentPlottables : IPlotBuilderFluent {
 	/// <param name="marker">Instance of MarkerPlot plottable</param>
 	/// <returns>Fluent builder as IPlotBuilderFluent_Plottable</returns>
 	IPlotBuilderFluentPlottables WithMarker(int plotIndex, out MarkerPlot marker);
+
+    /// <summary>
+    ///  Removes a plottable of type 'T' with plottableIndex from a specified plot via plotIndex
+    /// </summary>
+    /// <typeparam name="T">Type of plottables to remove</typeparam>
+    /// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>
+    /// <param name="plottableIndex">Plottale index to remove from plot</param>
+    /// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
+    IPlotBuilderFluentPlottables Remove<T> (int plotIndex, int plottableIndex) where T : class, IPlottable;
+
+	/// <summary>
+	///  Removes all plottables of type 'T' from the plot specifiged by plotIndex
+	/// </summary>
+	/// <typeparam name="T">Type of plottables to remove</typeparam>
+	/// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>
+	/// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
+	IPlotBuilderFluentPlottables RemoveAll<T> (int plotIndex) where T : class, IPlottable;
+
+	/// <summary>
+	///  Removes a plottable instance of type 'T' from a plot specified plotIndex
+	/// </summary>
+	/// <typeparam name="T">Type of plottables to remove</typeparam>
+	/// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>
+	/// <param name="plottable">Plottable instance to remove</param>
+	/// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
+	/// <exception cref="Exception">Thrown if plot does not contain plottle instance</exception>
+	IPlotBuilderFluentPlottables Remove<T> (int plotIndex, IPlottable plottable) where T : class, IPlottable;
+
+    /// <summary>
+    ///  Removes a plottable instance of type 'T' from a plot specified plotIndex
+    /// </summary>
+    /// <typeparam name="T">Type of plottables to remove</typeparam>
+    /// <param name="plot">Plotto remove the plottables of type 'T' from</param>
+    /// <param name="plottable">Plottable instance to remove</param>
+    /// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
+    /// <exception cref="Exception">Thrown if plot does not contain plottle instance</exception>
+    IPlotBuilderFluentPlottables Remove<T> (Plot plot, IPlottable plottable) where T : class, IPlottable;
 }

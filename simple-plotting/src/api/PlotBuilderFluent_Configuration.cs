@@ -1,5 +1,7 @@
 // simple-plotting
 
+using ScottPlot.Renderable;
+
 namespace simple_plotting.src;
 
 public partial class PlotBuilderFluent {
@@ -111,17 +113,65 @@ public partial class PlotBuilderFluent {
 		foreach (var plot in _plots) {
 			plot.XAxis2.Label(xAxisLabel);
 		}
-
+		
 		return this;
 	}
 
-	/// <summary>
-	///  Sets the label for the secondary Y axis.
-	/// </summary>
-	/// <param name="yAxisLabel">Label for the secondary x-axis (right side of plot)</param>
-	/// <returns>Fluent builder</returns>
-	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel) {
+    /// <summary>
+    /// Disables the second x-axis of each plot
+    /// </summary>
+    /// <returns>Fluent builder</returns>
+    public IPlotBuilderFluentConfiguration DisableSecondXAxis() {
+        foreach (var plot in _plots) {
+            plot.XAxis2.IsVisible = false;
+        }
+
+		return this;
+    }
+
+    /// <summary>
+    ///  Enables the second x-axis of each plot
+    /// </summary>
+    /// <returns>Fluent builder</returns>
+    public IPlotBuilderFluentConfiguration EnableSecondXAxis () {
+        foreach (var plot in _plots) {
+            plot.XAxis2.IsVisible = true;
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    /// Disables the second y-axis of each plot
+    /// </summary>
+    /// <returns>Fluent builder</returns>
+    public IPlotBuilderFluentConfiguration DisableSecondYAxis () {
+        foreach (var plot in _plots) {
+            plot.YAxis2.IsVisible = false;
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    ///  Enables the second y-axis of each plot
+    /// </summary>
+    /// <returns>Fluent builder</returns>
+    public IPlotBuilderFluentConfiguration EnableSecondYAxis () {
+        foreach (var plot in _plots) {
+            plot.YAxis2.IsVisible = true;
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    ///  Sets the label for the secondary Y axis.
+    /// </summary>
+    /// <param name="yAxisLabel">Label for the secondary x-axis (right side of plot)</param>
+    /// <returns>Fluent builder</returns>
+    /// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
+    public IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel) {
 		if (string.IsNullOrWhiteSpace(yAxisLabel))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 

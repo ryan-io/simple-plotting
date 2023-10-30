@@ -154,4 +154,28 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
     /// </summary>
     /// <returns>Fluent interface allowing consumer to Produce()</returns>
     IPlotBuilderFluentReadyToProduce FinalizeConfiguration();
+
+    /// <summary>
+    ///  Enables the second x-axis of each plot
+    /// </summary>
+    /// <returns>Fluent builder</returns>
+    IPlotBuilderFluentConfiguration EnableSecondXAxis ();
+
+    /// <summary>
+    /// Disables the second x-axis of each plot
+    /// </summary>
+    /// <returns>Fluent builder</returns>
+    IPlotBuilderFluentConfiguration DisableSecondXAxis ();
+
+    /// <summary>
+    ///  Enables the second y-axis of each plot
+    /// </summary>
+    /// <returns>Fluent builder</returns>
+    IPlotBuilderFluentConfiguration EnableSecondYAxis ();
+
+    /// <summary>
+    /// Disables the second y-axis of each plot
+    /// </summary>
+    /// <returns>Fluent builder</returns>
+    IPlotBuilderFluentConfiguration DisableSecondYAxis ();
 }

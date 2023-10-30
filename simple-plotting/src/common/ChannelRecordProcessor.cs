@@ -24,13 +24,17 @@ public class ChannelRecordProcessor {
 		var dateTimes    = batchedArray.Select(x => x.DateTime.ToOADate()).ToArray();
 		var values       = batchedArray.Select(v => v.Value).ToArray();
 
+
 		var poco = new PlottableData {
 			X          = dateTimes,
 			Y          = values,
-			SampleRate = channel.SampleRate.Value
 		};
 
-		var constructorFactory = new PlottableConstructorMapper(FactoryPrime.PlottableType);
+		if (channel != null && channel.SampleRate.HasValue)
+			poco.SampleRate = channel.SampleRate.Value;
+
+
+        var constructorFactory = new PlottableConstructorMapper(FactoryPrime.PlottableType);
 		var constructor        = constructorFactory.Determine(ref poco);
 		var workingPlot        = Data[plotTracker];
 		var product            = FactoryPrime.PrimeProduct(workingPlot, ref constructor);
