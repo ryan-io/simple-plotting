@@ -65,7 +65,8 @@ namespace simple_plotting.src {
 		///  This method will divvy up the data into separate plots based on on the number of plots specified in the constructor.
 		/// </summary>
 		void SetInitialState(Action<IEnumerable<PlotChannelRecord>, int, PlotChannel> actionDelegate) {
-			foreach (var channel in _data) {
+			for (var index = 0; index < _data.Count; index++) {
+				var channel   = _data[index];
 				var batchSize = channel.Records.Count / PlotCount;
 				var batch     = channel.Records.Batch(batchSize).ToArray();
 
