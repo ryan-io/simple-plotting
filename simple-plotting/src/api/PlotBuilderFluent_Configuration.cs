@@ -1,6 +1,6 @@
 // simple-plotting
 
-using ScottPlot.Renderable;
+using System.Drawing;
 
 namespace simple_plotting.src;
 
@@ -17,7 +17,7 @@ public partial class PlotBuilderFluent {
 			plot.Width  = container.Width;
 			plot.Height = container.Height;
 		}
-		
+
 		return this;
 	}
 
@@ -25,15 +25,16 @@ public partial class PlotBuilderFluent {
 	///  Sets the title of the plot.
 	/// </summary>
 	/// <param name="title">String title for plot</param>
+	/// <param name="fontSize">Size of font</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if string is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithTitle(string title) {
+	public IPlotBuilderFluentConfiguration WithTitle(string title, int fontSize) {
 		if (string.IsNullOrWhiteSpace(title))
 			throw new Exception(Message.EXCEPTION_TITLE_INVALID);
 
 		var plotTracker = 1;
 		foreach (var plot in _plots) {
-			plot.Title($"{title} - #{plotTracker}");
+			plot.Title($"{title} - #{plotTracker}", size: fontSize);
 			plotTracker++;
 		}
 
@@ -43,15 +44,34 @@ public partial class PlotBuilderFluent {
 	/// <summary>
 	///  Sets the label for the X axis.
 	/// </summary>
-	/// <param name="xAxisLabel">String value for the X axis label</param>
+	/// <param name="labelTxt">String value for the X axis label</param>
+	/// <param name="fontColor">Color of font</param>
+	/// <param name="fontSize">Size of font</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if xAxisLabel is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string xAxisLabel) {
-		if (string.IsNullOrWhiteSpace(xAxisLabel))
+	public IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, Color fontColor, int fontSize) {
+		if (string.IsNullOrWhiteSpace(labelTxt))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
 		foreach (var plot in _plots) {
-			plot.XAxis.Label(xAxisLabel);
+			plot.XAxis.Label(labelTxt, color: fontColor, size: fontSize);
+		}
+
+		return this;
+	}
+
+	/// <summary>
+	/// Sets the label for the X axis.
+	/// </summary>
+	/// <param name="labelTxt">String value for the X axis label</param>
+	/// <param name="fontSize">Size of font</param>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, int fontSize = 14) {
+		if (string.IsNullOrWhiteSpace(labelTxt))
+			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
+
+		foreach (var plot in _plots) {
+			plot.XAxis.Label(labelTxt, size: fontSize);
 		}
 
 		return this;
@@ -60,15 +80,34 @@ public partial class PlotBuilderFluent {
 	/// <summary>
 	///  Sets the label for the Y axis.
 	/// </summary>
-	/// <param name="yAxisLabel">String value for the Y axis label</param>
+	/// <param name="labelTxt">String value for the Y axis label</param>
+	/// <param name="fontColor">Color of font</param>
+	/// <param name="fontSize">Size of font</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if yAxisLabel is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string yAxisLabel) {
-		if (string.IsNullOrWhiteSpace(yAxisLabel))
+	public IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, Color fontColor, int fontSize) {
+		if (string.IsNullOrWhiteSpace(labelTxt))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
 		foreach (var plot in _plots) {
-			plot.YAxis.Label(yAxisLabel);
+			plot.YAxis.Label(labelTxt, color: fontColor, size: fontSize);
+		}
+
+		return this;
+	}
+
+	/// <summary>
+	/// Sets the label for the Y axis.
+	/// </summary>
+	/// <param name="labelTxt">String value for the Y axis label</param>
+	/// <param name="fontSize">Size of font</param>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, int fontSize = 14) {
+		if (string.IsNullOrWhiteSpace(labelTxt))
+			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
+
+		foreach (var plot in _plots) {
+			plot.YAxis.Label(labelTxt, size: fontSize);
 		}
 
 		return this;
@@ -99,84 +138,188 @@ public partial class PlotBuilderFluent {
 
 		return this;
 	}
+	
+	/// <summary>
+	///  Sets the label for the secondary X axis.
+	/// </summary>
+	/// <param name="xAxisLabel">Label for the secondary x-axis (top side of plot)</param>
+	/// <param name="fontSize">Size of font</param>
+	/// <param name="fontColor">Color of font</param>
+	/// <returns>Fluent builder</returns>
+	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
+	public IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel, Color fontColor, int fontSize = 14) {
+		if (string.IsNullOrWhiteSpace(xAxisLabel))
+			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
+
+		foreach (var plot in _plots) {
+			plot.XAxis2.Label(xAxisLabel, color: fontColor, size: fontSize);
+		}
+
+		return this;
+	}
+	
+	/// <summary>
+	///  Sets the label for the secondary Y axis.
+	/// </summary>
+	/// <param name="yAxisLabel">Label for the secondary x-axis (right side of plot)</param>
+	/// <param name="fontColor">Color of font</param>
+	/// <param name="fontSize">Size of font</param>
+	/// <returns>Fluent builder</returns>
+	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
+	public IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, Color fontColor, int fontSize = 14) {
+		if (string.IsNullOrWhiteSpace(yAxisLabel))
+			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
+
+		foreach (var plot in _plots) {
+			plot.YAxis2.Label(yAxisLabel, color: fontColor, size: fontSize);
+		}
+
+		return this;
+	}
 
 	/// <summary>
 	///  Sets the label for the secondary X axis.
 	/// </summary>
 	/// <param name="xAxisLabel">Label for the secondary x-axis (top side of plot)</param>
+	/// <param name="fontSize">Size of font</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel) {
+	public IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel, int fontSize = 14) {
 		if (string.IsNullOrWhiteSpace(xAxisLabel))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
 		foreach (var plot in _plots) {
-			plot.XAxis2.Label(xAxisLabel);
+			plot.XAxis2.Label(xAxisLabel, size: fontSize);
 		}
-		
+
 		return this;
 	}
 
-    /// <summary>
-    /// Disables the second x-axis of each plot
-    /// </summary>
-    /// <returns>Fluent builder</returns>
-    public IPlotBuilderFluentConfiguration DisableSecondXAxis() {
-        foreach (var plot in _plots) {
-            plot.XAxis2.IsVisible = false;
-        }
+	/// <summary>
+	/// Disables the second x-axis of each plot
+	/// </summary>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration DisableSecondXAxis() {
+		foreach (var plot in _plots) {
+			plot.XAxis2.IsVisible = false;
+		}
 
 		return this;
-    }
+	}
 
-    /// <summary>
-    ///  Enables the second x-axis of each plot
-    /// </summary>
-    /// <returns>Fluent builder</returns>
-    public IPlotBuilderFluentConfiguration EnableSecondXAxis () {
-        foreach (var plot in _plots) {
-            plot.XAxis2.IsVisible = true;
-        }
+	/// <summary>
+	///  Enables the second x-axis of each plot
+	/// </summary>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration EnableSecondXAxis() {
+		foreach (var plot in _plots) {
+			plot.XAxis2.IsVisible = true;
+		}
 
-        return this;
-    }
+		return this;
+	}
 
-    /// <summary>
-    /// Disables the second y-axis of each plot
-    /// </summary>
-    /// <returns>Fluent builder</returns>
-    public IPlotBuilderFluentConfiguration DisableSecondYAxis () {
-        foreach (var plot in _plots) {
-            plot.YAxis2.IsVisible = false;
-        }
+	/// <summary>
+	/// Disables the second y-axis of each plot
+	/// </summary>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration DisableSecondYAxis() {
+		foreach (var plot in _plots) {
+			plot.YAxis2.IsVisible = false;
+		}
 
-        return this;
-    }
+		return this;
+	}
 
-    /// <summary>
-    ///  Enables the second y-axis of each plot
-    /// </summary>
-    /// <returns>Fluent builder</returns>
-    public IPlotBuilderFluentConfiguration EnableSecondYAxis () {
-        foreach (var plot in _plots) {
-            plot.YAxis2.IsVisible = true;
-        }
+	/// <summary>
+	///  Rotates the tick labels on the X axis
+	/// </summary>
+	/// <param name="rotation">Rotation amount (counter-clockwise</param>
+	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration SetXAxisTicks(PlotAxisRotation rotation, bool isBold = false) {
+		var rotationInt = PlotAxisRotationMapper.Map(rotation);
+		
+		foreach (var plot in _plots) {
+			plot.XAxis.TickLabelStyle(rotation: rotationInt, fontBold: isBold);
+		}
 
-        return this;
-    }
+		return this;
+	}
 
-    /// <summary>
-    ///  Sets the label for the secondary Y axis.
-    /// </summary>
-    /// <param name="yAxisLabel">Label for the secondary x-axis (right side of plot)</param>
-    /// <returns>Fluent builder</returns>
-    /// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
-    public IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel) {
+	/// <summary>
+	///  Rotates the tick labels on the Y axis
+	/// </summary>
+	/// <param name="rotation">Rotation amount (counter-clockwise</param>
+	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration SetYAxisTicks(PlotAxisRotation rotation, bool isBold = false) {
+		var rotationInt = PlotAxisRotationMapper.Map(rotation);
+		
+		foreach (var plot in _plots) {
+			plot.YAxis.TickLabelStyle(rotation: rotationInt, fontBold: isBold);
+		}
+
+		return this;
+	}
+	
+	/// <summary>
+	///  Rotates the tick labels on the secondary Y axis
+	/// </summary>
+	/// <param name="rotation">Rotation amount (counter-clockwise</param>
+	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration SetSecondaryYAxisTicks(PlotAxisRotation rotation, bool isBold = false) {
+		var rotationInt = PlotAxisRotationMapper.Map(rotation);
+		
+		foreach (var plot in _plots) {
+			plot.YAxis2.TickLabelStyle(rotation: rotationInt, fontBold: isBold);
+		}
+
+		return this;
+	}
+	
+	/// <summary>
+	///  Rotates the tick labels on the secondary X axis
+	/// </summary>
+	/// <param name="rotation">Rotation amount (counter-clockwise</param>
+	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration SetSecondaryXAxisTicks(PlotAxisRotation rotation, bool isBold = false) {
+		var rotationInt = PlotAxisRotationMapper.Map(rotation);
+		
+		foreach (var plot in _plots) {
+			plot.XAxis2.TickLabelStyle(rotation: rotationInt, fontBold: isBold);
+		}
+
+		return this;
+	}
+
+	/// <summary>
+	///  Enables the second y-axis of each plot
+	/// </summary>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration EnableSecondYAxis() {
+		foreach (var plot in _plots) {
+			plot.YAxis2.IsVisible = true;
+		}
+
+		return this;
+	}
+
+	/// <summary>
+	///  Sets the label for the secondary Y axis.
+	/// </summary>
+	/// <param name="yAxisLabel">Label for the secondary x-axis (right side of plot)</param>
+	/// <param name="fontSize">Size of font</param>
+	/// <returns>Fluent builder</returns>
+	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
+	public IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, int fontSize =14) {
 		if (string.IsNullOrWhiteSpace(yAxisLabel))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
 		foreach (var plot in _plots) {
-			plot.YAxis2.Label(yAxisLabel);
+			plot.YAxis2.Label(yAxisLabel, size: fontSize);
 		}
 
 		return this;
@@ -256,7 +399,7 @@ public partial class PlotBuilderFluent {
 	/// <param name="bottom">Float-bottom padding</param>
 	/// <param name="left">Float-left padding</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration SetDataPadding(float right, float top , float bottom , float left ) {
+	public IPlotBuilderFluentConfiguration SetDataPadding(float right, float top, float bottom, float left) {
 		foreach (var plot in _plots) {
 			plot.Layout(left, right, bottom, top);
 		}
@@ -282,7 +425,7 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <param name="path">Standalone file path to try-save plots at</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration DefineSource (string path) {
+	public IPlotBuilderFluentConfiguration DefineSource(string path) {
 		if (string.IsNullOrWhiteSpace(path))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -290,46 +433,44 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
-    /// <summary>
-    ///  Determines the uppwer and lower y-axis limits
-    ///  </summary>	
-    ///  <returns>Fluent builder</returns>
-    public IPlotBuilderFluentConfiguration SetPlotLimits () {
-        /// </summary>
-        var calc = new PlotLimitCalculator();
-        var limits = calc.Calculate(_data);
+	/// <summary>
+	///  Determines the upper and lower y-axis limits
+	///  </summary>	
+	///  <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration SetPlotLimits() {
+		var calc   = new PlotLimitCalculator();
+		var limits = calc.Calculate(_data);
 
-        foreach (var plot in _plots) {
-            plot.SetAxisLimitsY(limits.Lower, limits.Upper);
-        }
+		foreach (var plot in _plots) {
+			plot.SetAxisLimitsY(limits.Lower, limits.Upper);
+		}
 
-        return this;
-    }
+		return this;
+	}
 
-    /// <summary>
-	///  Determines the uppwer and lower y-axis limits
+	/// <summary>
+	///  Determines the upper and lower y-axis limits
 	///  This overload takes into account default upper and lower values
 	///  </summary>
 	///  <param name="lower">Nullable lower limit; calculator will not go above this value (if not null)</param>
 	///  <param name="upper">Nullable upper limit; calculator will not go below this value (if not null)</param>
-    public IPlotBuilderFluentConfiguration SetPlotLimits (double? upper, double? lower) {
-        /// </summary>
-        var calc = new PlotLimitCalculator(upper, lower);
-        var limits = calc.Calculate(_data);
+	public IPlotBuilderFluentConfiguration SetPlotLimits(double? upper, double? lower) {
+		var calc   = new PlotLimitCalculator(upper, lower);
+		var limits = calc.Calculate(_data);
 
-        foreach (var plot in _plots) {
-            plot.SetAxisLimitsY(limits.Lower, limits.Upper);
-        }
+		foreach (var plot in _plots) {
+			plot.SetAxisLimitsY(limits.Lower, limits.Upper);
+		}
 
-        return this;
-    }
+		return this;
+	}
 
-    /// <summary>
-    ///  Finalizes the configuration of the plot. This should be the last call in the fluent API.
-    ///  This allows you to call Produce().
-    /// </summary>
-    /// <returns>Fluent interface allowing consumer to Produce()</returns>
-    public IPlotBuilderFluentReadyToProduce FinalizeConfiguration() => this;
+	/// <summary>
+	///  Finalizes the configuration of the plot. This should be the last call in the fluent API.
+	///  This allows you to call Produce().
+	/// </summary>
+	/// <returns>Fluent interface allowing consumer to Produce()</returns>
+	public IPlotBuilderFluentReadyToProduce FinalizeConfiguration() => this;
 
 	/// <summary>
 	///  Register an action to be invoked when the plot is produced.

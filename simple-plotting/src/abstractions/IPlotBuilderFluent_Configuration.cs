@@ -1,5 +1,7 @@
 // simple-plotting
 
+using System.Drawing;
+
 namespace simple_plotting.src;
 
 /// <summary>
@@ -24,25 +26,46 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	///  Sets the title of the plot.
 	/// </summary>
 	/// <param name="title">String title for plot</param>
+	/// <param name="fontSize">Size of font</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if string is null or whitespace</exception>
-	IPlotBuilderFluentConfiguration WithTitle(string title);
+	IPlotBuilderFluentConfiguration WithTitle(string title, int fontSize = 14);
 
 	/// <summary>
 	///  Sets the label for the X axis.
 	/// </summary>
-	/// <param name="xAxisLabel">String value for the X axis label</param>
+	/// <param name="labelTxt">String value for the X axis label</param>
+	/// <param name="fontColor">Color of font</param>
+	/// <param name="fontSize">Size of font</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if xAxisLabel is null or whitespace</exception>
-	IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string xAxisLabel);
+	IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, Color fontColor, int fontSize);
 
 	/// <summary>
 	///  Sets the label for the Y axis.
 	/// </summary>
-	/// <param name="yAxisLabel">String value for the Y axis label</param>
+	/// <param name="labelTxt">String value for the Y axis label</param>
+	/// <param name="fontColor">Color of font</param>
+	/// <param name="fontSize">Size of font</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if yAxisLabel is null or whitespace</exception>
-	IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string yAxisLabel);
+	IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, Color fontColor, int fontSize);
+
+	/// <summary>
+	/// Sets the label for the X axis.
+	/// </summary>
+	/// <param name="labelTxt">String value for the X axis label</param>
+	/// <param name="fontSize">Size of font</param>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, int fontSize = 14);
+
+	/// <summary>
+	/// Sets the label for the Y axis.
+	/// </summary>
+	/// <param name="labelTxt">String value for the Y axis label</param>
+	/// <param name="fontSize">Size of font</param>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, int fontSize = 14);
 
 	/// <summary>
 	///  Sets the rotation of the primary Y axis ticks.
@@ -62,17 +85,39 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	///  Sets the label for the secondary X axis.
 	/// </summary>
 	/// <param name="xAxisLabel">Label for the secondary x-axis (top side of plot)</param>
+	/// <param name="fontSize">Size of font</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
-	IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel);
+	IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel, int fontSize = 14);
+
+	/// <summary>
+	///  Sets the label for the secondary X axis.
+	/// </summary>
+	/// <param name="xAxisLabel">Label for the secondary x-axis (top side of plot)</param>
+	/// <param name="fontSize">Size of font</param>
+	/// <param name="fontColor">Color of font</param>
+	/// <returns>Fluent builder</returns>
+	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
+	IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel, Color fontColor, int fontSize = 14);
 
 	/// <summary>
 	///  Sets the label for the secondary Y axis.
 	/// </summary>
 	/// <param name="yAxisLabel">Label for the secondary x-axis (right side of plot)</param>
+	/// <param name="fontSize">Size of font</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
-	IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel);
+	IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, int fontSize = 14);
+
+	/// <summary>
+	///  Sets the label for the secondary Y axis.
+	/// </summary>
+	/// <param name="yAxisLabel">Label for the secondary x-axis (right side of plot)</param>
+	/// <param name="fontColor">Color of font</param>
+	/// <param name="fontSize">Size of font</param>
+	/// <returns>Fluent builder</returns>
+	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
+	IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, Color fontColor, int fontSize = 14);
 
 	/// <summary>
 	///  Sets the rotation of the secondary Y axis ticks.
@@ -123,19 +168,19 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <returns>Fluent builder</returns>
 	IPlotBuilderFluentConfiguration DefineSource(string path);
 
-    /// <summary>
-    ///  Determines the uppwer and lower y-axis limits
-    ///  </summary>	
+	/// <summary>
+	///  Determines the upper and lower y-axis limits
+	///  </summary>	
 	///  <returns>Fluent builder</returns>
-    IPlotBuilderFluentConfiguration SetPlotLimits ();
+	IPlotBuilderFluentConfiguration SetPlotLimits();
 
 	/// <summary>
-	///  Determines the uppwer and lower y-axis limits
+	///  Determines the upper and lower y-axis limits
 	///  This overload takes into account default upper and lower values
 	///  </summary>
 	///  <param name="lower">Nullable lower limit; calculator will not go above this value (if not null)</param>
 	///  <param name="upper">Nullable upper limit; calculator will not go below this value (if not null)</param>
-	IPlotBuilderFluentConfiguration SetPlotLimits (double? upper, double? lower);
+	IPlotBuilderFluentConfiguration SetPlotLimits(double? upper, double? lower);
 
 	/// <summary>
 	///  Sets the margins of the plot. This affects the actual data area of the plot.
@@ -148,34 +193,67 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <returns>Fluent builder</returns>
 	IPlotBuilderFluentConfiguration SetDataPadding(float right, float top, float bottom, float left);
 
-    /// <summary>
-    ///  Finalizes the configuration of the plot. This should be the last call in the fluent API.
-    ///  This allows you to call Produce().
-    /// </summary>
-    /// <returns>Fluent interface allowing consumer to Produce()</returns>
-    IPlotBuilderFluentReadyToProduce FinalizeConfiguration();
+	/// <summary>
+	///  Finalizes the configuration of the plot. This should be the last call in the fluent API.
+	///  This allows you to call Produce().
+	/// </summary>
+	/// <returns>Fluent interface allowing consumer to Produce()</returns>
+	IPlotBuilderFluentReadyToProduce FinalizeConfiguration();
 
-    /// <summary>
-    ///  Enables the second x-axis of each plot
-    /// </summary>
-    /// <returns>Fluent builder</returns>
-    IPlotBuilderFluentConfiguration EnableSecondXAxis ();
+	/// <summary>
+	///  Enables the second x-axis of each plot
+	/// </summary>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentConfiguration EnableSecondXAxis();
 
-    /// <summary>
-    /// Disables the second x-axis of each plot
-    /// </summary>
-    /// <returns>Fluent builder</returns>
-    IPlotBuilderFluentConfiguration DisableSecondXAxis ();
+	/// <summary>
+	/// Disables the second x-axis of each plot
+	/// </summary>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentConfiguration DisableSecondXAxis();
 
-    /// <summary>
-    ///  Enables the second y-axis of each plot
-    /// </summary>
-    /// <returns>Fluent builder</returns>
-    IPlotBuilderFluentConfiguration EnableSecondYAxis ();
+	/// <summary>
+	///  Enables the second y-axis of each plot
+	/// </summary>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentConfiguration EnableSecondYAxis();
 
-    /// <summary>
-    /// Disables the second y-axis of each plot
-    /// </summary>
-    /// <returns>Fluent builder</returns>
-    IPlotBuilderFluentConfiguration DisableSecondYAxis ();
+	/// <summary>
+	/// Disables the second y-axis of each plot
+	/// </summary>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentConfiguration DisableSecondYAxis();
+
+	/// <summary>
+	///  Rotates the tick labels on the X axis
+	/// </summary>
+	/// <param name="rotation">Rotation amount (counter-clockwise</param>
+	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentConfiguration SetXAxisTicks(PlotAxisRotation rotation, bool isBold = false);
+
+
+	/// <summary>
+	///  Rotates the tick labels on the Y axis
+	/// </summary>
+	/// <param name="rotation">Rotation amount (counter-clockwise</param>
+	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentConfiguration SetYAxisTicks(PlotAxisRotation rotation, bool isBold = false);
+
+	/// <summary>
+	///  Rotates the tick labels on the secondary Y axis
+	/// </summary>
+	/// <param name="rotation">Rotation amount (counter-clockwise</param>
+	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentConfiguration SetSecondaryYAxisTicks(PlotAxisRotation rotation, bool isBold = false);
+
+	/// <summary>
+	///  Rotates the tick labels on the secondary X axis
+	/// </summary>
+	/// <param name="rotation">Rotation amount (counter-clockwise</param>
+	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration SetSecondaryXAxisTicks(PlotAxisRotation rotation, bool isBold = false);
 }
