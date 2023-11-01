@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata;
-
-namespace simple_plotting.src {
+﻿namespace simple_plotting.src {
     /// <summary>
     ///  Constant messages used throughout the application. Typical to call when throwing exceptions.
     /// </summary>
@@ -59,5 +57,9 @@ namespace simple_plotting.src {
 
         public const string EXCEPTION_PLOT_DOES_NOT_CONTAIN_PLOTTABLE = "Plot does not contain the specified plottable and therefore cannot remove it";
 
+        public const string EXCEPTION_PLOT_IS_NULL = "Working plot is null. Cannot add a plottable to a null plot.";
+
+        public const string EXCEPTION_CREATE_SIGNAL_NO_SAMPLE_RATE =
+            "You are trying to create a signal plot but have not provided a sampling rate. Please pass a sample rate parmeter that is not null.";
     }
 }

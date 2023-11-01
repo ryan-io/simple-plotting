@@ -138,7 +138,7 @@ public partial class PlotBuilderFluent {
 
 		return this;
 	}
-	
+
 	/// <summary>
 	///  Sets the label for the secondary X axis.
 	/// </summary>
@@ -147,7 +147,8 @@ public partial class PlotBuilderFluent {
 	/// <param name="fontColor">Color of font</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel, Color fontColor, int fontSize = 14) {
+	public IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel, Color fontColor,
+		int fontSize = 14) {
 		if (string.IsNullOrWhiteSpace(xAxisLabel))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
@@ -157,7 +158,7 @@ public partial class PlotBuilderFluent {
 
 		return this;
 	}
-	
+
 	/// <summary>
 	///  Sets the label for the secondary Y axis.
 	/// </summary>
@@ -166,7 +167,8 @@ public partial class PlotBuilderFluent {
 	/// <param name="fontSize">Size of font</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, Color fontColor, int fontSize = 14) {
+	public IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, Color fontColor,
+		int fontSize = 14) {
 		if (string.IsNullOrWhiteSpace(yAxisLabel))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
@@ -239,7 +241,7 @@ public partial class PlotBuilderFluent {
 	/// <returns>Fluent builder</returns>
 	public IPlotBuilderFluentConfiguration SetXAxisTicks(PlotAxisRotation rotation, bool isBold = false) {
 		var rotationInt = PlotAxisRotationMapper.Map(rotation);
-		
+
 		foreach (var plot in _plots) {
 			plot.XAxis.TickLabelStyle(rotation: rotationInt, fontBold: isBold);
 		}
@@ -255,14 +257,14 @@ public partial class PlotBuilderFluent {
 	/// <returns>Fluent builder</returns>
 	public IPlotBuilderFluentConfiguration SetYAxisTicks(PlotAxisRotation rotation, bool isBold = false) {
 		var rotationInt = PlotAxisRotationMapper.Map(rotation);
-		
+
 		foreach (var plot in _plots) {
 			plot.YAxis.TickLabelStyle(rotation: rotationInt, fontBold: isBold);
 		}
 
 		return this;
 	}
-	
+
 	/// <summary>
 	///  Rotates the tick labels on the secondary Y axis
 	/// </summary>
@@ -271,14 +273,14 @@ public partial class PlotBuilderFluent {
 	/// <returns>Fluent builder</returns>
 	public IPlotBuilderFluentConfiguration SetSecondaryYAxisTicks(PlotAxisRotation rotation, bool isBold = false) {
 		var rotationInt = PlotAxisRotationMapper.Map(rotation);
-		
+
 		foreach (var plot in _plots) {
 			plot.YAxis2.TickLabelStyle(rotation: rotationInt, fontBold: isBold);
 		}
 
 		return this;
 	}
-	
+
 	/// <summary>
 	///  Rotates the tick labels on the secondary X axis
 	/// </summary>
@@ -287,7 +289,7 @@ public partial class PlotBuilderFluent {
 	/// <returns>Fluent builder</returns>
 	public IPlotBuilderFluentConfiguration SetSecondaryXAxisTicks(PlotAxisRotation rotation, bool isBold = false) {
 		var rotationInt = PlotAxisRotationMapper.Map(rotation);
-		
+
 		foreach (var plot in _plots) {
 			plot.XAxis2.TickLabelStyle(rotation: rotationInt, fontBold: isBold);
 		}
@@ -314,7 +316,7 @@ public partial class PlotBuilderFluent {
 	/// <param name="fontSize">Size of font</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, int fontSize =14) {
+	public IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, int fontSize = 14) {
 		if (string.IsNullOrWhiteSpace(yAxisLabel))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 

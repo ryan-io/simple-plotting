@@ -17,24 +17,22 @@ public class ChannelRecordProcessor {
 		int plotTracker,
 		PlotChannel channel) {
 		var batchedArray = batchedRecord.ToArray();
-		
+
 		// the line of code below this comment is opinionated. I prefer to use the OADate format for the x-axis.
 		// this of course is not applicable to all use cases, so you can remove this cast if you wish.
 		// leaving this is as-is as of 25 October 2023.
-		var dateTimes    = batchedArray.Select(x => x.DateTime.ToOADate()).ToArray();
-		var values       = batchedArray.Select(v => v.Value).ToArray();
-
+		var dateTimes = batchedArray.Select(x => x.DateTime.ToOADate()).ToArray();
+		var values    = batchedArray.Select(v => v.Value).ToArray();
 
 		var poco = new PlottableData {
-			X          = dateTimes,
-			Y          = values,
+			X = dateTimes,
+			Y = values,
 		};
 
-		if (channel != null && channel.SampleRate.HasValue)
+		if (channel.SampleRate.HasValue)
 			poco.SampleRate = channel.SampleRate.Value;
 
-
-        var constructorFactory = new PlottableConstructorMapper(FactoryPrime.PlottableType);
+		var constructorFactory = new PlottableConstructorMapper(FactoryPrime.PlottableType);
 		var constructor        = constructorFactory.Determine(ref poco);
 		var workingPlot        = Data[plotTracker];
 		var product            = FactoryPrime.PrimeProduct(workingPlot, ref constructor);

@@ -14,7 +14,6 @@ public partial class PlotBuilderFluent {
 		FactoryPrime = PlottableFactory.StartNew<T>();
 
 		SetInitialState(new ChannelRecordProcessor(_plots, FactoryPrime).Process);
-
 		
 		return this;
 	}

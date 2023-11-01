@@ -8,7 +8,7 @@ public class PlottableFactoryTypeMapper {
 		if (_plottableType == typeof(ScatterPlot))
 			return () => factory.AddScatterPlot(channel.Color, channel.ChannelIdentifier, data);
 
-		if (_plottableType == typeof(SignalPlotXY))
+		if (_plottableType == typeof(SignalPlot))
 			return () => factory.AddSignalPlot(channel.Color, channel.ChannelIdentifier, data);
 
 		return default;

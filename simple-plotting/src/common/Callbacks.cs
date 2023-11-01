@@ -62,14 +62,13 @@ public class SignalPlotCallback : IPlotCallback {
 	/// <typeparam name="T">Signal plot</typeparam>
 	/// <exception cref="InvalidCastException">Thrown if cannot cast plottable to SignalPlot</exception>
 	public void Callback<T>(T plot, ref PlottableData data) where T : class, IPlottable {
-		if (typeof(T) != typeof(SignalPlotXY))
+		if (typeof(T) != typeof(SignalPlot))
 			return;
 
-		if (plot is not SignalPlotXY sPlot)
+		if (plot is not SignalPlot sPlot)
 			throw new InvalidCastException(Message.EXCEPTION_CAST_PLOTTABLE_ACTIVATOR_INSTANCES);
 		
 		sPlot.Ys = data.Y;
-		sPlot.Xs = data.X;
 		data.SampleRate  ??= 1.0;
 		sPlot.SampleRate =   data.SampleRate.Value;
 		
