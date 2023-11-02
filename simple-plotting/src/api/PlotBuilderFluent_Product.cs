@@ -129,4 +129,11 @@ public partial class PlotBuilderFluent {
 	public IPlotBuilderFluentOfType Reset(IReadOnlyList<PlotChannel> data) {
 		return StartNew(data);
 	}
+	
+	/// <summary>
+	/// Takes a PlotSize and maps it to a PlotSizeContainer.
+	/// </summary>
+	/// <param name="size">PlotSize to map</param>
+	/// <returns>PlotSizeContainer containing width & height</returns>
+	public PlotSizeContainer GetPlotSizeContainer(PlotSize size) => PlotSizeMapper.Map(size);
 }

@@ -72,4 +72,11 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent {
 	/// <param name="data">New data to populate the builder with</param>
 	/// <returns>Fluent builder in a reset state</returns>
 	IPlotBuilderFluentOfType Reset(IReadOnlyList<PlotChannel> data);
+	
+	/// <summary>
+	/// Takes a PlotSize and maps it to a PlotSizeContainer.
+	/// </summary>
+	/// <param name="size">PlotSize to map</param>
+	/// <returns>PlotSizeContainer containing width & height</returns>
+	PlotSizeContainer GetPlotSizeContainer(PlotSize size);
 }
