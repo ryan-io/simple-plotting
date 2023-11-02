@@ -152,10 +152,11 @@ public partial class PlotBuilderFluent {
 	/// <param name="xAxisLabel">Label for the secondary x-axis (top side of plot)</param>
 	/// <param name="fontSize">Size of font</param>
 	/// <param name="fontColor">Color of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
 	public IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel, Color fontColor,
-		int fontSize = 14) {
+		int fontSize = 14, bool isBold = false) {
 		if (string.IsNullOrWhiteSpace(xAxisLabel))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
@@ -172,10 +173,11 @@ public partial class PlotBuilderFluent {
 	/// <param name="yAxisLabel">Label for the secondary x-axis (right side of plot)</param>
 	/// <param name="fontColor">Color of font</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
 	public IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, Color fontColor,
-		int fontSize = 14) {
+		int fontSize = 14, bool isBold =false) {
 		if (string.IsNullOrWhiteSpace(yAxisLabel))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
@@ -191,9 +193,11 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <param name="xAxisLabel">Label for the secondary x-axis (top side of plot)</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel, int fontSize = 14) {
+	public IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel, int fontSize = 14, 
+		bool isBold = false) {
 		if (string.IsNullOrWhiteSpace(xAxisLabel))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
@@ -321,9 +325,11 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <param name="yAxisLabel">Label for the secondary x-axis (right side of plot)</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, int fontSize = 14) {
+	public IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, int fontSize = 14, 
+		bool isBold = false) {
 		if (string.IsNullOrWhiteSpace(yAxisLabel))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
