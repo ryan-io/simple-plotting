@@ -163,7 +163,6 @@ namespace simple_plotting.src {
 			if (signalPlot == null)
 				return default;
 			
-			signalPlot.OffsetX    = data.X.First();
 			signalPlot.Color      = color;
 			signalPlot.Label      = channelName;
 			signalPlot.Smooth     = true;
