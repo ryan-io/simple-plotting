@@ -24,14 +24,15 @@ namespace simple_plotting.runtime {
 
         double? SampleRate { get; set; }
 
-        public async override Task StrategyAsync (List<PlotChannel> output, CsvReader csvr, CancellationToken? cancellationToken = default) {
+        public override async Task StrategyAsync (List<PlotChannel> output, CsvReader csvr, CancellationToken? cancellationToken = default) {
             try {
                 const int SkipFourRows = 4;
                 const int SkipSixRows = 6;
 
                 SkipRowsNumberOfRows(csvr, SkipSixRows);
 
-                csvr.Read();
+                await csvr.ReadAsync();
+                
                 SampleRate = CsvParserHelper.ExtractSampleRate(csvr[1]);
 
                 SkipRowsNumberOfRows(csvr, SkipFourRows);

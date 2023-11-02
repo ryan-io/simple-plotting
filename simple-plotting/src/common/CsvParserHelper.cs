@@ -10,7 +10,7 @@
 
             var splitValues = parsed.Split(DELIMITER, StringSplitOptions.RemoveEmptyEntries);
 
-            if (splitValues == null || splitValues.Length < 1)
+            if (splitValues.Length < 1)
                 return default;
 
             double interval = 0.0d;

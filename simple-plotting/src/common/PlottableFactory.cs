@@ -157,8 +157,8 @@ namespace simple_plotting.src {
 
 			if (!data.SampleRate.HasValue)
 				throw new Exception(Message.EXCEPTION_CREATE_SIGNAL_NO_SAMPLE_RATE);
-			
-			var signalPlot = Plot.AddSignal(data.Y, data.SampleRate.Value);
+
+			var signalPlot = Plot.AddSignalXYConst(data.X, data.Y);
 			
 			if (signalPlot == null)
 				return default;
@@ -203,6 +203,7 @@ namespace simple_plotting.src {
 				throw new InvalidCastException(Message.EXCEPTION_CANNOT_CREATE_GENERIC_PLOTTABLE);
 
 			creationCallback?.Callback(castedPlottable, ref data);
+			
 			Plot.Add(castedPlottable);
 			Plot.Render();
 

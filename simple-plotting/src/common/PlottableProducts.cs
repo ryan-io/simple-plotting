@@ -13,10 +13,10 @@ namespace simple_plotting.src {
 	}
 
 	public readonly struct SignalPlotProduct {
-		public IPlottableFactoryReset Factory    { get; }
-		public SignalPlot?            SignalPlot { get; }
+		public IPlottableFactoryReset             Factory    { get; }
+		public SignalPlotXYConst<double, double>? SignalPlot { get; }
 
-		public SignalPlotProduct(IPlottableFactoryReset factory, SignalPlot? signalPlot) {
+		public SignalPlotProduct(IPlottableFactoryReset factory, SignalPlotXYConst<double, double>? signalPlot) {
 			Factory    = factory;
 			SignalPlot = signalPlot;
 		}
