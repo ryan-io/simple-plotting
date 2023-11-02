@@ -20,49 +20,66 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <summary>
-    ///  Extracts actual channel names from the plots. 
-    /// </summary>
-    /// <returns>Enumerable of strings containing names extracted from plots</returns>
-    public IEnumerable<string> GetScatterPlotLabels(int plotIndex) {
-		List<string> output = new();
-		var plottables = GetPlottablesAs<ScatterPlot>(plotIndex);
-		
+	///  Extracts actual channel names from the plots. 
+	/// </summary>
+	/// <returns>Enumerable of strings containing names extracted from plots</returns>
+	public IEnumerable<string> GetScatterPlottableLabels(int plotIndex) {
+		List<string> output     = new();
+		var          plottables = GetPlottablesAs<ScatterPlot>(plotIndex);
+
 		foreach (var plottable in plottables) {
-			output.Add(plottable.Label);			
+			output.Add(plottable.Label);
 		}
 
 		return output;
 	}
 
-    /// <summary>
-    ///  Helper method that returns an enumerable of type T that implements IPlottable.
-    ///  This method invokes OfType with the generic type T.
-    ///  It requires an index to the plot to extract the plottables from.
-    /// </summary>
-    /// <param name="plotIndex">Index of plot to get</param>
-    /// <typeparam name="T">Class that implements IPlottable</typeparam>
-    /// <returns>Enumerable containing the plottables as type T</returns>
-    /// <exception cref="IndexOutOfRangeException">Thrown if index > plot count</exception>
-    public IEnumerable<T> GetPlottablesAs<T> (int plotIndex) where T : class, IPlottable {
-        if (plotIndex > _plots.Count)
-            throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
+	/// <summary>
+	///  Extracts actual channel names from the plots. 
+	/// </summary>
+	/// <returns>Enumerable of strings containing names extracted from plots</returns>
+	public IEnumerable<string> GetSignalPlottableLabels(int plotIndex) {
+		List<string> output = new();
 
-        var plottables = new List<T>();
-        var plot = _plots[plotIndex];
+		var plottables =
+			GetPlottablesAs<SignalPlotXYConst<double, double>>(plotIndex);
 
-        plottables.AddRange(plot.GetPlottables().OfType<T>().ToList());
+		foreach (var plottable in plottables) {
+			output.Add(plottable.Label);
+		}
 
-        return plottables;
-    }
+		return output;
+	}
 
-    /// <summary>
-    ///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
-    /// </summary>
-    /// <param name="savePath">Directory to save plots</param>
-    /// <param name="name">Name of each plot</param>
-    /// <returns>True if could write (save) to directory, otherwise false</returns>
-    /// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-    public bool TrySave(string savePath, string name) {
+	/// <summary>
+	///  Helper method that returns an enumerable of type T that implements IPlottable.
+	///  This method invokes OfType with the generic type T.
+	///  It requires an index to the plot to extract the plottables from.
+	/// </summary>
+	/// <param name="plotIndex">Index of plot to get</param>
+	/// <typeparam name="T">Class that implements IPlottable</typeparam>
+	/// <returns>Enumerable containing the plottables as type T</returns>
+	/// <exception cref="IndexOutOfRangeException">Thrown if index > plot count</exception>
+	public IEnumerable<T> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable {
+		if (plotIndex > _plots.Count)
+			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
+
+		var plottables = new List<T>();
+		var plot       = _plots[plotIndex];
+
+		plottables.AddRange(plot.GetPlottables().OfType<T>().ToList());
+
+		return plottables;
+	}
+
+	/// <summary>
+	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
+	/// </summary>
+	/// <param name="savePath">Directory to save plots</param>
+	/// <param name="name">Name of each plot</param>
+	/// <returns>True if could write (save) to directory, otherwise false</returns>
+	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
+	public bool TrySave(string savePath, string name) {
 		if (string.IsNullOrWhiteSpace(savePath) || string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -109,17 +126,17 @@ public partial class PlotBuilderFluent {
 	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
 	public IPlotBuilderFluentPostProcess GotoPostProcess() => this;
 
-    /// <summary>
-    ///  Exposes plottables API
-    /// </summary>
-    /// <returns>Fluent builder as  IPlotBuilderFluent_Plottables</returns>
-    public IPlotBuilderFluentPlottables GotoPlottables () => this;
+	/// <summary>
+	///  Exposes plottables API
+	/// </summary>
+	/// <returns>Fluent builder as  IPlotBuilderFluent_Plottables</returns>
+	public IPlotBuilderFluentPlottables GotoPlottables() => this;
 
-    /// <summary>
-    ///  Exposes configuration API.
-    /// </summary>
-    /// <returns>Fluent builder as IPlotBuilderFluent_Configuration</returns>
-    public IPlotBuilderFluentConfiguration GotoConfiguration() => this;
+	/// <summary>
+	///  Exposes configuration API.
+	/// </summary>
+	/// <returns>Fluent builder as IPlotBuilderFluent_Configuration</returns>
+	public IPlotBuilderFluentConfiguration GotoConfiguration() => this;
 
 	/// <summary>
 	///  Resets the builder to an initial state. This is useful if you want to reuse the builder with new data.
@@ -129,7 +146,7 @@ public partial class PlotBuilderFluent {
 	public IPlotBuilderFluentOfType Reset(IReadOnlyList<PlotChannel> data) {
 		return StartNew(data);
 	}
-	
+
 	/// <summary>
 	/// Takes a PlotSize and maps it to a PlotSizeContainer.
 	/// </summary>

@@ -23,7 +23,13 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent {
 	///  Extracts actual channel names from the plots. 
 	/// </summary>
 	/// <returns>Enumerable of strings containing names extracted from plots</returns>
-	IEnumerable<string> GetScatterPlotLabels(int plotIndex);
+	IEnumerable<string> GetScatterPlottableLabels(int plotIndex);
+
+	/// <summary>
+	///  Extracts actual channel names from the plots. 
+	/// </summary>
+	/// <returns>Enumerable of strings containing names extracted from plots</returns>
+	IEnumerable<string> GetSignalPlottableLabels(int plotIndex);
 
     /// <summary>
     ///  Helper method that returns an enumerable of an enumerable of type T
