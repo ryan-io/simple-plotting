@@ -33,7 +33,7 @@ namespace simple_plotting.runtime {
 
                 await csvr.ReadAsync();
                 
-                SampleRate = CsvParserHelper.ExtractSampleRate(csvr[1]);
+                SampleRate = CsvParserHelper.ExtractSampleRate(csvr[1]);    // we could ignore this entirely
 
                 SkipRowsNumberOfRows(csvr, SkipFourRows);
 
