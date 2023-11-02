@@ -237,18 +237,12 @@ public partial class PlotBuilderFluent {
 	/// <summary>
 	/// Disables the second y-axis of each plot
 	/// </summary>
+	/// <param name="keepVisible">If true, axis will still be rendered</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration DisableSecondYAxis() {
+	public IPlotBuilderFluentConfiguration DisableSecondYAxis(bool keepVisible = true) {
 		foreach (var plot in _plots) {
-			var padding = plot.YAxis2.GetSettings().Item1.PixelSizePadding;
-			// AxisLabel.PixelSizePadding = PixelSizePadding;
-			// AxisTicks.PixelOffset      = PixelOffset;
-			// AxisLabel.PixelOffset      = PixelOffset;
-			// AxisLabel.PixelSize        = PixelSize;
-			// AxisLine.PixelOffset       = PixelOffset;
-			
-			plot.YAxis2.IsVisible      = false;
-			plot.Layout(padding: padding);
+			plot.YAxis2.Label(" ");
+			plot.YAxis2.IsVisible = keepVisible;
 		}
 
 		return this;

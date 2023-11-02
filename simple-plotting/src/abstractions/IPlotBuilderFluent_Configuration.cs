@@ -234,8 +234,9 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <summary>
 	/// Disables the second y-axis of each plot
 	/// </summary>
+	/// <param name="keepVisible">If true, axis will still be rendered</param>
 	/// <returns>Fluent builder</returns>
-	IPlotBuilderFluentConfiguration DisableSecondYAxis();
+	IPlotBuilderFluentConfiguration DisableSecondYAxis(bool keepVisible = true);
 
 	/// <summary>
 	///  Rotates the tick labels on the X axis
