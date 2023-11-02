@@ -8,7 +8,7 @@ public interface IPlotBuilderFluentOfType : IPlotBuilderFluent {
     /// <summary>
     ///  The type of plot that is being built.
     /// </summary>
-    Type PlotType { get; }
+    Type? PlotType { get; }
     
     /// <summary>
     ///  Creates a new instance of PlotBuilderFluent and PlottableFactory using type defined in 'T'

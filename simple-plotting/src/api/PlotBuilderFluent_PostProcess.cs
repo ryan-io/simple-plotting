@@ -89,7 +89,7 @@ public partial class PlotBuilderFluent {
 			var plottables = GetPlottablesAs<ScatterPlot>();
 			StaticLabelSetter.SetScatterPlotLabels(ref newLabel, ref plottables, ref plottableIndices);
 		}
-		else if (PlotType == typeof(SignalPlotXYConst<double, double>)) {
+		else if (PlotType == typeof(SignalPlot)) {
 			var plottables = GetPlottablesAs<SignalPlotXYConst<double, double>>();
 			StaticLabelSetter.SetSignalPlotLabels(ref newLabel, ref plottables, ref plottableIndices);
 		}
