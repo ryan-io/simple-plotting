@@ -161,7 +161,7 @@ public partial class PlotBuilderFluent {
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
 		foreach (var plot in _plots) {
-			plot.XAxis2.Label(xAxisLabel, color: fontColor, size: fontSize);
+			plot.XAxis2.Label(xAxisLabel, color: fontColor, size: fontSize, bold:isBold);
 		}
 
 		return this;
@@ -182,7 +182,7 @@ public partial class PlotBuilderFluent {
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
 		foreach (var plot in _plots) {
-			plot.YAxis2.Label(yAxisLabel, color: fontColor, size: fontSize);
+			plot.YAxis2.Label(yAxisLabel, color: fontColor, size: fontSize, bold:isBold);
 		}
 
 		return this;
@@ -202,7 +202,7 @@ public partial class PlotBuilderFluent {
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
 		foreach (var plot in _plots) {
-			plot.XAxis2.Label(xAxisLabel, size: fontSize);
+			plot.XAxis2.Label(xAxisLabel, size: fontSize, bold:isBold);
 		}
 
 		return this;
@@ -249,12 +249,14 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <param name="rotation">Rotation amount (counter-clockwise</param>
 	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <param name="fontSize">Size of tick font</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration SetXAxisTicks(PlotAxisRotation rotation, bool isBold = false) {
+	public IPlotBuilderFluentConfiguration SetXAxisTicks(PlotAxisRotation rotation, bool isBold = false, int fontSize
+            = 14) {
 		var rotationInt = PlotAxisRotationMapper.Map(rotation);
 
 		foreach (var plot in _plots) {
-			plot.XAxis.TickLabelStyle(rotation: rotationInt, fontBold: isBold);
+			plot.XAxis.TickLabelStyle(rotation: rotationInt, fontBold: isBold, fontSize: 14);
 		}
 
 		return this;
@@ -265,8 +267,9 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <param name="rotation">Rotation amount (counter-clockwise</param>
 	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <param name="fontSize">Size of tick font</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration SetYAxisTicks(PlotAxisRotation rotation, bool isBold = false) {
+	public IPlotBuilderFluentConfiguration SetYAxisTicks(PlotAxisRotation rotation, bool isBold = false, int fontSize =14) {
 		var rotationInt = PlotAxisRotationMapper.Map(rotation);
 
 		foreach (var plot in _plots) {
@@ -281,8 +284,10 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <param name="rotation">Rotation amount (counter-clockwise</param>
 	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <param name="fontSize">Size of tick font</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration SetSecondaryYAxisTicks(PlotAxisRotation rotation, bool isBold = false) {
+	public IPlotBuilderFluentConfiguration SetSecondaryYAxisTicks(PlotAxisRotation rotation, bool isBold = false, int
+            fontSize =14) {
 		var rotationInt = PlotAxisRotationMapper.Map(rotation);
 
 		foreach (var plot in _plots) {
@@ -297,8 +302,10 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <param name="rotation">Rotation amount (counter-clockwise</param>
 	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <param name="fontSize">Size of tick font</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration SetSecondaryXAxisTicks(PlotAxisRotation rotation, bool isBold = false) {
+	public IPlotBuilderFluentConfiguration SetSecondaryXAxisTicks(PlotAxisRotation rotation, bool isBold = false, int
+            fontSize = 14) {
 		var rotationInt = PlotAxisRotationMapper.Map(rotation);
 
 		foreach (var plot in _plots) {
@@ -334,7 +341,7 @@ public partial class PlotBuilderFluent {
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
 		foreach (var plot in _plots) {
-			plot.YAxis2.Label(yAxisLabel, size: fontSize);
+			plot.YAxis2.Label(yAxisLabel, size: fontSize, bold:isBold);
 		}
 
 		return this;

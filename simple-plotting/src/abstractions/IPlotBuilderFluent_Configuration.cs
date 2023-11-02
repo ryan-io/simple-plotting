@@ -240,30 +240,36 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// </summary>
 	/// <param name="rotation">Rotation amount (counter-clockwise</param>
 	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <param name="fontSize">Size of tick font</param>
 	/// <returns>Fluent builder</returns>
-	IPlotBuilderFluentConfiguration SetXAxisTicks(PlotAxisRotation rotation, bool isBold = false);
+	IPlotBuilderFluentConfiguration SetXAxisTicks(PlotAxisRotation rotation, bool isBold = false, int fontSize = 14);
 
 	/// <summary>
 	///  Rotates the tick labels on the Y axis
 	/// </summary>
 	/// <param name="rotation">Rotation amount (counter-clockwise</param>
 	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <param name="fontSize">Size of tick font</param>
 	/// <returns>Fluent builder</returns>
-	IPlotBuilderFluentConfiguration SetYAxisTicks(PlotAxisRotation rotation, bool isBold = false);
+	IPlotBuilderFluentConfiguration SetYAxisTicks(PlotAxisRotation rotation, bool isBold = false, int fontSize = 14);
 
 	/// <summary>
 	///  Rotates the tick labels on the secondary Y axis
 	/// </summary>
 	/// <param name="rotation">Rotation amount (counter-clockwise</param>
 	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <param name="fontSize">Size of tick font</param>
 	/// <returns>Fluent builder</returns>
-	IPlotBuilderFluentConfiguration SetSecondaryYAxisTicks(PlotAxisRotation rotation, bool isBold = false);
+	IPlotBuilderFluentConfiguration SetSecondaryYAxisTicks(PlotAxisRotation rotation, bool isBold = false, int 
+        fontSize = 14);
 
 	/// <summary>
 	///  Rotates the tick labels on the secondary X axis
 	/// </summary>
 	/// <param name="rotation">Rotation amount (counter-clockwise</param>
 	/// <param name="isBold">Flag to bold tick labels</param>
+	/// <param name="fontSize">Size of tick font</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration SetSecondaryXAxisTicks(PlotAxisRotation rotation, bool isBold = false);
+	public IPlotBuilderFluentConfiguration SetSecondaryXAxisTicks(PlotAxisRotation rotation, bool isBold = false, int
+        fontSize = 14);
 }
