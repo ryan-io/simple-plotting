@@ -240,7 +240,15 @@ public partial class PlotBuilderFluent {
 	/// <returns>Fluent builder</returns>
 	public IPlotBuilderFluentConfiguration DisableSecondYAxis() {
 		foreach (var plot in _plots) {
-			plot.YAxis2.IsVisible = false;
+			var padding = plot.YAxis2.GetSettings().Item1.PixelSizePadding;
+			// AxisLabel.PixelSizePadding = PixelSizePadding;
+			// AxisTicks.PixelOffset      = PixelOffset;
+			// AxisLabel.PixelOffset      = PixelOffset;
+			// AxisLabel.PixelSize        = PixelSize;
+			// AxisLine.PixelOffset       = PixelOffset;
+			
+			plot.YAxis2.IsVisible      = false;
+			plot.Layout(padding: padding);
 		}
 
 		return this;
