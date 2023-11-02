@@ -27,9 +27,10 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// </summary>
 	/// <param name="title">String title for plot</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if string is null or whitespace</exception>
-	IPlotBuilderFluentConfiguration WithTitle(string title, int fontSize = 14);
+	IPlotBuilderFluentConfiguration WithTitle(string title, int fontSize = 14, bool isBold = false);
 
 	/// <summary>
 	///  Sets the label for the X axis.
@@ -37,9 +38,10 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="labelTxt">String value for the X axis label</param>
 	/// <param name="fontColor">Color of font</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if xAxisLabel is null or whitespace</exception>
-	IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, Color fontColor, int fontSize);
+	IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, Color fontColor, int fontSize, bool isBold = false);
 
 	/// <summary>
 	///  Sets the label for the Y axis.
@@ -47,25 +49,28 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="labelTxt">String value for the Y axis label</param>
 	/// <param name="fontColor">Color of font</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if yAxisLabel is null or whitespace</exception>
-	IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, Color fontColor, int fontSize);
+	IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, Color fontColor, int fontSize, bool isBold = false);
 
 	/// <summary>
 	/// Sets the label for the X axis.
 	/// </summary>
 	/// <param name="labelTxt">String value for the X axis label</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
-	IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, int fontSize = 14);
+	IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, int fontSize = 14, bool isBold = false);
 
 	/// <summary>
 	/// Sets the label for the Y axis.
 	/// </summary>
 	/// <param name="labelTxt">String value for the Y axis label</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
-	IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, int fontSize = 14);
+	IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, int fontSize = 14, bool isBold = false);
 
 	/// <summary>
 	///  Sets the rotation of the primary Y axis ticks.
@@ -231,7 +236,6 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="isBold">Flag to bold tick labels</param>
 	/// <returns>Fluent builder</returns>
 	IPlotBuilderFluentConfiguration SetXAxisTicks(PlotAxisRotation rotation, bool isBold = false);
-
 
 	/// <summary>
 	///  Rotates the tick labels on the Y axis

@@ -26,15 +26,16 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <param name="title">String title for plot</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if string is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithTitle(string title, int fontSize) {
+	public IPlotBuilderFluentConfiguration WithTitle(string title, int fontSize, bool isBold = false) {
 		if (string.IsNullOrWhiteSpace(title))
 			throw new Exception(Message.EXCEPTION_TITLE_INVALID);
 
 		var plotTracker = 1;
 		foreach (var plot in _plots) {
-			plot.Title($"{title} - #{plotTracker}", size: fontSize);
+			plot.Title($"{title} - #{plotTracker}", size: fontSize, bold: isBold);
 			plotTracker++;
 		}
 
@@ -47,14 +48,16 @@ public partial class PlotBuilderFluent {
 	/// <param name="labelTxt">String value for the X axis label</param>
 	/// <param name="fontColor">Color of font</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if xAxisLabel is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, Color fontColor, int fontSize) {
+	public IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, Color fontColor, int fontSize, 
+		bool isBold=false) {
 		if (string.IsNullOrWhiteSpace(labelTxt))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
 		foreach (var plot in _plots) {
-			plot.XAxis.Label(labelTxt, color: fontColor, size: fontSize);
+			plot.XAxis.Label(labelTxt, color: fontColor, size: fontSize, bold:isBold);
 		}
 
 		return this;
@@ -65,13 +68,14 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <param name="labelTxt">String value for the X axis label</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, int fontSize = 14) {
+	public IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, int fontSize = 14, bool isBold=false) {
 		if (string.IsNullOrWhiteSpace(labelTxt))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
 		foreach (var plot in _plots) {
-			plot.XAxis.Label(labelTxt, size: fontSize);
+			plot.XAxis.Label(labelTxt, size: fontSize, bold:isBold);
 		}
 
 		return this;
@@ -83,14 +87,16 @@ public partial class PlotBuilderFluent {
 	/// <param name="labelTxt">String value for the Y axis label</param>
 	/// <param name="fontColor">Color of font</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if yAxisLabel is null or whitespace</exception>
-	public IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, Color fontColor, int fontSize) {
+	public IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, Color fontColor, int fontSize, 
+		bool isBold = false) {
 		if (string.IsNullOrWhiteSpace(labelTxt))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
 		foreach (var plot in _plots) {
-			plot.YAxis.Label(labelTxt, color: fontColor, size: fontSize);
+			plot.YAxis.Label(labelTxt, color: fontColor, size: fontSize, bold:isBold);
 		}
 
 		return this;
@@ -101,13 +107,14 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <param name="labelTxt">String value for the Y axis label</param>
 	/// <param name="fontSize">Size of font</param>
+	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, int fontSize = 14) {
+	public IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, int fontSize = 14, bool isBold=false) {
 		if (string.IsNullOrWhiteSpace(labelTxt))
 			throw new Exception(Message.EXCEPTION_AXIS_LABEL_INVALID);
 
 		foreach (var plot in _plots) {
-			plot.YAxis.Label(labelTxt, size: fontSize);
+			plot.YAxis.Label(labelTxt, size: fontSize, bold:isBold);
 		}
 
 		return this;
