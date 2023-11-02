@@ -273,7 +273,7 @@ public partial class PlotBuilderFluent {
 		var rotationInt = PlotAxisRotationMapper.Map(rotation);
 
 		foreach (var plot in _plots) {
-			plot.YAxis.TickLabelStyle(rotation: rotationInt, fontBold: isBold);
+			plot.YAxis.TickLabelStyle(rotation: rotationInt, fontBold: isBold, fontSize: 14);
 		}
 
 		return this;
@@ -291,7 +291,7 @@ public partial class PlotBuilderFluent {
 		var rotationInt = PlotAxisRotationMapper.Map(rotation);
 
 		foreach (var plot in _plots) {
-			plot.YAxis2.TickLabelStyle(rotation: rotationInt, fontBold: isBold);
+			plot.YAxis2.TickLabelStyle(rotation: rotationInt, fontBold: isBold, fontSize: 14);
 		}
 
 		return this;
@@ -309,7 +309,7 @@ public partial class PlotBuilderFluent {
 		var rotationInt = PlotAxisRotationMapper.Map(rotation);
 
 		foreach (var plot in _plots) {
-			plot.XAxis2.TickLabelStyle(rotation: rotationInt, fontBold: isBold);
+			plot.XAxis2.TickLabelStyle(rotation: rotationInt, fontBold: isBold, fontSize: 14);
 		}
 
 		return this;
