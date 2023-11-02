@@ -49,7 +49,16 @@ public interface IPlotBuilderFluentPostProcess {
 	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
 	/// <exception cref="NullReferenceException">Thrown if plottable cast fails</exception>
 	IPlotBuilderFluentPostProcess TrySetScatterLabelAll(string newLabel);
-    
+
+	/// <summary>
+	/// Changes the title for all plots
+	/// </summary>
+	/// <param name="newTitle">The new plot title</param>
+	/// <param name="fontSize">Title font size</param>
+	/// <param name="isBold">Whether the title is bold or not</param>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentPostProcess ChangeTitle(string newTitle, int fontSize = 14, bool isBold = false);
+	
 	/// <summary>
 	/// Invokes Render on all plots.
 	/// </summary>

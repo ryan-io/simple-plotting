@@ -42,6 +42,27 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <summary>
+	/// Changes the title for all plots
+	/// </summary>
+	/// <param name="newTitle">The new plot title</param>
+	/// <param name="fontSize">Title font size</param>
+	/// <param name="isBold">Whether the title is bold or not</param>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentPostProcess ChangeTitle(string newTitle, int fontSize = 14, bool isBold = false) {
+		if (string.IsNullOrWhiteSpace(newTitle))
+			throw new Exception(Message.EXCEPTION_TITLE_INVALID);
+
+		var plotTracker = 1;
+		foreach (var plot in _plots) {
+			plot.Title($"{newTitle} - #{plotTracker}", size: fontSize, bold: isBold);
+			plot.Render();
+			plotTracker++;
+		}
+
+		return this;
+	}
+
+	/// <summary>
 	///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
 	///  This method will invoke Render() on the plot.
 	///  Plottable index is 0-based and is in sequential order of generated plots
@@ -98,7 +119,7 @@ public partial class PlotBuilderFluent {
 
 		return this;
 	}
-	
+
 	/// <summary>
 	///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
 	///  This method will invoke Render() on the plot.
