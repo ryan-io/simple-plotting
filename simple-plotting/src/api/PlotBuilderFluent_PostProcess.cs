@@ -1,5 +1,6 @@
 // simple-plotting
 
+using NAMESPACE;
 using ScottPlot;
 using ScottPlot.Plottable;
 
@@ -52,7 +53,7 @@ public partial class PlotBuilderFluent {
 	public IPlotBuilderFluentPostProcess TrySetScatterLabel(string newLabel, params int[] plottableIndex) {
 		if (string.IsNullOrWhiteSpace(newLabel))
 			throw new NullReferenceException(Message.EXCEPTION_NO_PLOT_LABEL_SPECIFIED);
-		
+
 		var plottables = GetPlottablesAs<ScatterPlot>();
 
 		foreach (var plotty in plottables) {
@@ -74,6 +75,31 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <summary>
+	///  Generically sets labels defined in plottableIndices for ALL plots.
+	/// </summary>
+	/// <param name="newLabel">New label</param>
+	/// <param name="plottableIndices">Array of label indices to change</param>
+	/// <returns></returns>
+	/// <exception cref="NullReferenceException">Thrown if newLabel is null or whitespace</exception>
+	public IPlotBuilderFluentPostProcess TrySetLabel(string newLabel, params int[] plottableIndices) {
+		if (string.IsNullOrWhiteSpace(newLabel))
+			throw new NullReferenceException(Message.EXCEPTION_NO_PLOT_LABEL_SPECIFIED);
+
+		if (PlotType == typeof(ScatterPlot)) {
+			var plottables = GetPlottablesAs<ScatterPlot>();
+			StaticLabelSetter.SetScatterPlotLabels(ref newLabel, ref plottables, ref plottableIndices);
+		}
+		else if (PlotType == typeof(SignalPlotXYConst<double, double>)) {
+			var plottables = GetPlottablesAs<SignalPlotXYConst<double, double>>();
+			StaticLabelSetter.SetSignalPlotLabels(ref newLabel, ref plottables, ref plottableIndices);
+		}
+
+		RefreshRenderers();
+
+		return this;
+	}
+	
+	/// <summary>
 	///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
 	///  This method will invoke Render() on the plot.
 	///  This version will set the label for all plots.
@@ -82,11 +108,7 @@ public partial class PlotBuilderFluent {
 	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
 	/// <exception cref="NullReferenceException">Thrown if plottable cast fails</exception>
 	public IPlotBuilderFluentPostProcess TrySetScatterLabelAll(string newLabel) {
-		var indices = new int[_data.Count];
-
-		for (var i = 0; i < indices.Length; i++) {
-			indices[i] = i;
-		}
+		var indices = GetIndices();
 
 		return TrySetScatterLabel(newLabel, indices);
 	}
@@ -100,5 +122,15 @@ public partial class PlotBuilderFluent {
 		}
 
 		return this;
+	}
+
+	int[] GetIndices() {
+		var indices = new int[_data.Count];
+
+		for (var i = 0; i < indices.Length; i++) {
+			indices[i] = i;
+		}
+
+		return indices;
 	}
 }

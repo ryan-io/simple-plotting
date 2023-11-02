@@ -6,6 +6,11 @@ namespace simple_plotting.src;
 
 public partial class PlotBuilderFluent {
 	/// <summary>
+	///  The type of plot that is being built.
+	/// </summary>
+	public Type PlotType { get; }
+	
+	/// <summary>
 	///  Creates a new instance of PlotBuilderFluent and PlottableFactory using type defined in 'T'
 	/// </summary>
 	/// <typeparam name="T">Is a class that implements IPlottable (SignalPlot, ScatterPlot, etc.)</typeparam>
