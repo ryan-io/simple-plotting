@@ -41,7 +41,8 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if xAxisLabel is null or whitespace</exception>
-	IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, Color fontColor, int fontSize, bool isBold = false);
+	IPlotBuilderFluentConfiguration WithPrimaryXAxisLabel(string labelTxt, Color fontColor, int fontSize,
+		bool isBold = false);
 
 	/// <summary>
 	///  Sets the label for the Y axis.
@@ -52,7 +53,8 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if yAxisLabel is null or whitespace</exception>
-	IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, Color fontColor, int fontSize, bool isBold = false);
+	IPlotBuilderFluentConfiguration WithPrimaryYAxisLabel(string labelTxt, Color fontColor, int fontSize,
+		bool isBold = false);
 
 	/// <summary>
 	/// Sets the label for the X axis.
@@ -105,8 +107,8 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
-	IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel, Color fontColor, int fontSize = 14, 
-        bool isBold = false);
+	IPlotBuilderFluentConfiguration WithSecondaryXAxisLabel(string xAxisLabel, Color fontColor, int fontSize = 14,
+		bool isBold = false);
 
 	/// <summary>
 	///  Sets the label for the secondary Y axis.
@@ -127,8 +129,8 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="isBold">True bolds, otherwise leaves as-is</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="Exception">Thrown if the label is null or whitespace</exception>
-	IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, Color fontColor, int fontSize = 14, 
-        bool isBold =false);
+	IPlotBuilderFluentConfiguration WithSecondaryYAxisLabel(string yAxisLabel, Color fontColor, int fontSize = 14,
+		bool isBold = false);
 
 	/// <summary>
 	///  Sets the rotation of the secondary Y axis ticks.
@@ -260,8 +262,8 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="isBold">Flag to bold tick labels</param>
 	/// <param name="fontSize">Size of tick font</param>
 	/// <returns>Fluent builder</returns>
-	IPlotBuilderFluentConfiguration SetSecondaryYAxisTicks(PlotAxisRotation rotation, bool isBold = false, int 
-        fontSize = 14);
+	IPlotBuilderFluentConfiguration SetSecondaryYAxisTicks(PlotAxisRotation rotation, bool isBold = false, int
+		fontSize = 14);
 
 	/// <summary>
 	///  Rotates the tick labels on the secondary X axis
@@ -271,5 +273,21 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="fontSize">Size of tick font</param>
 	/// <returns>Fluent builder</returns>
 	public IPlotBuilderFluentConfiguration SetSecondaryXAxisTicks(PlotAxisRotation rotation, bool isBold = false, int
-        fontSize = 14);
+		fontSize = 14);
+
+	/// <summary>
+	///  Sets the layout of the plot; this is the padding around the plot
+	/// </summary>
+	/// <param name="left">Left padding</param>
+	/// <param name="right">Right padding</param>
+	/// <param name="top">Top padding</param>
+	/// <param name="bottom">Bottom padding</param>
+	/// <param name="padding">Additional padding</param>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration SetLayout(
+		float? left = 50f
+		, float? right = 50f
+		, float? top = 50f
+		, float? bottom = 50f
+		, float? padding = 0f);
 }
