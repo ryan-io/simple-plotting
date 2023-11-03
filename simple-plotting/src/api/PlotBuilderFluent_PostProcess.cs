@@ -1,7 +1,6 @@
 // simple-plotting
 
 using NAMESPACE;
-using ScottPlot;
 using ScottPlot.Plottable;
 
 namespace simple_plotting.src;
@@ -119,7 +118,7 @@ public partial class PlotBuilderFluent {
 
 		return this;
 	}
-
+	
 	/// <summary>
 	///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
 	///  This method will invoke Render() on the plot.

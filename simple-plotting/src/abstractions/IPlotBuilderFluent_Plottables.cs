@@ -103,5 +103,16 @@ public interface IPlotBuilderFluentPlottables : IPlotBuilderFluent {
     /// <param name="plottable">Plottable instance to remove</param>
     /// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
     /// <exception cref="Exception">Thrown if plot does not contain plottle instance</exception>
-    IPlotBuilderFluentPlottables Remove<T> (Plot plot, IPlottable plottable) where T : class, IPlottable;
+    IPlotBuilderFluentPlottables Remove<T> (Plot? plot, IPlottable? plottable) where T : class, IPlottable;
+    
+    /// <summary>
+    ///  Adds a draggable line to the plot at posX, posY
+    /// </summary>
+    /// <param name="plotIndex">Plot index to add line to</param>
+    /// <param name="posX">Plot coordinate x</param>
+    /// <param name="posY">Plot coordinate y</param>
+    /// <param name="marker">Out DraggableMarkerPlot</param>
+    /// <returns>Fluent builder</returns>
+    IPlotBuilderFluentPlottables AddDraggableLine(int plotIndex, double posX, double posY,
+	    out DraggableMarkerPlot marker);
 }
