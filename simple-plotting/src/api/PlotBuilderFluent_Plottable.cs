@@ -51,10 +51,9 @@ public partial class PlotBuilderFluent {
 			MarkerSize  = length,
 			DragEnabled = true
 		};
+		
 		//marker.MarkerLineWidth = width;
-
-		plot.Add(marker);
-
+		
 		// TODO - data is ALWAYS pulled from channel with index 0. this is not necessarily the correct logic
 		if (isSnap) {
 			var x = _data[0].Records.Select(x => x.DateTime.ToOADate()).ToArray();
@@ -63,6 +62,8 @@ public partial class PlotBuilderFluent {
 			marker.DragSnap = new ScottPlot.SnapLogic.Nearest2D(x, y);
 		}
 
+		plot.Add(marker);
+		
 		return this;
 	}
 

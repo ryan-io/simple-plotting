@@ -7,7 +7,7 @@ namespace simple_plotting.src {
 	/// <summary>
 	///  Adds a draggable arrow to a plot. Implements IPlottable.
 	/// </summary>
-	public class DraggableArrow : ArrowCoordinated, IDraggable {
+	public class DraggableArrow : IPlottable, IDraggable, IHasPixelOffset, IHasLine, IHasColor {
 		/// <summary>
 		///  Event handler for when the arrow is dragged
 		/// </summary>
@@ -31,34 +31,120 @@ namespace simple_plotting.src {
 		/// <summary>
 		///  X coordinate of the arrow
 		/// </summary>
-		double XCoord { get; set; }
+		public double XCoord { get; private set; }
 
 		/// <summary>
 		///  Y coordinate of the arrow
 		/// </summary>
-		double YCoord { get; set; }
+		public double YCoord { get; private set; }
 
-		public int DebugRenderCount { get; private set; }
+		/// <summary>
+		///  If dragging is enabled the marker cannot be dragged more negative than this position
+		/// </summary>
+		public double DragXLimitMin { get; set; } = double.NegativeInfinity;
+
+		/// <summary>
+		///  If dragging is enabled the marker cannot be dragged more positive than this position
+		/// </summary>
+		public double DragXLimitMax { get; set; } = double.PositiveInfinity;
+
+		/// <summary>
+		///  If dragging is enabled the marker cannot be dragged more negative than this position
+		/// </summary>
+		public double DragYLimitMin { get; set; } = double.NegativeInfinity;
+
+		/// <summary>
+		///  If dragging is enabled the marker cannot be dragged more positive than this position
+		/// </summary>
+		public double DragYLimitMax { get; set; } = double.PositiveInfinity;
+
+		/// <summary>
+		/// Location of the arrow base in coordinate space
+		/// </summary>
+		public Coordinate Base = new(0, 0);
+
+		/// <summary>
+		/// Location of the arrow base in coordinate space
+		/// </summary>
+		public Coordinate Tip = new(0, 0);
+
+		/// <summary>
+		/// Color of the arrow and arrowhead
+		/// </summary>
+		public Color Color { get; set; } = Color.Black;
+
+		/// <summary>
+		/// Color of the arrow and arrowhead
+		/// </summary>
+		public Color LineColor {
+			get => Color;
+			set { Color = value; }
+		}
+
+		/// <summary>
+		/// Thickness of the arrow line
+		/// </summary>
+		public double LineWidth { get; set; } = 2;
+
+		/// <summary>
+		/// Style of the arrow line
+		/// </summary>
+		public LineStyle LineStyle { get; set; } = LineStyle.Solid;
+
+		/// <summary>
+		/// Label to appear in the legend
+		/// </summary>
+		public string? Label { get; set; }
+
+		/// <summary>
+		/// Width of the arrowhead (pixels)
+		/// </summary>
+		public double ArrowheadWidth { get; set; } = 3;
+
+		/// <summary>
+		/// Height of the arrowhead (pixels)
+		/// </summary>
+		public double ArrowheadLength { get; set; } = 3;
+
+		/// <summary>
+		/// The arrow will be lengthened to ensure it is at least this size on the screen
+		/// </summary>
+		public float MinimumLengthPixels { get; set; } = 0;
+
+		/// <summary>
+		/// Marker to be drawn at the base (if MarkerSize > 0)
+		/// </summary>
+		public MarkerShape MarkerShape { get; set; } = MarkerShape.filledCircle;
+
+		/// <summary>
+		/// Size of marker (in pixels) to draw at the base
+		/// </summary>
+		public float MarkerSize { get; set; } = 0;
+
+		/// <summary>
+		///  Indicates whether the arrow is visible
+		/// </summary>
+		public bool  IsVisible    { get; set; } = true;
 		
 		/// <summary>
-		///  If dragging is enabled the marker cannot be dragged more negative than this position
+		///  X axis index
 		/// </summary>
-		double DragXLimitMin { get; set; } = double.NegativeInfinity;
-
+		public int   XAxisIndex   { get; set; } = 0;
+		
 		/// <summary>
-		///  If dragging is enabled the marker cannot be dragged more positive than this position
+		///  Y axis index
 		/// </summary>
-		double DragXLimitMax { get; set; } = double.PositiveInfinity;
-
+		public int   YAxisIndex   { get; set; } = 0;
+		
 		/// <summary>
-		///  If dragging is enabled the marker cannot be dragged more negative than this position
+		///  X pixel offset
 		/// </summary>
-		double DragYLimitMin { get; set; } = double.NegativeInfinity;
-
+		public float PixelOffsetX { get; set; } = 0;
+		
 		/// <summary>
-		///  If dragging is enabled the marker cannot be dragged more positive than this position
+		///  Y pixel offset
 		/// </summary>
-		double DragYLimitMax { get; set; } = double.PositiveInfinity;
+		public float PixelOffsetY { get; set; } = 0;
 
 		/// <summary>
 		///  Move the marker to a new coordinate in plot space.
@@ -105,9 +191,7 @@ namespace simple_plotting.src {
 		/// <param name="dims">Plot dimensions</param>
 		/// <param name="bmp">Bitmap of the plot</param>
 		/// <param name="lowQuality">If true, GDI API call will be rendered with low quality</param>
-		public new void Render(PlotDimensions dims, Bitmap bmp, bool lowQuality = false) {
-			DebugRenderCount++;
-			
+		public void Render(PlotDimensions dims, Bitmap bmp, bool lowQuality = false) {
 			if (IsVisible == false)
 				return;
 
@@ -121,7 +205,7 @@ namespace simple_plotting.src {
 			tipPixel.Translate(PixelOffsetX, -PixelOffsetY);
 
 			float lengthPixels = basePixel.Distance(tipPixel);
-			
+
 			if (lengthPixels < MinimumLengthPixels) {
 				float expandBy = MinimumLengthPixels / lengthPixels;
 				float dX       = tipPixel.X - basePixel.X;
@@ -140,14 +224,65 @@ namespace simple_plotting.src {
 		}
 
 		/// <summary>
+		///  Returns the axis limits of the arrow
+		/// </summary>
+		/// <returns>Instance of AxisLimits</returns>
+		public AxisLimits GetAxisLimits() {
+			double xMin = Math.Min(Base.X, Tip.X);
+			double xMax = Math.Max(Base.X, Tip.X);
+			double yMin = Math.Min(Base.Y, Tip.Y);
+			double yMax = Math.Max(Base.Y, Tip.Y);
+			return new AxisLimits(xMin, xMax, yMin, yMax);
+		}
+
+		/// <summary>
+		///  Returns the legend items for the arrow
+		/// </summary>
+		/// <returns>Array containing all LegendItems</returns>
+		public LegendItem[] GetLegendItems() {
+			LegendItem item = new(this) {
+				label     = Label,
+				lineWidth = LineWidth,
+				color     = Color,
+			};
+
+			return LegendItem.Single(item);
+		}
+
+		/// <summary>
+		///  Validates the data for the arrow
+		/// </summary>
+		/// <param name="deep">Not currently in use</param>
+		/// <exception cref="InvalidOperationException">Thrown if Base or Tip is finite</exception>
+		public void ValidateData(bool deep = false) {
+			if (!Base.IsFinite() || !Tip.IsFinite())
+				throw new InvalidOperationException("Base and Tip coordinates must be finite");
+		}
+
+		/// <summary>
 		///  Creates a new draggable arrow
 		/// </summary>
 		/// <param name="xBase">Starting X coordinate</param>
 		/// <param name="yBase">Starting Y coordinate</param>
 		/// <param name="xTip">X coordinate for the tip of the arrow head</param>
 		/// <param name="yTip">Y coordinate for the tip of the arrow head</param>
-		public DraggableArrow(double xBase, double yBase, double xTip, double yTip)
-			: base(xBase, yBase, xTip, yTip) {
+		public DraggableArrow(double xBase, double yBase, double xTip, double yTip) {
+			Base.X = xBase;
+			Base.Y = yBase;
+			Tip.X  = xTip;
+			Tip.Y  = yTip;
+		}
+
+		/// <summary>
+		///  Creates a new draggable arrow
+		/// </summary>
+		/// <param name="arrowBase">Coordinates for the base of the arrow</param>
+		/// <param name="arrowTip">Coordinates for the tip of the arrow</param>
+		public DraggableArrow(Coordinate arrowBase, Coordinate arrowTip) {
+			Base.X = arrowBase.X;
+			Base.Y = arrowTip.Y;
+			Tip.X  = arrowTip.X;
+			Tip.Y  = arrowTip.Y;
 		}
 	}
 }
