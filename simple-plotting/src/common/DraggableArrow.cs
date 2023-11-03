@@ -214,7 +214,7 @@ namespace simple_plotting.src {
 				basePixel.Y = tipPixel.Y - dY * expandBy;
 			}
 
-			gfx.RotateTransform(90);
+			//gfx.RotateTransform(90);
 			MarkerTools.DrawMarker(gfx, new(basePixel.X, basePixel.Y), MarkerShape, MarkerSize, Color);
 
 			penLine.CustomEndCap =
