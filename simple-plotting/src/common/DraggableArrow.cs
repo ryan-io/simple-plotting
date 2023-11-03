@@ -38,6 +38,8 @@ namespace simple_plotting.src {
 		/// </summary>
 		double YCoord { get; set; }
 
+		public int DebugRenderCount { get; private set; }
+		
 		/// <summary>
 		///  If dragging is enabled the marker cannot be dragged more negative than this position
 		/// </summary>
@@ -104,6 +106,8 @@ namespace simple_plotting.src {
 		/// <param name="bmp">Bitmap of the plot</param>
 		/// <param name="lowQuality">If true, GDI API call will be rendered with low quality</param>
 		public new void Render(PlotDimensions dims, Bitmap bmp, bool lowQuality = false) {
+			DebugRenderCount++;
+			
 			if (IsVisible == false)
 				return;
 
@@ -117,6 +121,7 @@ namespace simple_plotting.src {
 			tipPixel.Translate(PixelOffsetX, -PixelOffsetY);
 
 			float lengthPixels = basePixel.Distance(tipPixel);
+			
 			if (lengthPixels < MinimumLengthPixels) {
 				float expandBy = MinimumLengthPixels / lengthPixels;
 				float dX       = tipPixel.X - basePixel.X;
@@ -125,6 +130,7 @@ namespace simple_plotting.src {
 				basePixel.Y = tipPixel.Y - dY * expandBy;
 			}
 
+			gfx.RotateTransform(90);
 			MarkerTools.DrawMarker(gfx, new(basePixel.X, basePixel.Y), MarkerShape, MarkerSize, Color);
 
 			penLine.CustomEndCap =
