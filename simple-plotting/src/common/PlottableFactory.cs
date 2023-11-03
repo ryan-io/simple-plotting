@@ -152,17 +152,17 @@ namespace simple_plotting.src {
 
 			if (Plot == null)
 				throw new Exception(Message.EXCEPTION_PLOT_IS_NULL);
-			
+
 			// var signalPlot = AddPlotOfType<SignalPlot>(ref data, new SignalPlotCallback());
 
 			if (!data.SampleRate.HasValue)
 				throw new Exception(Message.EXCEPTION_CREATE_SIGNAL_NO_SAMPLE_RATE);
 
 			var signalPlot = Plot.AddSignalXYConst(data.X, data.Y);
-			
+
 			if (signalPlot == null)
 				return default;
-			
+
 			signalPlot.Color      = color;
 			signalPlot.Label      = channelName;
 			signalPlot.Smooth     = true;
@@ -202,7 +202,7 @@ namespace simple_plotting.src {
 				throw new InvalidCastException(Message.EXCEPTION_CANNOT_CREATE_GENERIC_PLOTTABLE);
 
 			creationCallback?.Callback(castedPlottable, ref data);
-			
+
 			Plot.Add(castedPlottable);
 			Plot.Render();
 

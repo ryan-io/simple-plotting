@@ -1,7 +1,6 @@
 using ScottPlot.Plottable;
-using simple_plotting.src;
 
-namespace NAMESPACE {
+namespace simple_plotting.src {
 	/// <summary>
 	///  Helper class for setting labels on plottables.
 	/// </summary>

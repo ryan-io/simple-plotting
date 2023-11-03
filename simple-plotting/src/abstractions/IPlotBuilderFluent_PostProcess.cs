@@ -58,7 +58,7 @@ public interface IPlotBuilderFluentPostProcess {
 	/// <param name="isBold">Whether the title is bold or not</param>
 	/// <returns>Fluent builder</returns>
 	IPlotBuilderFluentPostProcess ChangeTitle(string newTitle, int fontSize = 14, bool isBold = false);
-	
+
 	/// <summary>
 	/// Invokes Render on all plots.
 	/// </summary>
@@ -71,5 +71,5 @@ public interface IPlotBuilderFluentPostProcess {
 	/// <param name="plottableIndices">Array of label indices to change</param>
 	/// <returns></returns>
 	/// <exception cref="NullReferenceException">Thrown if newLabel is null or whitespace</exception>
-	 IPlotBuilderFluentPostProcess TrySetLabel(string newLabel, params int[] plottableIndices);
+	IPlotBuilderFluentPostProcess TrySetLabel(string newLabel, params int[] plottableIndices);
 }

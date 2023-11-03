@@ -11,10 +11,10 @@ public partial class PlotBuilderFluent {
 	///  Removes a plottable instance of type 'T' from a plot specified plotIndex
 	/// </summary>
 	/// <typeparam name="T">Type of plottables to remove</typeparam>
-	/// <param name="plot">Plotto remove the plottables of type 'T' from</param>
+	/// <param name="plot">Plot remove the plottables of type 'T' from</param>
 	/// <param name="plottable">Plottable instance to remove</param>
 	/// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
-	/// <exception cref="Exception">Thrown if plot does not contain plottle instance</exception>
+	/// <exception cref="Exception">Thrown if plot does not contain plottable instance</exception>
 	public IPlotBuilderFluentPlottables Remove<T>(Plot? plot, IPlottable? plottable)
 		where T : class, IPlottable {
 		if (plot == null || plottable == null)
@@ -35,21 +35,33 @@ public partial class PlotBuilderFluent {
 	/// <param name="posX">Plot coordinate x</param>
 	/// <param name="posY">Plot coordinate y</param>
 	/// <param name="marker">Out DraggableMarkerPlot</param>
+	/// <param name="length">The length of the line</param>
+	/// <param name="isSnap">If true, the draggable line will snap to data points</param>
+	/// <param name="width">The width of th eline</param>
 	/// <returns>Fluent builder</returns>
 	public IPlotBuilderFluentPlottables AddDraggableLine(int plotIndex, double posX, double posY,
-		out DraggableMarkerPlot marker) {
+		out DraggableArrow marker, float width = 1.0f, float length = 5.0f, bool isSnap = false) {
 		plotIndex.ValidateInRange(_plots);
 
 		var plot = _plots[plotIndex];
 
-		var x    = _data[0].Records.Select(x => x.DateTime.ToOADate()).ToArray();
-		var y    = _data[0].Records.Select(y => y.Value).ToArray();
-		
-		marker                 = plot.AddMarkerDraggable(x[0], y[0], MarkerShape.cross);
-		marker.Color           = Color.Black;
-		marker.MarkerSize      = 20;
-		marker.MarkerLineWidth = 20;
-		marker.DragSnap = new ScottPlot.SnapLogic.Nearest2D(x, y);
+		marker = new DraggableArrow(posX, posY, posX + 3, posY + 3) {
+			//marker = plot.AddMarkerDraggable(posX, posY, MarkerShape.verticalBar);
+			Color       = Color.Black,
+			MarkerSize  = length,
+			DragEnabled = true
+		};
+		//marker.MarkerLineWidth = width;
+
+		plot.Add(marker);
+
+		// TODO - data is ALWAYS pulled from channel with index 0. this is not necessarily the correct logic
+		if (isSnap) {
+			var x = _data[0].Records.Select(x => x.DateTime.ToOADate()).ToArray();
+			var y = _data[0].Records.Select(y => y.Value).ToArray();
+
+			marker.DragSnap = new ScottPlot.SnapLogic.Nearest2D(x, y);
+		}
 
 		return this;
 	}
@@ -61,7 +73,7 @@ public partial class PlotBuilderFluent {
 	/// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>
 	/// <param name="plottable">Plottable instance to remove</param>
 	/// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
-	/// <exception cref="Exception">Thrown if plot does not contain plottle instance</exception>
+	/// <exception cref="Exception">Thrown if plot does not contain plottable instance</exception>
 	public IPlotBuilderFluentPlottables Remove<T>(int plotIndex, IPlottable plottable) where T : class, IPlottable {
 		var plottables = GetPlottablesAs<T>(plotIndex);
 		var contains   = plottables.Contains(plottable);
@@ -79,7 +91,7 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <typeparam name="T">Type of plottables to remove</typeparam>
 	/// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>
-	/// <param name="plottableIndex">Plottale index to remove from plot</param>
+	/// <param name="plottableIndex">Plottable index to remove from plot</param>
 	/// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
 	public IPlotBuilderFluentPlottables Remove<T>(int plotIndex, int plottableIndex) where T : class, IPlottable {
 		_plots[plotIndex].RemoveAt(plottableIndex);
@@ -88,7 +100,7 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <summary>
-	///  Removes all plottables of type 'T' from the plot specifiged by plotIndex
+	///  Removes all plottables of type 'T' from the plot specified by plotIndex
 	/// </summary>
 	/// <typeparam name="T">Type of plottables to remove</typeparam>
 	/// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>

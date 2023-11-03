@@ -21,7 +21,7 @@ public class PlottableConstructorMapper {
 		if (_plottableType == typeof(ScatterPlot))
 			return GetScatterPlotConstructor(ref data.X, ref data.Y);
 
-		if (_plottableType == typeof(SignalPlot)) 
+		if (_plottableType == typeof(SignalPlot))
 			return GetSignalPlotConstructor();
 
 		return Array.Empty<object>();

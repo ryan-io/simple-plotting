@@ -20,12 +20,6 @@ namespace simple_plotting.src {
 		public bool CanSave => _data.Any() && _plotWasProduced;
 
 		/// <summary>
-		///  A sequential list containing batched data used for each plot. Plot data for a specific index
-		///  will match with this collection at the same index.
-		/// </summary>
-		List<IEnumerable<PlotChannelRecord>?[]> BatchData { get; set; }
-		
-		/// <summary>
 		/// Total number of graphs to generate
 		/// </summary>
 		int PlotCount { get; }
@@ -71,6 +65,7 @@ namespace simple_plotting.src {
 		///  This method will divvy up the data into separate plots based on on the number of plots specified in the constructor.
 		/// </summary>
 		void SetInitialState(Action<IEnumerable<PlotChannelRecord>, int, PlotChannel> actionDelegate) {
+			// ReSharper disable once ForCanBeConvertedToForeach
 			for (var index = 0; index < _data.Count; index++) {
 				var channel   = _data[index];
 				var batchSize = channel.Records.Count / PlotCount;
@@ -94,8 +89,6 @@ namespace simple_plotting.src {
 					actionDelegate.Invoke(batchedRecord, plotTracker, channel);
 					plotTracker++;
 				}
-				
-				BatchData.Add(batch);
 			}
 		}
 

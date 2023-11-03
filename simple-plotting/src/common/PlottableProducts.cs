@@ -2,7 +2,7 @@ using ScottPlot.Plottable;
 
 namespace simple_plotting.src {
 	// TODO: Add documentation
-	public readonly struct ScatterPlotProduct  {
+	public readonly struct ScatterPlotProduct {
 		public IPlottableFactoryReset Factory     { get; }
 		public ScatterPlot?           ScatterPlot { get; }
 

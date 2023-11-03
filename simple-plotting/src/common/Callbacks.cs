@@ -8,7 +8,7 @@ namespace simple_plotting.src;
 /// <summary>
 ///  Static class for creating callbacks for plots. Use these as default implementations.
 /// </summary>
-public static class Callbacks  {
+public static class Callbacks {
 	/// <summary>
 	///  Creates a callback for a scatter plot.
 	/// </summary>
@@ -17,8 +17,8 @@ public static class Callbacks  {
 	/// <param name="lineStyle">Type of line; dashed, solid, dotted, etc.</param>
 	/// <returns></returns>
 	public static IPlotCallback ForScatterPlot(
-		int lineWidth = 1, 
-		int markerSize = 10, 
+		int lineWidth = 1,
+		int markerSize = 10,
 		LineStyle lineStyle = LineStyle.Solid) {
 		return new ScatterPlotCallback {
 			LineStyle  = lineStyle,
@@ -26,7 +26,7 @@ public static class Callbacks  {
 			MarkerSize = markerSize
 		};
 	}
-	
+
 	/// <summary>
 	///  Creates a callback for a signal plot.
 	/// </summary>
@@ -35,8 +35,8 @@ public static class Callbacks  {
 	/// <param name="lineStyle">Type of line; dashed, solid, dotted, etc.</param>
 	/// <returns></returns>
 	public static IPlotCallback ForSignalPlot(
-		int lineWidth = 1, 
-		int markerSize = 10, 
+		int lineWidth = 1,
+		int markerSize = 10,
 		LineStyle lineStyle = LineStyle.Solid) {
 		return new SignalPlotCallback {
 			LineStyle  = lineStyle,
@@ -67,11 +67,11 @@ public class SignalPlotCallback : IPlotCallback {
 
 		if (plot is not SignalPlot sPlot)
 			throw new InvalidCastException(Message.EXCEPTION_CAST_PLOTTABLE_ACTIVATOR_INSTANCES);
-		
-		sPlot.Ys = data.Y;
+
+		sPlot.Ys         =   data.Y;
 		data.SampleRate  ??= 1.0;
 		sPlot.SampleRate =   data.SampleRate.Value;
-		
+
 		sPlot.LineWidth  = 1;
 		sPlot.MarkerSize = 10;
 		sPlot.LineStyle  = LineStyle.Solid;

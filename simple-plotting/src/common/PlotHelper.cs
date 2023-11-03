@@ -18,7 +18,7 @@ namespace simple_plotting.src {
 				plot.Height = sizeContainer.Height;
 			}
 		}
-		
+
 		/// <summary>
 		/// Takes a PlotSize and maps it to a PlotSizeContainer.
 		/// </summary>

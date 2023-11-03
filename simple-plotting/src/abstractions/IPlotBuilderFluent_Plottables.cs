@@ -6,7 +6,7 @@ using ScottPlot.Plottable;
 namespace simple_plotting.src;
 
 /// <summary>
-///  Abstraction for adding plottables to a plot (annotations, crosshairs, text, etc.)
+///  Abstraction for adding plottables to a plot (annotations, crosshair, text, etc.)
 /// </summary>
 public interface IPlotBuilderFluentPlottables : IPlotBuilderFluent {
 	/// <summary>
@@ -68,22 +68,22 @@ public interface IPlotBuilderFluentPlottables : IPlotBuilderFluent {
 	/// <returns>Fluent builder as IPlotBuilderFluent_Plottable</returns>
 	IPlotBuilderFluentPlottables WithMarker(int plotIndex, out MarkerPlot marker);
 
-    /// <summary>
-    ///  Removes a plottable of type 'T' with plottableIndex from a specified plot via plotIndex
-    /// </summary>
-    /// <typeparam name="T">Type of plottables to remove</typeparam>
-    /// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>
-    /// <param name="plottableIndex">Plottale index to remove from plot</param>
-    /// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
-    IPlotBuilderFluentPlottables Remove<T> (int plotIndex, int plottableIndex) where T : class, IPlottable;
+	/// <summary>
+	///  Removes a plottable of type 'T' with plottableIndex from a specified plot via plotIndex
+	/// </summary>
+	/// <typeparam name="T">Type of plottables to remove</typeparam>
+	/// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>
+	/// <param name="plottableIndex">Plottable index to remove from plot</param>
+	/// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
+	IPlotBuilderFluentPlottables Remove<T>(int plotIndex, int plottableIndex) where T : class, IPlottable;
 
 	/// <summary>
-	///  Removes all plottables of type 'T' from the plot specifiged by plotIndex
+	///  Removes all plottables of type 'T' from the plot specified by plotIndex
 	/// </summary>
 	/// <typeparam name="T">Type of plottables to remove</typeparam>
 	/// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>
 	/// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
-	IPlotBuilderFluentPlottables RemoveAll<T> (int plotIndex) where T : class, IPlottable;
+	IPlotBuilderFluentPlottables RemoveAll<T>(int plotIndex) where T : class, IPlottable;
 
 	/// <summary>
 	///  Removes a plottable instance of type 'T' from a plot specified plotIndex
@@ -92,27 +92,30 @@ public interface IPlotBuilderFluentPlottables : IPlotBuilderFluent {
 	/// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>
 	/// <param name="plottable">Plottable instance to remove</param>
 	/// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
-	/// <exception cref="Exception">Thrown if plot does not contain plottle instance</exception>
-	IPlotBuilderFluentPlottables Remove<T> (int plotIndex, IPlottable plottable) where T : class, IPlottable;
+	/// <exception cref="Exception">Thrown if plot does not contain plottable instance</exception>
+	IPlotBuilderFluentPlottables Remove<T>(int plotIndex, IPlottable plottable) where T : class, IPlottable;
 
-    /// <summary>
-    ///  Removes a plottable instance of type 'T' from a plot specified plotIndex
-    /// </summary>
-    /// <typeparam name="T">Type of plottables to remove</typeparam>
-    /// <param name="plot">Plotto remove the plottables of type 'T' from</param>
-    /// <param name="plottable">Plottable instance to remove</param>
-    /// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
-    /// <exception cref="Exception">Thrown if plot does not contain plottle instance</exception>
-    IPlotBuilderFluentPlottables Remove<T> (Plot? plot, IPlottable? plottable) where T : class, IPlottable;
-    
-    /// <summary>
-    ///  Adds a draggable line to the plot at posX, posY
-    /// </summary>
-    /// <param name="plotIndex">Plot index to add line to</param>
-    /// <param name="posX">Plot coordinate x</param>
-    /// <param name="posY">Plot coordinate y</param>
-    /// <param name="marker">Out DraggableMarkerPlot</param>
-    /// <returns>Fluent builder</returns>
-    IPlotBuilderFluentPlottables AddDraggableLine(int plotIndex, double posX, double posY,
-	    out DraggableMarkerPlot marker);
+	/// <summary>
+	///  Removes a plottable instance of type 'T' from a plot specified plotIndex
+	/// </summary>
+	/// <typeparam name="T">Type of plottables to remove</typeparam>
+	/// <param name="plot">Plottable remove the plottables of type 'T' from</param>
+	/// <param name="plottable">Plottable instance to remove</param>
+	/// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
+	/// <exception cref="Exception">Thrown if plot does not contain plottable instance</exception>
+	IPlotBuilderFluentPlottables Remove<T>(Plot? plot, IPlottable? plottable) where T : class, IPlottable;
+
+	/// <summary>
+	///  Adds a draggable line to the plot at posX, posY
+	/// </summary>
+	/// <param name="plotIndex">Plot index to add line to</param>
+	/// <param name="posX">Plot coordinate x</param>
+	/// <param name="posY">Plot coordinate y</param>
+	/// <param name="marker">Out DraggableMarkerPlot</param>
+	/// <param name="length">Length of the line</param>
+	/// <param name="isSnap">If true, the draggable line will snap to data points</param>
+	/// <param name="width">Width of the line</param>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentPlottables AddDraggableLine(int plotIndex, double posX, double posY,
+		out DraggableArrow marker, float width = 1.0f, float length = 5.0f, bool isSnap = false);
 }

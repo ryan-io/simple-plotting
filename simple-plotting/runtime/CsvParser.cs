@@ -4,14 +4,13 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using simple_plotting.src;
 
-namespace simple_plotting.runtime
-{
-    /// <summary>
-    ///  Parses a CSV file and extracts the data into a collection of <see cref="PlotChannel" /> instances.
-    ///  This is the data provider in MVVM.
-    ///  https://github.com/CarlVerret/csFastFloat is used for parsing double values.
-    /// </summary>
-    public class CsvParser : ICsvParser {
+namespace simple_plotting.runtime {
+	/// <summary>
+	///  Parses a CSV file and extracts the data into a collection of <see cref="PlotChannel" /> instances.
+	///  This is the data provider in MVVM.
+	///  https://github.com/CarlVerret/csFastFloat is used for parsing double values.
+	/// </summary>
+	public class CsvParser : ICsvParser {
 		StringBuilder Sb { get; } = new StringBuilder();
 
 		/// <summary>
@@ -25,7 +24,8 @@ namespace simple_plotting.runtime
 		/// <param name="fileName">Name of file to parse</param>
 		/// <param name="cancellationToken">Optional cancelltation token to stop the task</param>
 		/// <returns>Readonly list of PlotChannel</returns>
-		public async Task<IReadOnlyList<PlotChannel>?> ExtractAsync(string fileName, CancellationToken? cancellationToken = default) {
+		public async Task<IReadOnlyList<PlotChannel>?> ExtractAsync(string fileName,
+			CancellationToken? cancellationToken = default) {
 			try {
 				if (string.IsNullOrWhiteSpace(fileName))
 					return default;
