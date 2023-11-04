@@ -59,12 +59,12 @@ namespace simple_plotting.src {
 		public double DragYLimitMax { get; set; } = double.PositiveInfinity;
 
 		/// <summary>
-		/// Location of the arrow base in coordinate space
+		/// Coordinates of the base of the arrow
 		/// </summary>
 		public Coordinate Base = new(0, 0);
 
 		/// <summary>
-		/// Location of the arrow base in coordinate space
+		/// Coordinates of the arrow tip
 		/// </summary>
 		public Coordinate Tip = new(0, 0);
 
@@ -197,7 +197,7 @@ namespace simple_plotting.src {
 
 			using var gfx     = ScottPlot.Drawing.GDI.Graphics(bmp, dims, lowQuality);
 			using var penLine = ScottPlot.Drawing.GDI.Pen(Color, LineWidth, LineStyle, true);
-
+			gfx.RotateTransform(90);
 			var basePixel = dims.GetPixel(Base);
 			var tipPixel  = dims.GetPixel(Tip);
 
@@ -214,7 +214,6 @@ namespace simple_plotting.src {
 				basePixel.Y = tipPixel.Y - dY * expandBy;
 			}
 
-			//gfx.RotateTransform(90);
 			MarkerTools.DrawMarker(gfx, new(basePixel.X, basePixel.Y), MarkerShape, MarkerSize, Color);
 
 			penLine.CustomEndCap =
