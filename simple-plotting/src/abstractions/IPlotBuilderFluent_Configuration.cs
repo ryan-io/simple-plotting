@@ -273,7 +273,7 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="isBold">Flag to bold tick labels</param>
 	/// <param name="fontSize">Size of tick font</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration SetSecondaryXAxisTicks(PlotAxisRotation rotation, bool isBold = false, int
+	IPlotBuilderFluentConfiguration SetSecondaryXAxisTicks(PlotAxisRotation rotation, bool isBold = false, int
 		fontSize = 14);
 
 	/// <summary>
@@ -285,10 +285,18 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="bottom">Bottom padding</param>
 	/// <param name="padding">Additional padding</param>
 	/// <returns>Fluent builder</returns>
-	public IPlotBuilderFluentConfiguration SetLayout(
+	IPlotBuilderFluentConfiguration SetLayout(
 		float? left = 50f
 		, float? right = 50f
 		, float? top = 50f
 		, float? bottom = 50f
 		, float? padding = 0f);
+
+	/// <summary>
+	///  Sets the font for the legend. Currently can set font size and boldness.
+	/// </summary>
+	/// <param name="fontSize">Font size</param>
+	/// <param name="isBold">If true, font will be bold</param>
+	/// <returns>Fluent builder</returns>
+	IPlotBuilderFluentConfiguration SetLegendFont(float fontSize = 14f, bool isBold = false);
 }

@@ -119,7 +119,11 @@ public interface IPlotBuilderFluentPlottables : IPlotBuilderFluent {
     /// <param name="arrowTipXLocation">Optional location for arrow tip x coordinate</param>
     /// <param name="arrowTipYLocation">Optional location for arrow tip y coordinate</param>
     /// <returns>Fluent builder</returns>
-    IPlotBuilderFluentPlottables AddDraggableLine (int plotIndex, double posX, double posY,
-        out DraggableArrow marker, float arrowTailSize = 3.0f, float arrowHeadWidth = 1.0f, float arrowHeadLength = 5.0f, bool isSnap = false,
+    IPlotBuilderFluentPlottables AddDraggableLine (
+        int plotIndex, 
+        double posX, double posY,
+        out DraggableArrow marker, 
+        float arrowTailSize = 3.0f, float arrowHeadWidth = 1.0f, float arrowHeadLength = 5.0f, 
+        bool isSnap = false,
         double? arrowTipXLocation = null, double? arrowTipYLocation = null);
 }

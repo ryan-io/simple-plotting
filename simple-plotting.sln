@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "simple-plotting", "simple-p
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "simple-plotting-console", "simple-plotting-console\simple-plotting-console.csproj", "{9C53B870-B8AA-4F3D-BFFF-06D5FF02EE48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "simple-plotting-wpf", "simple-plotting-wpf\simple-plotting-wpf.csproj", "{CFC9B476-C54B-411A-BF3D-79AB3703621E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9C53B870-B8AA-4F3D-BFFF-06D5FF02EE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C53B870-B8AA-4F3D-BFFF-06D5FF02EE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C53B870-B8AA-4F3D-BFFF-06D5FF02EE48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFC9B476-C54B-411A-BF3D-79AB3703621E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFC9B476-C54B-411A-BF3D-79AB3703621E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFC9B476-C54B-411A-BF3D-79AB3703621E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFC9B476-C54B-411A-BF3D-79AB3703621E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

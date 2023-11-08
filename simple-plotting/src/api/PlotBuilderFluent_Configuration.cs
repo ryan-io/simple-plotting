@@ -530,4 +530,19 @@ public partial class PlotBuilderFluent {
 		Observables.Add(action);
 		return this;
 	}
+
+	/// <summary>
+	///  Sets the font for the legend. Currently can set font size and boldness.
+	/// </summary>
+	/// <param name="fontSize">Font size</param>
+	/// <param name="isBold">If true, font will be bold</param>
+	/// <returns>Fluent builder</returns>
+	public IPlotBuilderFluentConfiguration SetLegendFont(float fontSize = 14f, bool isBold = false) {
+		foreach (var plot in _plots) {
+			plot.Legend().Font.Bold = isBold;
+			plot.Legend().Font.Size = fontSize;
+		}
+
+		return this;
+	}
 }

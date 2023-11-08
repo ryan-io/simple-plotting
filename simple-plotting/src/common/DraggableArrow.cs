@@ -1,6 +1,5 @@
 ﻿using System.Drawing;
 using ScottPlot;
-using ScottPlot.Drawing.Colormaps;
 using ScottPlot.Plottable;
 using ScottPlot.SnapLogic;
 
