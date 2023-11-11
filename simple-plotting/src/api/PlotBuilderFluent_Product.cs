@@ -79,6 +79,32 @@ public partial class PlotBuilderFluent {
 	/// <param name="name">Name of each plot</param>
 	/// <returns>True if could write (save) to directory, otherwise false</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
+	public async Task<bool> TrySaveTask(string savePath, string name) {
+		var plotTracker = new IntSafe(1);
+
+		try {
+			foreach (var plot in _plots) {
+				await Task.Run(
+					() => {
+						plot.SaveFig($@"{savePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
+						plotTracker++;
+					});
+			}
+
+			return true;
+		}
+		catch (Exception) {
+			return false;
+		}
+	}
+
+	/// <summary>
+	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
+	/// </summary>
+	/// <param name="savePath">Directory to save plots</param>
+	/// <param name="name">Name of each plot</param>
+	/// <returns>True if could write (save) to directory, otherwise false</returns>
+	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
 	public bool TrySave(string savePath, string name) {
 		if (string.IsNullOrWhiteSpace(savePath) || string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
