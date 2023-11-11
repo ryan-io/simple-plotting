@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace simple_plotting.src {
+namespace simple_plotting {
 	/// <summary>
 	///  A helper class to determine the maxima & minima y-axes limits
 	/// </summary>

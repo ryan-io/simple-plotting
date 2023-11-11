@@ -3,7 +3,7 @@
 using ScottPlot;
 using ScottPlot.Plottable;
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 /// <summary>
 ///  Abstraction for adding plottables to a plot (annotations, crosshair, text, etc.)

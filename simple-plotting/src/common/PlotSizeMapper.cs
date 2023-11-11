@@ -1,4 +1,4 @@
-﻿namespace simple_plotting.src {
+﻿namespace simple_plotting {
 	/// <summary>
 	///  Maps a <see cref="PlotSize"/> to a <see cref="PlotSizeContainer"/>.
 	/// </summary>

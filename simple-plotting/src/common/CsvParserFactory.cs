@@ -1,6 +1,6 @@
 using simple_plotting.runtime;
 
-namespace simple_plotting.src {
+namespace simple_plotting {
 	public static class CsvParserFactory {
 		/// <summary>
 		///  Creates a new <see cref="CsvParser" /> instance.

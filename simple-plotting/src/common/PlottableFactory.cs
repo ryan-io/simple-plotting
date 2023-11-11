@@ -2,7 +2,7 @@
 using ScottPlot;
 using ScottPlot.Plottable;
 
-namespace simple_plotting.src {
+namespace simple_plotting {
 	/// <summary>
 	///  Base abstraction for PlottableFactory
 	/// </summary>

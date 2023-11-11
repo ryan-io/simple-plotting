@@ -1,4 +1,4 @@
-namespace simple_plotting.src {
+namespace simple_plotting {
 	/// <summary>
 	///  Static class for event handling
 	/// </summary>

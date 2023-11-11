@@ -1,6 +1,6 @@
 // simple-plotting
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 /// <summary>
 ///  Abstraction for extracting data from a data source.

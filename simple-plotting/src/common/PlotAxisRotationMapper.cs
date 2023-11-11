@@ -1,4 +1,4 @@
-﻿namespace simple_plotting.src {
+﻿namespace simple_plotting {
 	internal static class PlotAxisRotationMapper {
 		internal static int Map(PlotAxisRotation plotAxisRotation) {
 			var rotation = 0;

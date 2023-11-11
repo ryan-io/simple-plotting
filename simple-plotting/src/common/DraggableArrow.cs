@@ -3,7 +3,7 @@ using ScottPlot;
 using ScottPlot.Plottable;
 using ScottPlot.SnapLogic;
 
-namespace simple_plotting.src {
+namespace simple_plotting {
     /// <summary>
     ///  Adds a draggable arrow to a plot. Implements IPlottable, IDraggable, IHasPixelOffset, IHasLine, IHasColor.
     /// </summary>

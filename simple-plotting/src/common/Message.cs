@@ -1,4 +1,4 @@
-﻿namespace simple_plotting.src {
+﻿namespace simple_plotting {
 	/// <summary>
 	///  Constant messages used throughout the application. Typical to call when throwing exceptions.
 	/// </summary>

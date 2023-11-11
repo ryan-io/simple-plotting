@@ -2,7 +2,6 @@
 using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
-using simple_plotting.src;
 
 namespace simple_plotting.runtime {
 	/// <summary>

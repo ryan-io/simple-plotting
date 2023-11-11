@@ -3,7 +3,7 @@
 using ScottPlot;
 using ScottPlot.Plottable;
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 /// <summary>
 ///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.

@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace simple_plotting.src {
+namespace simple_plotting {
 	public record PlotChannelRecord(DateTime DateTime, double Value) : IComparer {
 		public int Compare(object? r1, object? r2) {
 			if (r1 is not PlotChannelRecord record1 || r2 is not PlotChannelRecord record2)

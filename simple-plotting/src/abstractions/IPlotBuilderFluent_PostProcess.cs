@@ -1,9 +1,8 @@
 // simple-plotting
 
-using ScottPlot;
 using ScottPlot.Plottable;
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 /// <summary>
 ///  Provides the consumer with additional tools to manipulate the plots. Any interactive plot features should be defined here.

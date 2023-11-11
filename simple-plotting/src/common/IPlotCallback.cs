@@ -2,7 +2,7 @@
 
 using ScottPlot.Plottable;
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 /// <summary>
 /// Abstraction of a callback for a plot object creation.

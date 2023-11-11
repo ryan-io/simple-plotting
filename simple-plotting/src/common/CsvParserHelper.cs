@@ -1,4 +1,4 @@
-﻿namespace simple_plotting.src {
+﻿namespace simple_plotting {
 	public static class CsvParserHelper {
 		public static double? ExtractSampleRate(string? parsed) {
 			if (string.IsNullOrEmpty(parsed))

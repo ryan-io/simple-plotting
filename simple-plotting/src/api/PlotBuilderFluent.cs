@@ -3,7 +3,7 @@ using ScottPlot;
 using ScottPlot.Plottable;
 using simple_plotting.runtime;
 
-namespace simple_plotting.src {
+namespace simple_plotting {
 	/// <summary>
 	///  This class is used to build a plot using a fluent API. It is recommended to use this class instead of ScottPlot.Plot
 	///  or CsvPlotter.Plot wrapper directly.

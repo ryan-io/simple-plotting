@@ -1,6 +1,6 @@
 using ScottPlot.Plottable;
 
-namespace simple_plotting.src {
+namespace simple_plotting {
 	// TODO: Add documentation
 	public readonly struct ScatterPlotProduct {
 		public IPlottableFactoryReset Factory     { get; }

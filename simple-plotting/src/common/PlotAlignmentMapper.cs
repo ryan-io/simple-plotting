@@ -2,7 +2,7 @@
 
 using ScottPlot;
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 internal static class PlotAlignmentMapper {
 	internal static Alignment Map(PlotAlignment alignment) {

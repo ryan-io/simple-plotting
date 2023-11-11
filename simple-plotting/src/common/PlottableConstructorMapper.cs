@@ -2,7 +2,7 @@
 
 using ScottPlot.Plottable;
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 /// <summary>
 ///  Maps a plottable type to a constructor. Will return an object array with the parameters for the constructor.

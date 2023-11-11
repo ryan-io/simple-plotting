@@ -1,6 +1,6 @@
 ﻿using ScottPlot;
 
-namespace simple_plotting.src {
+namespace simple_plotting {
 	public class PlotColorPaletteManager {
 		IPalette Palette { get; set; }
 

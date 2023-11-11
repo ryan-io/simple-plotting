@@ -2,8 +2,7 @@
 using System.Text;
 using csFastFloat;
 using CsvHelper;
-using simple_plotting.src;
-using static simple_plotting.src.Constants;
+using static simple_plotting.Constants;
 
 namespace simple_plotting.runtime {
 	/// <summary>

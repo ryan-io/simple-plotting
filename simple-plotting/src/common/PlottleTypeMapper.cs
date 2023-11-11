@@ -1,7 +1,7 @@
 ﻿using ScottPlot.Plottable;
 
 //TODO: add documentation
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 public class PlottableFactoryTypeMapper {
 	public Action? Determine(IPlottableProduct factory, PlotChannel channel, PlottableData data) {

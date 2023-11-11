@@ -1,4 +1,4 @@
-﻿namespace simple_plotting.src {
+﻿namespace simple_plotting {
 	/// <summary>
 	///  Helper class to scale a value by a percentage.
 	/// </summary>

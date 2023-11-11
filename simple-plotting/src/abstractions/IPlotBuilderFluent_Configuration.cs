@@ -2,7 +2,7 @@
 
 using System.Drawing;
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 /// <summary>
 ///  Core abstraction for fluent API. All configuration methods should be defined here.

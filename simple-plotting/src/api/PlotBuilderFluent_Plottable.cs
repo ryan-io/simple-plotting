@@ -4,7 +4,7 @@ using System.Drawing;
 using ScottPlot;
 using ScottPlot.Plottable;
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 public partial class PlotBuilderFluent {
     /// <summary>

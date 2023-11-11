@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using simple_plotting.src;
 
 namespace simple_plotting {
 	/// <summary>

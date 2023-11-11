@@ -1,6 +1,6 @@
 // simple-plotting
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 /// <summary>
 ///  This abstraction finalizes the configuration of the plot. This should be the last call in the fluent API.

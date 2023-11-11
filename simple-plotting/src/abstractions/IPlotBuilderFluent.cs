@@ -1,4 +1,4 @@
-﻿namespace simple_plotting.src {
+﻿namespace simple_plotting {
 	/// <summary>
 	///  The base abstraction for the fluent API.
 	/// </summary>

@@ -3,7 +3,7 @@
 using ScottPlot;
 using ScottPlot.Plottable;
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 /// <summary>
 ///  Static class for creating callbacks for plots. Use these as default implementations.

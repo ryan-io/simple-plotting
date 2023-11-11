@@ -1,6 +1,6 @@
 // simple-plotting
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 /// <summary>
 ///  POCO for holding data for a plottable.

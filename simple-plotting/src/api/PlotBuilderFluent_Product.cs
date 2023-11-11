@@ -1,12 +1,9 @@
 // simple-plotting
 
-using System.Collections.Immutable;
-using System.Drawing;
-using System.Drawing.Imaging;
 using ScottPlot;
 using ScottPlot.Plottable;
 
-namespace simple_plotting.src;
+namespace simple_plotting;
 
 public partial class PlotBuilderFluent {
 	/// <summary>

@@ -1,6 +1,6 @@
 ﻿using ScottPlot;
 
-namespace simple_plotting.src {
+namespace simple_plotting {
 	/// <summary>
 	///  Static class containing helper methods for plots.
 	/// </summary>
