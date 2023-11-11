@@ -13,6 +13,7 @@ A library wrapper for ScottPlot &amp; CsvHelper. This library parses CSV files &
 	- System.Buffers.4.5.1
 	- System.Memory.4.5.5
 	- System.Runtime.CompilerServices.Unsafe.5.0.0
+	- System.Threading.Tasks.Dataflow.4.5.24
 
 ### Simple Use Case
     - Can be used with the following application environments: WPF, WinForms, Blazor, Console Apps

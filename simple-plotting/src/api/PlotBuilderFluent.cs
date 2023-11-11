@@ -1,4 +1,5 @@
-﻿using ScottPlot;
+﻿using System.Collections.Concurrent;
+using ScottPlot;
 using ScottPlot.Plottable;
 using simple_plotting.runtime;
 
@@ -23,6 +24,13 @@ namespace simple_plotting.src {
 		/// Total number of graphs to generate
 		/// </summary>
 		int PlotCount { get; }
+
+		/// <summary>
+		/// Cancellation source used for saving plots asynchronously
+		/// </summary>
+		CancellationTokenSource CancellationTokenSource { get; set; } = new();
+		
+		ConcurrentBag<string> CachedPlotPaths { get; } = new();
 
 		/// <summary>
 		///  Factory for adding graphs to plots
@@ -59,6 +67,13 @@ namespace simple_plotting.src {
 		/// <returns>New instance of PlotBuilderFluent (this)</returns>
 		public static IPlotBuilderFluentOfType StartNew(IReadOnlyList<PlotChannel> data, int numOfPlots = 1)
 			=> new PlotBuilderFluent(data, numOfPlots);
+		
+		/// <summary>
+		///  Dispose of the cancellation token source. This should be invoked on application exit or stop.
+		/// </summary>
+		public void Dispose() {
+			ValidateCancellationTokenSource();
+		}
 
 		/// <summary>
 		///  Helper method to set the initial state of the plot. This is called in the constructor.
@@ -107,6 +122,16 @@ namespace simple_plotting.src {
 			}
 
 			return plottables;
+		}
+		
+		void ValidateCancellationTokenSource(bool createNewIfDisposed = false) {
+			if (!CancellationTokenSource.IsCancellationRequested)
+				CancellationTokenSource.Cancel();
+			
+			CancellationTokenSource.Dispose();
+			
+			if (createNewIfDisposed)
+				CancellationTokenSource = new CancellationTokenSource();
 		}
 
 		/// <summary>

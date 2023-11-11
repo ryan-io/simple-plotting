@@ -1,5 +1,8 @@
 // simple-plotting
 
+using System.Collections.Immutable;
+using System.Drawing;
+using System.Drawing.Imaging;
 using ScottPlot;
 using ScottPlot.Plottable;
 
@@ -79,23 +82,44 @@ public partial class PlotBuilderFluent {
 	/// <param name="name">Name of each plot</param>
 	/// <returns>True if could write (save) to directory, otherwise false</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	public async Task<bool> TrySaveTask(string savePath, string name) {
-		var plotTracker = new IntSafe(1);
+	public async Task<SaveStatus> TrySaveAsync(string savePath, string name) {
+		ValidateCancellationTokenSource(true);
+		CachedPlotPaths.Clear();
 
 		try {
-			foreach (var plot in _plots) {
-				await Task.Run(
-					() => {
-						plot.SaveFig($@"{savePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
-						plotTracker++;
-					});
-			}
+			await Task.Run(
+				() => {
+					var plotTracker = new IntSafe(1);
 
-			return true;
+					foreach (var plot in _plots) {
+						var result = plot.SaveFig($@"{savePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
+						CachedPlotPaths.Add(result);
+						plotTracker++;
+					}
+				});
+
+			return new SaveStatus(true, CachedPlotPaths);
 		}
 		catch (Exception) {
-			return false;
+			return new SaveStatus(false, Enumerable.Empty<string>());
 		}
+	}
+
+	/// <summary>
+	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
+	///  This method requires you to call DefineSource.
+	/// </summary>
+	/// <param name="name">Name of each plot</param>
+	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
+	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
+	public async Task<SaveStatus?> TrySaveAsyncAtSource(string name) {
+		if (string.IsNullOrWhiteSpace(name))
+			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
+
+		if (string.IsNullOrWhiteSpace(SourcePath))
+			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
+
+		return await Task.Run(() => TrySaveAsync(SourcePath, name));
 	}
 
 	/// <summary>
@@ -105,21 +129,27 @@ public partial class PlotBuilderFluent {
 	/// <param name="name">Name of each plot</param>
 	/// <returns>True if could write (save) to directory, otherwise false</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	public bool TrySave(string savePath, string name) {
+	public SaveStatus TrySave(string savePath, string name) {
 		if (string.IsNullOrWhiteSpace(savePath) || string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
 		try {
-			var plotTracker = 1;
+			List<string> paths       = new();
+			var          plotTracker = 1;
+
 			foreach (var plot in _plots) {
-				plot.SaveFig($@"{savePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
+				var path = plot.SaveFig($@"{savePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
+
+				if (!string.IsNullOrWhiteSpace(path))
+					paths.Add(path);
+
 				plotTracker++;
 			}
 
-			return true;
+			return new SaveStatus(true, paths);
 		}
 		catch (Exception) {
-			return false;
+			return new SaveStatus(false, Enumerable.Empty<string>());
 		}
 	}
 
@@ -130,7 +160,7 @@ public partial class PlotBuilderFluent {
 	/// <param name="name">Name of each plot</param>
 	/// <returns>True if could write (save) to directory, otherwise false</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	public bool TrySaveAtSource(string name) {
+	public SaveStatus TrySaveAtSource(string name) {
 		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 

@@ -8,7 +8,7 @@ namespace simple_plotting.src;
 /// <summary>
 ///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.
 /// </summary>
-public interface IPlotBuilderFluentProduct : IPlotBuilderFluent {
+public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// <summary>
 	///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.
 	/// </summary>
@@ -45,27 +45,36 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent {
 	/// </summary>
 	/// <param name="savePath">Directory to save plots</param>
 	/// <param name="name">Name of each plot</param>
-	/// <returns>True if could write (save) to directory, otherwise false</returns>
+	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	bool TrySave(string savePath, string name);
+	SaveStatus TrySave(string savePath, string name);
 
 	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
 	///  This method requires you to call DefineSource.
 	/// </summary>
 	/// <param name="name">Name of each plot</param>
-	/// <returns>True if could write (save) to directory, otherwise false</returns>
+	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	bool TrySaveAtSource(string name);
+	SaveStatus TrySaveAtSource(string name);
 
 	/// <summary>
 	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
 	/// </summary>
 	/// <param name="savePath">Directory to save plots</param>
 	/// <param name="name">Name of each plot</param>
-	/// <returns>True if could write (save) to directory, otherwise false</returns>
+	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<bool> TrySaveTask(string savePath, string name);
+	Task<SaveStatus> TrySaveAsync(string savePath, string name);
+	
+	/// <summary>
+	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
+	///  This method requires you to call DefineSource.
+	/// </summary>
+	/// <param name="name">Name of each plot</param>
+	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
+	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
+	Task<SaveStatus?> TrySaveAsyncAtSource(string name);
 
 	/// <summary>
 	///  Exposes post processing API.

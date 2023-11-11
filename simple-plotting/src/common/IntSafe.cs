@@ -39,7 +39,13 @@ public struct IntSafe {
 		safe.Value--;
 		return safe;
 	}
-	
+ 
+	/// <summary>
+	///  Implicit conversion from IntSafe to string.
+	/// </summary>
+	/// <returns>string object</returns>
+	public override string ToString() => Value.ToString();
+
 	/// <summary>
 	///  Constructor that takes an optional start value.
 	/// </summary>
