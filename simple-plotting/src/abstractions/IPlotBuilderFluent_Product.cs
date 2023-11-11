@@ -59,6 +59,15 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent {
 	bool TrySaveAtSource(string name);
 
 	/// <summary>
+	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
+	/// </summary>
+	/// <param name="savePath">Directory to save plots</param>
+	/// <param name="name">Name of each plot</param>
+	/// <returns>True if could write (save) to directory, otherwise false</returns>
+	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
+	Task<bool> TrySaveTask(string savePath, string name);
+
+	/// <summary>
 	///  Exposes post processing API.
 	/// </summary>
 	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
