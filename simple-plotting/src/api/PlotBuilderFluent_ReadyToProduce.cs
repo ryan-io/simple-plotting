@@ -8,6 +8,7 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <returns>ScottPlot.Plot instance (private)</returns>
 	public IPlotBuilderFluentProduct Produce() {
+		InstanceTracker.Global.RegisterInstance(this);
 		_plotWasProduced = true;
 
 		if (!Observables.Any())
@@ -15,7 +16,7 @@ public partial class PlotBuilderFluent {
 
 		foreach (var o in Observables)
 			o.Invoke();
-
+		
 		return this;
 	}
 }
