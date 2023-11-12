@@ -85,6 +85,7 @@ public partial class PlotBuilderFluent {
 
 		try {
 			await Task.Run(
+				
 				() => {
 					var plotTracker = new IntSafe(1);
 

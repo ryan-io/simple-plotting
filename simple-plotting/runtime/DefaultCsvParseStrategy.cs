@@ -25,19 +25,21 @@ namespace simple_plotting.runtime {
 
 		double? SampleRate { get; set; }
 
-		public override async Task StrategyAsync(List<PlotChannel> output, CsvReader csvr,
+		public override async Task StrategyAsync(
+			List<PlotChannel> output,
+			CsvReader csvr,
 			CancellationToken? cancellationToken = default) {
 			try {
-				const int SkipFourRows = 4;
-				const int SkipSixRows  = 6;
+				const int SKIP_FOUR_ROWS = 4;
+				const int SKIP_SIX_ROWS  = 6;
 
-				SkipRowsNumberOfRows(csvr, SkipSixRows);
+				SkipRowsNumberOfRows(csvr, SKIP_SIX_ROWS);
 
 				await csvr.ReadAsync();
 
 				SampleRate = CsvParserHelper.ExtractSampleRate(csvr[1]); // we could ignore this entirely
 
-				SkipRowsNumberOfRows(csvr, SkipFourRows);
+				SkipRowsNumberOfRows(csvr, SKIP_FOUR_ROWS);
 
 				csvr.ReadHeader();
 
@@ -47,58 +49,60 @@ namespace simple_plotting.runtime {
 				var channelsToParse = csvr.HeaderRecord.Length - 3;
 
 				for (var i = 0; i < channelsToParse; i++) {
-					if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested) {
+					if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested) 
 						break;
-					}
 
 					output.Add(new PlotChannel(csvr.HeaderRecord[3 + i], PlotChannelType.Temperature, SampleRate));
 				}
 
-				const double EPSILON = 5E-6d;
-
 				while (await csvr.ReadAsync()) {
-					if (cancellationToken.WasCancelled()) {
+					if (cancellationToken.WasCancelled()) 
 						break;
-					}
 
-					Sb.Clear();
-					Sb.Append(csvr[0]); // csvr[0] = date
-					Sb.Append(SPACE_CHAR);
-					Sb.Append(csvr[1]); // csvr[1] = time
-
-					// csvr[2] = IGNORE (mSec)
-
-					var date = ParseDate();
-
-					// csvr[...] = channel values
-
-					for (var i = 0; i < channelsToParse; i++) {
-						if (string.IsNullOrWhiteSpace(csvr[i]))
-							continue;
-
-						if (cancellationToken.WasCancelled()) {
-							break;
-						}
-
-						var  hasValue          = FastDoubleParser.TryParseDouble(csvr[3 + i], out var value);
-						bool isOutside         = value < _lowerValueLimit || value > _upperValueLimit;
-						bool isEssentiallyZero = value >= 0.0d - EPSILON && value  <= 0.0d + EPSILON;
-
-						if (isOutside || isEssentiallyZero || !hasValue) {
-							continue;
-						}
-
-						var record    = new PlotChannelRecord(date, value);
-						var eventData = new PlotEventData(output[i].ChannelIdentifier, record);
-
-						PlotEvent.OnRecordEnumerated(eventData);
-
-						output[i].AddRecord(record);
-					}
+					ParseCurrentReaderIndex(output, csvr, cancellationToken, channelsToParse);
 				}
 			}
 			catch (Exception e) {
 				throw new Exception(Message.EXCEPTION_STRATEGY_FAILED, e);
+			}
+		}
+
+		void ParseCurrentReaderIndex(List<PlotChannel> output, CsvReader csvr, CancellationToken? cancellationToken, int channelsToParse) {
+			const double EPSILON = 5E-6d;
+
+			Sb.Clear();
+			Sb.Append(csvr[0]); // csvr[0] = date
+			Sb.Append(SPACE_CHAR);
+			Sb.Append(csvr[1]); // csvr[1] = time
+
+			// csvr[2] = IGNORE (mSec)
+
+			var date = ParseDate();
+
+			// csvr[...] = channel values
+
+			for (var i = 0; i < channelsToParse; i++) {
+				if (string.IsNullOrWhiteSpace(csvr[i]))
+					continue;
+
+				if (cancellationToken.WasCancelled()) {
+					break;
+				}
+
+				var  hasValue          = FastDoubleParser.TryParseDouble(csvr[3 + i], out var value);
+				bool isOutside         = value < _lowerValueLimit || value > _upperValueLimit;
+				bool isEssentiallyZero = value >= 0.0d - EPSILON && value  <= 0.0d + EPSILON;
+
+				if (isOutside || isEssentiallyZero || !hasValue) {
+					continue;
+				}
+
+				var record    = new PlotChannelRecord(date, value);
+				var eventData = new PlotEventData(output[i].ChannelIdentifier, record);
+
+				PlotEvent.OnRecordEnumerated(eventData);
+
+				output[i].AddRecord(record);
 			}
 		}
 

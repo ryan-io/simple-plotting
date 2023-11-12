@@ -15,30 +15,31 @@ A library wrapper for ScottPlot &amp; CsvHelper. This library parses CSV files &
 	- System.Runtime.CompilerServices.Unsafe.5.0.0
 	- System.Threading.Tasks.Dataflow.4.5.24
 
-### Simple Use Case
     - Can be used with the following application environments: WPF, WinForms, Blazor, Console Apps
         ** Interactive plots are currently only support in WPF, WinForms and Console Apps
 
+### Console Application Example
+
 ```cs
-using simple_plotting.src;
+using ScottPlot.Plottable;
+using simple_plotting;
 using simple_plotting.runtime;
 
-var path = @"c:\your_directory";
-var file = "your_file.csv";
+var file = "c71_hrl_therm_cycling_9222023_92144_AM.csv";
+var path = @"C:\Development\visual-studio-projects\simple-plotting\simple-plotting-console\test-data";
 
-// this API throws exceptions, so you must wrap it in a try-catch block
 try {
-	const int numOfPlots = 5;
+	const int numOfPlots = 4;
 
 	// can use CsvParser.StartNew(path) to skip SetSource(path)
 	var initialStrategy = new DefaultCsvParseStrategy(-65d, 165d);
-	var source          = CsvParser.StartNew(initialStrategy, path);
-	
+	var source          = CsvParserFactory.StartNew(initialStrategy, path);
+
 	// if you prefer to set the pat manually, you can do the following
 	// var initialStrategy = new DefaultCsvParseStrategy(-65d, 165d);
 	// var source          = CsvParser.StartNew(initialStrategy);
 	// source.SetSource(path);
-	
+
 	// invoke source.ExtractAsync(file) to generate output
 	var output = await source.ExtractAsync(file);
 
@@ -50,25 +51,28 @@ try {
 
 	// begin building the plot via fluent builder
 	var product = PlotBuilderFluent.StartNew(output, numOfPlots)
-	                               .WithTitle("Test title")
+	                               .OfType<SignalPlot>()
+	                               .WithTitle("Test title", 24)
 	                               .WithSize(PlotSize.S1280X800)
-	                               .WithPrimaryXAxisLabel(Constants.X_AXIS_LABEL_DATE_TIME)
-	                               .WithSecondaryYAxisLabel(Constants.Y_AXIS_LABEL_RH)
+	                               .WithPrimaryXAxisLabel(Constants.X_AXIS_LABEL_DATE_TIME, 20)
+	                               .WithPrimaryYAxisLabel(Constants.Y_AXIS_LABEL_TEMP, 20)
+	                               .WithSecondaryYAxisLabel(Constants.Y_AXIS_LABEL_RH, 20)
 	                               .ShowLegend(PlotAlignment.UpperRight)
-	                               .SetDataPadding(percentY: 0.2)
+	                               .SetDataPadding(percentY: .2, percentX: 0.0)
 	                               .DefineSource(source)
-	                               .RotatePrimaryXAxisTicks(PlotAxisRotation.Zero)
+	                               .RotatePrimaryXAxisTicks(PlotAxisRotation.FortyFive)
 	                               .RotatePrimaryYAxisTicks(PlotAxisRotation.Zero)
-	                               .WithPrimaryYAxisLabel(Constants.Y_AXIS_LABEL_TEMP).FinalizeConfiguration()
+	                               .SetLayout(right: 123, top:123)
+	                               .FinalizeConfiguration()
 	                               .Produce();
 
-	// can also define a path in by invoking product.TrySave()
-	// var canSave = product.TrySave(@"c:\your-directory", "output");
-	
-	// you could invoke product.TrySave if you call PlotBuilderFluent.DefineSource
-	var canSaveAtSource = product.TrySaveAtSource("output");
-	
-	Console.WriteLine(canSaveAtSource ? "Successfully saved plot!" : "Could not save plot...");
+	product.GotoPlottables().AddDraggableLine(0, 50, 40000, out _);
+	product.GotoPostProcess().TrySetLabel("Test label", 0, 1);
+	product.GotoPlottables().WithAnnotationAt("test annotation", 1, 100, 100, out _);
+
+	var status = product.TrySaveAtSource("output");
+
+	Console.WriteLine(status.State ? "Successfully saved plot!" : "Could not save plot...");
 }
 catch (Exception e) {
 	Console.WriteLine(e);
@@ -76,4 +80,11 @@ catch (Exception e) {
 }
 
 return 0;
+```
+
+### WPF Application Example
+
+```cs
+Taking a look at the included WPF example. This will showcase how to build a plot and interact with a WpfPlot
+control and how to interact with it.
 ```
