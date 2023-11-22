@@ -12,10 +12,14 @@ public class ChannelRecordProcessor {
 	/// <param name="batchedRecord">Current batched record</param>
 	/// <param name="plotTracker">Iteration tracker</param>
 	/// <param name="channel">Current channel being enumerated</param>
+	/// <exception cref="IndexOutOfRangeException">Thrown if plotTacker > Data.Count</exception>
 	public void Process(
 		IEnumerable<PlotChannelRecord> batchedRecord,
 		int plotTracker,
 		PlotChannel channel) {
+		if (plotTracker >= Data.Count)
+			throw new IndexOutOfRangeException(Message.EXCEPTION_PLOT_TRACKER_INDEX_OUT_OF_RANGE);
+		
 		var batchedArray = batchedRecord.ToArray();
 
 		// the line of code below this comment is opinionated. I prefer to use the OADate format for the x-axis.

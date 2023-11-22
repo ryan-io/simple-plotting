@@ -107,7 +107,8 @@ namespace simple_plotting.runtime {
 		/// <param name="csvr">Instance of Csv Reader</param>
 		/// <param name="cancellationToken">Cancellation token for cancelling the awaitable task</param>
 		/// <returns>An awaitable task</returns>
-		Task StrategyAsync(List<PlotChannel> output, CsvReader csvr, CancellationToken? cancellationToken = default);
+		Task 
+			StrategyAsync(List<PlotChannel> output, CsvReader csvr, CancellationToken? cancellationToken = default);
 	}
 
 	/// <summary>

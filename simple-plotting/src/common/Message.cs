@@ -66,5 +66,8 @@
 
 		public const string EXCEPTION_CREATE_SIGNAL_NO_SAMPLE_RATE =
 			"You are trying to create a signal plot but have not provided a sampling rate. Please pass a sample rate parmeter that is not null.";
+
+		public const string EXCEPTION_PLOT_TRACKER_INDEX_OUT_OF_RANGE =
+			"The provided plot tracker index was greater than the initialized number of plots.";
 	}
 }
