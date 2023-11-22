@@ -83,25 +83,14 @@ namespace simple_plotting {
 			// ReSharper disable once ForCanBeConvertedToForeach
 			for (var index = 0; index < _data.Count; index++) {
 				var channel   = _data[index];
-				var batchSize = channel.Records.Count / PlotCount;
-				var batch     = channel.Records.Batch(batchSize).ToArray();
-
-				if (batch[^1] != null && batch.Length > PlotCount) {
-					var lastBatch = batch.Last();
-
-					if (lastBatch != null && batch[^2] != null) {
-						batch[^2] = batch[^2]?.Concat(lastBatch);
-						batch[^1] = null;
-					}
-				}
-
+				var batch     = channel.Records.Batch(PlotCount).ToArray();
 				var plotTracker = 0;
 
 				foreach (var batchedRecord in batch) {
-					if (batchedRecord == null)
+					if (batchedRecord.Value.IsNullOrEmpty())
 						continue;
-
-					actionDelegate.Invoke(batchedRecord, plotTracker, channel);
+				
+					actionDelegate.Invoke(batchedRecord.Value, plotTracker, channel);
 					plotTracker++;
 				}
 			}

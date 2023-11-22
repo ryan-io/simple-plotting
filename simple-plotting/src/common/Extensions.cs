@@ -43,29 +43,36 @@
 		///  This method will break an IEnumerable into batches of a given size. Any overflow will be returned as a final batch.
 		/// </summary>
 		/// <param name="enumerator">Collection to batch</param>
-		/// <param name="size">Batch size</param>
+		/// <param name="targetSize">Batch size</param>
 		/// <typeparam name="T">Generic type</typeparam>
 		/// <returns>Enumerable of an enumerable with appropriate batch sizes. The final element may not have equal size
 		///  due to it being use as 'overflow'</returns>
-		public static IEnumerable<IEnumerable<T>?> Batch<T>(this IEnumerable<T> enumerator, int size) {
-			T[]? batch = null;
-			var  count = 0;
+		public static Dictionary<int, List<T>> Batch<T>(this IEnumerable<T> enumerator, int targetSize) {
+			var output     = new Dictionary<int, List<T>>();
+			var enumerable = enumerator as T[] ?? enumerator.ToArray();
 
-			foreach (var item in enumerator) {
-				batch ??= new T[size];
+			var step     = enumerable.Length / targetSize;
+			var overFlow = enumerable.Length % targetSize;
 
-				batch[count++] = item;
-				if (count != size)
-					continue;
+			var tracker      = int.MaxValue;
+			var plotTracker  = -1;
+			//var totalCounter = 0;
 
-				yield return batch;
+			for (var i = 0; i < enumerable.Length; i++) {
+				if (tracker > step - 1) {
+					if (plotTracker != targetSize - 1) {
+						plotTracker++;
+						output.Add(plotTracker, new List<T>());
+						tracker = 0;
+					}
+				}
 
-				batch = null;
-				count = 0;
+				output[plotTracker].Add(enumerable[i]);
+				tracker++;
+				//totalCounter++;
 			}
 
-			if (batch != null && count > 0)
-				yield return batch.Take(count).ToArray();
+			return output;
 		}
 
 		/// <summary>

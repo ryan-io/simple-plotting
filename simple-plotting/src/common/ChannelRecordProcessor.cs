@@ -17,7 +17,7 @@ public class ChannelRecordProcessor {
 		IEnumerable<PlotChannelRecord> batchedRecord,
 		int plotTracker,
 		PlotChannel channel) {
-		if (plotTracker >= Data.Count)
+		if (plotTracker >= Data.Count|| plotTracker < 0)
 			throw new IndexOutOfRangeException(Message.EXCEPTION_PLOT_TRACKER_INDEX_OUT_OF_RANGE);
 		
 		var batchedArray = batchedRecord.ToArray();
