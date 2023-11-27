@@ -171,10 +171,25 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="valueX">Double value for x-axis</param>
 	/// <param name="valueY">Double value for y-axis</param>
 	/// <returns>Fluent builder</returns>
-	IPlotBuilderFluentConfiguration SetDataPadding(double valueX = 0.05, double valueY = 0.05);
+	IPlotBuilderFluentConfiguration SetDataPadding(double valueX = 1.0, double valueY = 1.0);
 	
-
-	IPlotBuilderFluentConfiguration SetDataPadding(int channelCount, double percentX = 1.0, double percentY = 1.0);
+	/// <summary>
+	/// Sets the data padding by considering the number of channels and the percent increment for each channel.
+	/// </summary>
+	/// <param name="channelCount">The total number of channels that the data padding will be set for.</param>
+	/// <param name="valueX">The percentage increment for the X axis for each channel. Default value is 1.0.</param>
+	/// <param name="valueY">The percentage increment for the Y axis for each channel. Default value is 1.0.</param>
+	/// <returns>Itself (the `IPlotBuilderFluentConfiguration` instance), allowing for method chaining.</returns>
+	/// <exception cref="Exception">Throws an exception when channel count is zero or negative.</exception>
+	IPlotBuilderFluentConfiguration SetDataPadding(int channelCount, double valueX = 1.0, double valueY = 1.0);
+	
+	/// <summary>
+	/// Sets data padding with respect to channels.
+	/// </summary>
+	/// <param name="valueX">The padding value for the X-axis data. Default is 1.0</param>
+	/// <param name="valueY">The padding value for the Y-axis data. Default is 1.0</param>
+	/// <returns>An instance of <see cref="IPlotBuilderFluentConfiguration"/> to enable method chaining.</returns>
+	IPlotBuilderFluentConfiguration SetDataPaddingWrtChannels(double valueX = 1.0, double valueY = 1.0);
 
 	/// <summary>
 	///  Sets the SourcePath property to Source.Path. This is used to save the plot(s) to the same directory as the source.

@@ -316,15 +316,8 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
-	/// <summary>
-	/// Sets the data padding by considering the number of channels and the percent increment for each channel.
-	/// </summary>
-	/// <param name="channelCount">The total number of channels that the data padding will be set for.</param>
-	/// <param name="percentX">The percentage increment for the X axis for each channel. Default value is 1.0.</param>
-	/// <param name="percentY">The percentage increment for the Y axis for each channel. Default value is 1.0.</param>
-	/// <returns>Itself (the `IPlotBuilderFluentConfiguration` instance), allowing for method chaining.</returns>
-	/// <exception cref="Exception">Throws an exception when channel count is zero or negative.</exception>
-	public IPlotBuilderFluentConfiguration SetDataPadding(int channelCount, double percentX = 1.0, double percentY = 1.0) {
+	/// <inheritdoc />
+	public IPlotBuilderFluentConfiguration SetDataPadding(int channelCount, double valueX = 1.0, double valueY = 1.0) {
 		if (channelCount <= 0)
 			throw new Exception(Message.EXCEPTION_CHANNEL_COUNT_ZERO_OR_NEG);
 		
@@ -333,12 +326,19 @@ public partial class PlotBuilderFluent {
 		var xMargin = 0.0d;
 
 		do {
-			yMargin += percentY;
-			xMargin += percentX;
+			yMargin += valueY;
+			xMargin += valueX;
 			tracker++;
 		} while (tracker <= channelCount);
 
 		SetDataPadding(xMargin, yMargin);
+
+		return this;
+	}
+
+	/// <inheritdoc />
+	public IPlotBuilderFluentConfiguration SetDataPaddingWrtChannels(double valueX = 1.0, double valueY = 1.0) {
+		SetDataPadding(_data.Count, valueX, valueY);
 
 		return this;
 	}
