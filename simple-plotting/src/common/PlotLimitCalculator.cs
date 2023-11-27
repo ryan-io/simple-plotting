@@ -5,8 +5,8 @@ namespace simple_plotting {
 	///  A helper class to determine the maxima & minima y-axes limits
 	/// </summary>
 	public class PlotLimitCalculator {
-		double? DefaultUpper { get; } = null;
-		double? DefaultLower { get; } = null;
+		double? DefaultUpper { get; }
+		double? DefaultLower { get; }
 		double  DeltaPercent { get; }
 
 		/// <summary>
@@ -17,12 +17,14 @@ namespace simple_plotting {
 		/// <returns>Readonly struct with upper & lower limits</returns>
 		/// <exception cref="Exception">Thrown if 'channels' is empty</exception>
 		public PlotLimit Calculate(IEnumerable<PlotChannel> channels, [CallerMemberName] string caller = "") {
-			if (!channels.Any())
+			var plotChannels = channels as PlotChannel[] ?? channels.ToArray();
+			
+			if (!plotChannels.Any())
 				throw new Exception($"{caller}: {Message.EXCEPTION_NO_PLOT_ENUMERABLES_LIMIT_CAL}");
 
 			double upper = double.NegativeInfinity, lower = double.PositiveInfinity;
 
-			foreach (PlotChannel channel in channels) {
+			foreach (var channel in plotChannels) {
 				foreach (var record in channel.Records) {
 					if (record.Value.CompareTo(lower) < 0) {
 						lower = record.Value;
@@ -47,8 +49,7 @@ namespace simple_plotting {
 			else if (DeltaPercent > 100d)
 				sanitizedPercent = 100d;
 			else
-				sanitizedPercent =
-					DeltaPercent;
+				sanitizedPercent = DeltaPercent;
 
 			var delta = upper - lower;
 			delta *= sanitizedPercent / 100d;

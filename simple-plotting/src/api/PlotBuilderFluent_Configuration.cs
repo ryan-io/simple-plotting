@@ -1,5 +1,6 @@
 // simple-plotting
 
+using System.Diagnostics;
 using System.Drawing;
 
 namespace simple_plotting;
@@ -280,6 +281,24 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
+	public IPlotBuilderFluentConfiguration ShowLegendOutSideTopRight() {
+		foreach (var p in _plots) {
+			Bitmap bmpPlot   = p.GetBitmap();
+			Bitmap bmpLegend = p.RenderLegend();
+
+			Bitmap         bmp = new Bitmap(bmpPlot.Width + bmpLegend.Width, bmpPlot.Height);
+			using Graphics gfx = Graphics.FromImage(bmp);
+			gfx.Clear(Color.White);
+			gfx.DrawImage(bmpPlot,   0,             0);
+			gfx.DrawImage(bmpLegend, bmpPlot.Width, (bmp.Height - bmpLegend.Height) / 2);
+
+			p.Render();
+		}
+
+		return this;
+	}
+
+	/// <inheritdoc />
 	public IPlotBuilderFluentConfiguration HideLegend() {
 		foreach (var plot in _plots) {
 			plot.Legend(false);
@@ -289,10 +308,37 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentConfiguration SetDataPadding(double percentX = 1.0, double percentY = 1.0) {
+	public IPlotBuilderFluentConfiguration SetDataPadding(double valueX = 1.0, double valueY = 1.0) {
 		foreach (var plot in _plots) {
-			plot.Margins(percentX, percentY);
+			plot.Margins(valueX, valueY);
 		}
+
+		return this;
+	}
+
+	/// <summary>
+	/// Sets the data padding by considering the number of channels and the percent increment for each channel.
+	/// </summary>
+	/// <param name="channelCount">The total number of channels that the data padding will be set for.</param>
+	/// <param name="percentX">The percentage increment for the X axis for each channel. Default value is 1.0.</param>
+	/// <param name="percentY">The percentage increment for the Y axis for each channel. Default value is 1.0.</param>
+	/// <returns>Itself (the `IPlotBuilderFluentConfiguration` instance), allowing for method chaining.</returns>
+	/// <exception cref="Exception">Throws an exception when channel count is zero or negative.</exception>
+	public IPlotBuilderFluentConfiguration SetDataPadding(int channelCount, double percentX = 1.0, double percentY = 1.0) {
+		if (channelCount <= 0)
+			throw new Exception(Message.EXCEPTION_CHANNEL_COUNT_ZERO_OR_NEG);
+		
+		var tracker = 1;
+		var yMargin = 0.0d;
+		var xMargin = 0.0d;
+
+		do {
+			yMargin += percentY;
+			xMargin += percentX;
+			tracker++;
+		} while (tracker <= channelCount);
+
+		SetDataPadding(xMargin, yMargin);
 
 		return this;
 	}

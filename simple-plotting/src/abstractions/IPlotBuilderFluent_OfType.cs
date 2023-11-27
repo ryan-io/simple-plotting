@@ -6,14 +6,14 @@ namespace simple_plotting;
 
 public interface IPlotBuilderFluentOfType : IPlotBuilderFluent {
 	/// <summary>
-	///  The type of plot that is being built.
+	/// Gets the type of the plot being built.
 	/// </summary>
 	Type? PlotType { get; }
 
 	/// <summary>
-	///  Creates a new instance of PlotBuilderFluent and PlottableFactory using type defined in 'T'
+	/// Defines the type of the plot.
 	/// </summary>
-	/// <typeparam name="T">Is a class that implements IPlottable (SignalPlot, ScatterPlot, etc.)</typeparam>
-	/// <returns>Fluent builder</returns>
+	/// <typeparam name="T">The type of the plot. Must be a class implementing IPlottable interface.</typeparam>
+	/// <returns>An instance of IPlotBuilderFluentConfiguration for further configuration.</returns>
 	IPlotBuilderFluentConfiguration OfType<T>() where T : class, IPlottable;
 }

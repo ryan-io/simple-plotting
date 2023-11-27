@@ -7,8 +7,8 @@ namespace simple_plotting;
 /// </summary>
 public interface IPlotBuilderFluentReadyToProduce : IPlotBuilderFluent {
 	/// <summary>
-	///  Returns the generated Plot instance. This should be the last call in the fluent API.
+	/// Produces the plot product based on the current configuration.
 	/// </summary>
-	/// <returns>ScottPlot.Plot instance (private)</returns>
+	/// <returns>A configured plot product.</returns>
 	IPlotBuilderFluentProduct Produce();
 }

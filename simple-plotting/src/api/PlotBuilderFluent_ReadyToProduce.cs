@@ -10,7 +10,7 @@ public partial class PlotBuilderFluent {
 
 		if (!Observables.Any())
 			return this;
-
+ 
 		foreach (var o in Observables)
 			o.Invoke();
 		

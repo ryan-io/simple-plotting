@@ -154,6 +154,12 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	IPlotBuilderFluentConfiguration ShowLegend(PlotAlignment alignment);
 
 	/// <summary>
+	/// Configures to show the plot legend outside at the top right corner of the plot.
+	/// </summary>
+	/// <returns>A fluent configuration object for continuing the plot building process.</returns>
+	IPlotBuilderFluentConfiguration ShowLegendOutSideTopRight();
+
+	/// <summary>
 	///  Hides the legend.
 	/// </summary>
 	/// <returns>Fluent builder</returns>
@@ -162,10 +168,13 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <summary>
 	///  Sets the margins of the plot. This affects the actual data area of the plot.
 	/// </summary>
-	/// <param name="percentX">Double value for x-axis</param>
-	/// <param name="percentY">Double value for y-axis</param>
+	/// <param name="valueX">Double value for x-axis</param>
+	/// <param name="valueY">Double value for y-axis</param>
 	/// <returns>Fluent builder</returns>
-	IPlotBuilderFluentConfiguration SetDataPadding(double percentX = 0.05, double percentY = 0.05);
+	IPlotBuilderFluentConfiguration SetDataPadding(double valueX = 0.05, double valueY = 0.05);
+	
+
+	IPlotBuilderFluentConfiguration SetDataPadding(int channelCount, double percentX = 1.0, double percentY = 1.0);
 
 	/// <summary>
 	///  Sets the SourcePath property to Source.Path. This is used to save the plot(s) to the same directory as the source.
