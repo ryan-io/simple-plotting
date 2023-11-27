@@ -14,10 +14,17 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// </summary>
 	IEnumerable<Plot> GetPlots();
 
-	/// <summary>
-	///  The generated plots. Queries the plot collection and returns the plot at the specified index.
-	/// </summary>
-	Plot GetPlot(int plotIndex);
+    /// <summary>
+    /// Gets a readonly collection of type PlotChannels
+    /// A call to this method should only be made once plots have been generated
+    /// </summary>
+    /// <returns></returns>
+    IReadOnlyList<PlotChannel> GetPlotChannels ();
+
+    /// <summary>
+    ///  The generated plots. Queries the plot collection and returns the plot at the specified index.
+    /// </summary>
+    Plot GetPlot(int plotIndex);
 
 	/// <summary>
 	///  Extracts actual channel names from the plots. 

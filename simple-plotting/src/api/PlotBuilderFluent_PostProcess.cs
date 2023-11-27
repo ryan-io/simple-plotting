@@ -5,29 +5,16 @@ using ScottPlot.Plottable;
 namespace simple_plotting;
 
 public partial class PlotBuilderFluent {
-	/// <summary>
-	///  Helper method to return back to the product.
-	/// </summary>
-	/// <returns>Instance product</returns>
+	/// <inheritdoc cref="IPlotBuilderFluentPlottables.GoToProduct" />
 	public IPlotBuilderFluentProduct GoToProduct() => this;
 
-	/// <summary>
-	///  Sets the size of all plots.
-	/// </summary>
-	/// <param name="size">New plot size</param>
-	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+	/// <inheritdoc />
 	public IPlotBuilderFluentPostProcess SetSizeOfAll(PlotSize size) {
 		PlotHelper.SetSizeOfAll(_plots, size);
 		return this;
 	}
 
-	/// <summary>
-	///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
-	///  This version REQUIRES you call Render() on the appropriate plot.
-	/// </summary>
-	/// <param name="plot">IPlottable to change the label fro</param>
-	/// <param name="newLabel">New label</param>
-	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+	/// <inheritdoc />
 	public IPlotBuilderFluentPostProcess SetScatterLabel(IPlottable? plot, string newLabel) {
 		if (plot is null)
 			return this;
@@ -39,13 +26,7 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
-	/// <summary>
-	/// Changes the title for all plots
-	/// </summary>
-	/// <param name="newTitle">The new plot title</param>
-	/// <param name="fontSize">Title font size</param>
-	/// <param name="isBold">Whether the title is bold or not</param>
-	/// <returns>Fluent builder</returns>
+	/// <inheritdoc />
 	public IPlotBuilderFluentPostProcess ChangeTitle(string newTitle, int fontSize = 14, bool isBold = false) {
 		if (string.IsNullOrWhiteSpace(newTitle))
 			throw new Exception(Message.EXCEPTION_TITLE_INVALID);
@@ -60,15 +41,7 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
-	/// <summary>
-	///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
-	///  This method will invoke Render() on the plot.
-	///  Plottable index is 0-based and is in sequential order of generated plots
-	/// </summary>
-	/// <param name="newLabel">New label</param>
-	/// <param name="plottableIndex">Plottable index to adjust label for</param>
-	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
-	/// <exception cref="NullReferenceException">Thrown if plottable cast fails</exception>
+	/// <inheritdoc />
 	public IPlotBuilderFluentPostProcess TrySetScatterLabel(string newLabel, params int[] plottableIndex) {
 		if (string.IsNullOrWhiteSpace(newLabel))
 			throw new NullReferenceException(Message.EXCEPTION_NO_PLOT_LABEL_SPECIFIED);
@@ -93,14 +66,8 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
-	/// <summary>
-	///  Generically sets labels defined in plottableIndices for ALL plots.
-	/// </summary>
-	/// <param name="newLabel">New label</param>
-	/// <param name="plottableIndices">Array of label indices to change</param>
-	/// <returns></returns>
-	/// <exception cref="NullReferenceException">Thrown if newLabel is null or whitespace</exception>
-	public IPlotBuilderFluentPostProcess TrySetLabel(string newLabel, params int[] plottableIndices) {
+	/// <inheritdoc />
+    public IPlotBuilderFluentPostProcess TrySetLabel(string newLabel, params int[] plottableIndices) {
 		if (string.IsNullOrWhiteSpace(newLabel))
 			throw new NullReferenceException(Message.EXCEPTION_NO_PLOT_LABEL_SPECIFIED);
 
@@ -118,23 +85,25 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
-	/// <summary>
-	///  Takes an IPlottable, casts it to a ScatterPlot and sets the label.
-	///  This method will invoke Render() on the plot.
-	///  This version will set the label for all plots.
-	/// </summary>
-	/// <param name="newLabel">New label</param>
-	/// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
-	/// <exception cref="NullReferenceException">Thrown if plottable cast fails</exception>
-	public IPlotBuilderFluentPostProcess TrySetScatterLabelAll(string newLabel) {
+	/// <inheritdoc />
+    public IPlotBuilderFluentPostProcess TrySetLabelAll (string newLabel) {
+        if (string.IsNullOrWhiteSpace(newLabel))
+            throw new NullReferenceException(Message.EXCEPTION_NO_PLOT_LABEL_SPECIFIED);
+		
+		var indices = GetIndices();
+		TrySetLabel(newLabel, indices.ToArray());
+
+        return this;
+    }
+
+	/// <inheritdoc />
+    public IPlotBuilderFluentPostProcess TrySetScatterLabelAll(string newLabel) {
 		var indices = GetIndices();
 
 		return TrySetScatterLabel(newLabel, indices);
 	}
 
-	/// <summary>
-	/// Invokes Render on all plots.
-	/// </summary>	
+	/// <inheritdoc />	
 	public IPlotBuilderFluentPostProcess RefreshRenderers() {
 		foreach (var plot in _plots) {
 			plot.Render();
@@ -143,6 +112,10 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
+	/// <summary>
+	///  Gets the indices of the plottables. A helper method for TrySetScatterLabelAll.
+	/// </summary>
+	/// <returns>Integer array containing indices of each plot, sequential, ascending</returns>
 	int[] GetIndices() {
 		var indices = new int[_data.Count];
 

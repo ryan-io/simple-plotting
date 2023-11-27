@@ -7,14 +7,7 @@ using ScottPlot.Plottable;
 namespace simple_plotting;
 
 public partial class PlotBuilderFluent {
-    /// <summary>
-    ///  Removes a plottable instance of type 'T' from a plot specified plotIndex
-    /// </summary>
-    /// <typeparam name="T">Type of plottables to remove</typeparam>
-    /// <param name="plot">Plot remove the plottables of type 'T' from</param>
-    /// <param name="plottable">Plottable instance to remove</param>
-    /// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
-    /// <exception cref="Exception">Thrown if plot does not contain plottable instance</exception>
+    /// <inheritdoc />
     public IPlotBuilderFluentPlottables Remove<T> (Plot? plot, IPlottable? plottable)
         where T : class, IPlottable {
         if (plot == null || plottable == null)
@@ -28,18 +21,7 @@ public partial class PlotBuilderFluent {
         return this;
     }
 
-    /// <summary>
-    ///  Adds a draggable line to the plot at posX, posY
-    /// </summary>
-    /// <param name="plotIndex">Plot index to add line to</param>
-    /// <param name="posX">Plot coordinate x</param>
-    /// <param name="posY">Plot coordinate y</param>
-    /// <param name="marker">Out DraggableMarkerPlot</param>
-    /// <param name="arrowHeadLength">The length of the line</param>
-    /// <param name="isSnap">If true, the draggable line will snap to data points</param>
-    /// <param name="arrowHeadWidth">The width of th eline</param>
-    /// <param name="arrowTailSize">Size of the circle tail end of the arrow</param>
-    /// <returns>Fluent builder</returns>
+    /// <inheritdoc />
     public IPlotBuilderFluentPlottables AddDraggableLine (int plotIndex, double posX, double posY,
         out DraggableArrow marker, float arrowTailSize = 3.0f, float arrowHeadWidth = 1.0f, float arrowHeadLength = 5.0f, bool isSnap = false,
         double? arrowTipXLocation = null, double? arrowTipYLocation = null) {
@@ -74,14 +56,7 @@ public partial class PlotBuilderFluent {
         return this;
     }
 
-    /// <summary>
-    ///  Removes a plottable instance of type 'T' from a plot specified plotIndex
-    /// </summary>
-    /// <typeparam name="T">Type of plottables to remove</typeparam>
-    /// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>
-    /// <param name="plottable">Plottable instance to remove</param>
-    /// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
-    /// <exception cref="Exception">Thrown if plot does not contain plottable instance</exception>
+    /// <inheritdoc />
     public IPlotBuilderFluentPlottables Remove<T> (int plotIndex, IPlottable plottable) where T : class, IPlottable {
         var plottables = GetPlottablesAs<T>(plotIndex);
         var contains = plottables.Contains(plottable);
@@ -94,25 +69,14 @@ public partial class PlotBuilderFluent {
         return this;
     }
 
-    /// <summary>
-    ///  Removes a plottable of type 'T' with plottableIndex from a specified plot via plotIndex
-    /// </summary>
-    /// <typeparam name="T">Type of plottables to remove</typeparam>
-    /// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>
-    /// <param name="plottableIndex">Plottable index to remove from plot</param>
-    /// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
+    /// <inheritdoc />
     public IPlotBuilderFluentPlottables Remove<T> (int plotIndex, int plottableIndex) where T : class, IPlottable {
         _plots[plotIndex].RemoveAt(plottableIndex);
 
         return this;
     }
 
-    /// <summary>
-    ///  Removes all plottables of type 'T' from the plot specified by plotIndex
-    /// </summary>
-    /// <typeparam name="T">Type of plottables to remove</typeparam>
-    /// <param name="plotIndex">Plot index to remove the plottables of type 'T' from</param>
-    /// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
+    /// <inheritdoc />
     public IPlotBuilderFluentPlottables RemoveAll<T> (int plotIndex) where T : class, IPlottable {
         var plot = _plots[plotIndex];
         var plottables = GetPlottablesAs<T>(plotIndex);
@@ -124,15 +88,7 @@ public partial class PlotBuilderFluent {
         return this;
     }
 
-    /// <summary>
-    ///  Adds an annotation to a plot at xOff, yOff.
-    /// </summary>
-    /// <param name="text">String text to display in annotation</param>
-    /// <param name="index">Index of plot to annotate</param>
-    /// <param name="xOff">x-offset (from lower-left of plot)</param>
-    /// <param name="yOff">y-offset (from the lower-left of the plot)</param>
-    /// <param name="annotation">Instance of Annotation plottable</param>
-    /// <returns>Fluent builder as IPlotBuilderFluentPlottables</returns>
+    /// <inheritdoc />
     public IPlotBuilderFluentPlottables WithAnnotationAt (string text, int index, float xOff, float yOff, out
         Annotation annotation) {
         index.ValidateInRange(_plots);
@@ -148,15 +104,7 @@ public partial class PlotBuilderFluent {
         return this;
     }
 
-    /// <summary>
-    ///  Adds a crosshair plottable to the plot.
-    /// </summary>
-    /// <param name="plotIndex">Index of your plot</param>
-    /// <param name="crosshair">Instance of Crosshair plottable</param>
-    /// <param name="isXDataDate">OPTIONAL; default = false; formats x-axis data for date time if true</param>
-    /// <param name="positionX">OPTIONAL; default = 0.0; x-offset from bottom-left of plot</param>
-    /// <param name="positionY">OPTIONAL; default = 0.0; y-offset from bottom-left of plot</param>
-    /// <returns></returns>
+    /// <inheritdoc />
     public IPlotBuilderFluentPlottables WithCrosshair (int plotIndex, out Crosshair crosshair, bool isXDataDate = false,
         double positionX = 0, double positionY = 0) {
         plotIndex.ValidateInRange(_plots);
@@ -171,12 +119,7 @@ public partial class PlotBuilderFluent {
         return this;
     }
 
-    /// <summary>
-    ///  Adds a marker plottable to the plot.
-    /// </summary>
-    /// <param name="plotIndex">Plot index to add marker to</param>
-    /// <param name="marker">Instance of MarkerPlot plottable</param>
-    /// <returns></returns>
+    /// <inheritdoc />
     public IPlotBuilderFluentPlottables WithMarker (int plotIndex, out MarkerPlot marker) {
         plotIndex.ValidateInRange(_plots);
 
@@ -191,6 +134,7 @@ public partial class PlotBuilderFluent {
         return this;
     }
 
+    /// <inheritdoc />
     public IPlotBuilderFluentPlottables WithText (int plotIndex, string text, double xCoord, double yCoord,
         out Text textPlottable) {
         plotIndex.ValidateInRange(_plots);
@@ -208,7 +152,7 @@ public partial class PlotBuilderFluent {
     /// <param name="text">String text to display in annotation</param>
     /// <param name="xOff">x-offset (from lower-left of plot)</param>
     /// <param name="yOff">y-offset (from the lower-left of the plot)</param>
-    /// <returns></returns>
+    /// <returns>Annotation instance</returns>
     public static Annotation WithAnnotationAt (Plot plot, string text, float xOff, float yOff) {
         var annotation = plot.AddAnnotation(text, Alignment.LowerLeft);
 
@@ -225,10 +169,10 @@ public partial class PlotBuilderFluent {
     /// </summary>
     /// <param name="plot">Plot to add the crosshair to</param>
     /// <param name="isXDataDate">OPTIONAL; default = false; formats x-axis data for date time if true</param>
-    /// <returns></returns>
+    /// <returns>Crosshair instance</returns>
     public static Crosshair WithCrosshair (Plot plot, bool isXDataDate = false) {
         var crosshair = plot.AddCrosshair(0, 0);
-
+        
         if (isXDataDate)
             crosshair.VerticalLine.PositionFormatter = p => DateTime.FromOADate(p).ToString("d");
 
@@ -239,7 +183,7 @@ public partial class PlotBuilderFluent {
     ///  Static method for adding a marker plottable to the plot.
     /// </summary>
     /// <param name="plot">Plot to add a marker to</param>
-    /// <returns></returns>
+    /// <returns>MarkerPlot instance</returns>
     public static MarkerPlot WithMark (Plot plot) {
         var marker = plot.AddPoint(0, 0);
 

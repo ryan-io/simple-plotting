@@ -5,16 +5,10 @@ using ScottPlot.Plottable;
 namespace simple_plotting;
 
 public partial class PlotBuilderFluent {
-	/// <summary>
-	///  The type of plot that is being built.
-	/// </summary>
+	/// <inheritdoc />
 	public Type? PlotType { get; private set; }
 
-	/// <summary>
-	///  Creates a new instance of PlotBuilderFluent and PlottableFactory using type defined in 'T'
-	/// </summary>
-	/// <typeparam name="T">Is a class that implements IPlottable (SignalPlot, ScatterPlot, etc.)</typeparam>
-	/// <returns>Fluent builder</returns>
+	/// <inheritdoc />
 	public IPlotBuilderFluentConfiguration OfType<T>() where T : class, IPlottable {
 		PlotType     = typeof(T);
 		FactoryPrime = PlottableFactory.StartNew<T>();

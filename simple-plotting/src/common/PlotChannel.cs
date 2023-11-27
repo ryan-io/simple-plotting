@@ -4,60 +4,66 @@
 ///  Defines characteristics for a channel in a plot.
 /// </summary>
 public class PlotChannel {
-	static PlotColorPaletteManager ColorPaletteManager = new();
+    static PlotColorPaletteManager ColorPaletteManager = new();
 
-	/// <summary>
-	///  The identifier of the channel. Should be parsed from CsvHelper
-	/// </summary>
-	public string ChannelIdentifier { get; set; }
+    /// <summary>
+    ///  The identifier of the channel. Should be parsed from CsvHelper
+    /// </summary>
+    public string ChannelIdentifier { get; set; }
 
-	/// <summary>
-	/// Typically temperature or humidity
-	/// </summary>
-	public PlotChannelType ChannelType { get; }
+    /// <summary>
+    ///  The identifier of the channel. Should be parsed from CsvHelper
+    /// </summary>
+    public string ChannelIdentifierOriginal { get; }
 
-	/// <summary>
-	///  Plot color of channel
-	/// </summary>
-	public System.Drawing.Color Color { get; }
+    /// <summary>
+    /// Typically temperature or humidity
+    /// </summary>
+    public PlotChannelType ChannelType { get; }
 
-	/// <summary>
-	///  Interval between each data points
-	///  This can be extracted through the CsvParser
-	/// </summary>
-	public double? SampleRate { get; } = default;
+    /// <summary>
+    ///  Plot color of channel
+    /// </summary>
+    public System.Drawing.Color Color { get; }
 
-	/// <summary>
-	///  The values of the channel. 
-	/// </summary>
-	public IReadOnlyCollection<PlotChannelRecord> Records => _records;
+    /// <summary>
+    ///  Interval between each data points
+    ///  This can be extracted through the CsvParser
+    /// </summary>
+    public double? SampleRate { get; } = default;
 
-	/// <summary>
-	///  Adds a record to the channel.
-	/// </summary>
-	/// <param name="record">Record to add to internal collection</param>
-	public void AddRecord(PlotChannelRecord record) => _records.Add(record);
+    /// <summary>
+    ///  The values of the channel. 
+    /// </summary>
+    public IReadOnlyCollection<PlotChannelRecord> Records => _records;
 
-	/// <summary>
-	///  Adds a record to the channel. Returns true if the record was added, false if it already exists.
-	/// </summary>
-	/// <param name="record">Record to add to internal collection</param>
-	/// <returns>False if exists, true if not</returns>
-	public bool TryAddRecord(PlotChannelRecord record) {
-		if (_records.Contains(record))
-			return false;
+    /// <summary>
+    ///  Adds a record to the channel.
+    /// </summary>
+    /// <param name="record">Record to add to internal collection</param>
+    public void AddRecord (PlotChannelRecord record) => _records.Add(record);
 
-		_records.Add(record);
-		return true;
+    /// <summary>
+    ///  Adds a record to the channel. Returns true if the record was added, false if it already exists.
+    /// </summary>
+    /// <param name="record">Record to add to internal collection</param>
+    /// <returns>False if exists, true if not</returns>
+    public bool TryAddRecord (PlotChannelRecord record) {
+        if (_records.Contains(record))
+            return false;
+
+        _records.Add(record);
+        return true;
 	}
 
-	public PlotChannel(string channelIdentifier, PlotChannelType channelType, double? sampleRate = default) {
-		_records          = new List<PlotChannelRecord>();
-		ChannelIdentifier = channelIdentifier;
-		ChannelType       = channelType;
-		SampleRate        = sampleRate;
-		Color             = ColorPaletteManager.GetNext();
-	}
+    public PlotChannel (string channelIdentifier, PlotChannelType channelType, double? sampleRate = default) {
+        _records = new List<PlotChannelRecord>();
+        ChannelIdentifier = channelIdentifier;
+        ChannelIdentifierOriginal = channelIdentifier;
+        ChannelType = channelType;
+        SampleRate = sampleRate;
+        Color = ColorPaletteManager.GetNext();
+    }
 
-	readonly List<PlotChannelRecord> _records;
+    readonly List<PlotChannelRecord> _records;
 }

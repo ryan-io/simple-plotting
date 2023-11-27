@@ -15,9 +15,7 @@ namespace simple_plotting {
 	                                         IPlotBuilderFluentPlottables,
 	                                         IPlotBuilderFluentPostProcess,
 	                                         IPlotBuilderFluentProduct {
-		/// <summary>
-		///  This ensures a the Produce() method has been invoked before allowing you to save a plot.
-		/// </summary>
+		/// <inheritdoc />
 		public bool CanSave => _data.Any() && _plotWasProduced;
 
 		/// <summary>
@@ -30,6 +28,9 @@ namespace simple_plotting {
 		/// </summary>
 		CancellationTokenSource CancellationTokenSource { get; set; } = new();
 		
+		/// <summary>
+		///  Thread safe collection for plot paths
+		/// </summary>
 		ConcurrentBag<string> CachedPlotPaths { get; } = new();
 
 		/// <summary>
