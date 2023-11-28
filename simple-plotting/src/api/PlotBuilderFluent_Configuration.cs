@@ -1,6 +1,7 @@
 // simple-plotting
 
 using System.Drawing;
+using ScottPlot;
 
 namespace simple_plotting;
 
@@ -274,6 +275,16 @@ public partial class PlotBuilderFluent {
 	public IPlotBuilderFluentConfiguration ShowLegend(PlotAlignment alignment) {
 		foreach (var plot in _plots) {
 			plot.Legend(true, PlotAlignmentMapper.Map(alignment));
+		}
+
+		return this;
+	}
+	
+	/// <inheritdoc />
+	public IPlotBuilderFluentConfiguration ShowLegend(PlotAlignment alignment, Orientation orientation) {
+		foreach (var plot in _plots) {
+			var l = plot.Legend(true, PlotAlignmentMapper.Map(alignment));
+			l.Orientation = orientation;
 		}
 
 		return this;

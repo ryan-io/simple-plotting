@@ -1,6 +1,7 @@
 // simple-plotting
 
 using System.Drawing;
+using ScottPlot;
 
 namespace simple_plotting;
 
@@ -153,6 +154,14 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <returns>Fluent builder</returns>
 	IPlotBuilderFluentConfiguration ShowLegend(PlotAlignment alignment);
 
+	/// <summary>
+	/// Enables to show the plot's legend in the specified alignment position and orientation.
+	/// </summary>
+	/// <param name="alignment">The alignment position of the legend relative to the plot area.</param>
+	/// <param name="orientation">The orientation of the legend elements. Could be horizontal or vertical.</param>
+	/// <returns>IPlotBuilderFluentConfiguration: A reference to this instance after the operation completed.</returns>
+	IPlotBuilderFluentConfiguration ShowLegend(PlotAlignment alignment, Orientation orientation);
+	
 	/// <summary>
 	/// Configures to show the plot legend outside at the top right corner of the plot.
 	/// </summary>
