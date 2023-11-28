@@ -318,12 +318,12 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
-	
+
 	public IPlotBuilderFluentConfiguration SetDataPadding(int chCnt, double valueX = 0.05, double valueY = 0.05) {
 		if (chCnt <= 0)
 			throw new Exception(Message.EXCEPTION_CHANNEL_COUNT_ZERO_OR_NEG);
 
-		if (valueX < 0 || valueY < 0 || valueX > 1 || valueY > 1)
+		if (valueX <= 0 || valueY <= 0 || valueX >= 1 || valueY >= 1)
 			throw new Exception(Message.EXCEPTION_MARGIN_NOT_BETWEEN_ZERO_AND_ONE);
 
 		var tracker = 1;
@@ -336,16 +336,9 @@ public partial class PlotBuilderFluent {
 			tracker++;
 		} while (tracker <= chCnt);
 
-		if (xMargin > 1)
-			xMargin = 1;
-		else if (xMargin < 0)
-			xMargin = 0;
-
-		if (yMargin > 1)
-			yMargin = 1;
-		else if (yMargin < 0)
-			yMargin = 0;
-
+		xMargin = Math.Clamp(xMargin, MIN_MARGIN, MAX_MARGIN);
+		yMargin = Math.Clamp(yMargin, MIN_MARGIN, MAX_MARGIN);
+		
 		SetDataPadding(xMargin, yMargin);
 
 		return this;
@@ -427,4 +420,7 @@ public partial class PlotBuilderFluent {
 
 		return this;
 	}
+
+	const double MAX_MARGIN = 0.99;
+	const double MIN_MARGIN = 0.01;
 }
