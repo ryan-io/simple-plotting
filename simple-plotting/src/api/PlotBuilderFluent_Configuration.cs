@@ -323,9 +323,6 @@ public partial class PlotBuilderFluent {
 		if (chCnt <= 0)
 			throw new Exception(Message.EXCEPTION_CHANNEL_COUNT_ZERO_OR_NEG);
 
-		if (valueX <= 0 || valueY <= 0 || valueX >= 1 || valueY >= 1)
-			throw new Exception(Message.EXCEPTION_MARGIN_NOT_BETWEEN_ZERO_AND_ONE);
-
 		var tracker = 1;
 		var yMargin = 0.0d;
 		var xMargin = 0.0d;
