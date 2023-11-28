@@ -166,30 +166,38 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	IPlotBuilderFluentConfiguration HideLegend();
 
 	/// <summary>
-	///  Sets the margins of the plot. This affects the actual data area of the plot.
+	/// Sets the data padding for all plots in the configuration.
 	/// </summary>
-	/// <param name="valueX">Double value for x-axis</param>
-	/// <param name="valueY">Double value for y-axis</param>
-	/// <returns>Fluent builder</returns>
-	IPlotBuilderFluentConfiguration SetDataPadding(double valueX = 1.0, double valueY = 1.0);
-	
+	/// <param name="valueX">The padding value in X-direction, default to 0.05. This value must lie between 0 and 1 (Inclusive). Otherwise an Exception is thrown.</param>
+	/// <param name="valueY">The padding value in Y-direction, default to 0.05. This value must lie between 0 and 1 (Inclusive). Otherwise an Exception is thrown.</param>
+	/// <returns>The same IPlotBuilderFluentConfiguration with the updated padding information.</returns>
+	/// <exception cref="Exception">Throws an exception if the given valueX or valueY is not between 0 and 1 (Inclusive).</exception>
+	IPlotBuilderFluentConfiguration SetDataPadding(double valueX = 0.05, double valueY = 0.05);
+
 	/// <summary>
-	/// Sets the data padding by considering the number of channels and the percent increment for each channel.
+	/// Sets the padding to add around the drawn data on a plot.
 	/// </summary>
-	/// <param name="channelCount">The total number of channels that the data padding will be set for.</param>
-	/// <param name="valueX">The percentage increment for the X axis for each channel. Default value is 1.0.</param>
-	/// <param name="valueY">The percentage increment for the Y axis for each channel. Default value is 1.0.</param>
-	/// <returns>Itself (the `IPlotBuilderFluentConfiguration` instance), allowing for method chaining.</returns>
-	/// <exception cref="Exception">Throws an exception when channel count is zero or negative.</exception>
-	IPlotBuilderFluentConfiguration SetDataPadding(int channelCount, double valueX = 1.0, double valueY = 1.0);
-	
+	/// <param name="chCnt">Number of channels to consider when calculating padding. Must be greater than 0.</param>
+	/// <param name="valueX">Padding value to add on the x-axis for each channel. It should be a value between 0 and 1, defaults to 0.05.</param>
+	/// <param name="valueY">Padding value to add on the y-axis for each channel. It should be a value between 0 and 1, defaults to 0.05.</param>
+	/// <returns>Returns the updated configuration object.</returns>
+	/// <exception cref="Exception">Throws an exception if chCnt is zero or negative.</exception>
+	/// <exception cref="Exception">Throws an exception if either valueX or valueY is not between 0 and 1.</exception>
+	/// <remarks>
+	/// The padding is added incrementally for each channel specified by chCnt. 
+	/// The total padding for the x-axis and y-axis is capped at 1.
+	/// If the total calculated padding is negative or exceeds 1, it is clamped to the range 0-1.
+	/// </remarks>
+	IPlotBuilderFluentConfiguration SetDataPadding(int chCnt, double valueX = 0.05, double valueY = 0.05);
+
 	/// <summary>
-	/// Sets data padding with respect to channels.
+	/// Set data padding with respect to the number of channels (_data.Count) in both the X and Y axes.
 	/// </summary>
-	/// <param name="valueX">The padding value for the X-axis data. Default is 1.0</param>
-	/// <param name="valueY">The padding value for the Y-axis data. Default is 1.0</param>
-	/// <returns>An instance of <see cref="IPlotBuilderFluentConfiguration"/> to enable method chaining.</returns>
-	IPlotBuilderFluentConfiguration SetDataPaddingWrtChannels(double valueX = 1.0, double valueY = 1.0);
+	/// <param name="valueX">The padding value for the X-axis. Default is 0.05. It should be between 0 and 1.</param>
+	/// <param name="valueY">The padding value for the Y-axis. Default is 0.05. It should be between 0 and 1.</param>
+	/// <returns>Returns an instance of IPlotBuilderFluentConfiguration to chain the configuration.</returns>
+	/// <exception cref="Exception">Thrown when the calculated margin is not between 0 and 1 for both axes.</exception>
+	IPlotBuilderFluentConfiguration SetDataPaddingWrtChannels(double valueX = 0.05, double valueY = 0.05);
 
 	/// <summary>
 	///  Sets the SourcePath property to Source.Path. This is used to save the plot(s) to the same directory as the source.
@@ -228,7 +236,7 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="bottom">Float-bottom padding</param>
 	/// <param name="left">Float-left padding</param>
 	/// <returns>Fluent builder</returns>
-	IPlotBuilderFluentConfiguration SetDataPadding(float right, float top, float bottom, float left);
+	IPlotBuilderFluentConfiguration SetDataLayout(float right, float top, float bottom, float left);
 
 	/// <summary>
 	///  Finalizes the configuration of the plot. This should be the last call in the fluent API.

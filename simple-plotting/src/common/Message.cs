@@ -71,5 +71,7 @@
 			"The provided plot tracker index was greater than the initialized number of plots.";
 
 		public const string EXCEPTION_CHANNEL_COUNT_ZERO_OR_NEG = "Channel count cannot be zero or negative.";
+		
+		public const string EXCEPTION_MARGIN_NOT_BETWEEN_ZERO_AND_ONE = "Margin must be between 0 and 1.";
 	}
 }

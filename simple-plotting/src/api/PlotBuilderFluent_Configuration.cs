@@ -1,6 +1,5 @@
 // simple-plotting
 
-using System.Diagnostics;
 using System.Drawing;
 
 namespace simple_plotting;
@@ -308,7 +307,10 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentConfiguration SetDataPadding(double valueX = 1.0, double valueY = 1.0) {
+	public IPlotBuilderFluentConfiguration SetDataPadding(double valueX = 0.05, double valueY = 0.05) {
+		if (valueX < 0 || valueY < 0 || valueX > 1 || valueY > 1)
+			throw new Exception(Message.EXCEPTION_MARGIN_NOT_BETWEEN_ZERO_AND_ONE);
+
 		foreach (var plot in _plots) {
 			plot.Margins(valueX, valueY);
 		}
@@ -316,11 +318,14 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
-	/// <inheritdoc />
-	public IPlotBuilderFluentConfiguration SetDataPadding(int channelCount, double valueX = 1.0, double valueY = 1.0) {
-		if (channelCount <= 0)
+	
+	public IPlotBuilderFluentConfiguration SetDataPadding(int chCnt, double valueX = 0.05, double valueY = 0.05) {
+		if (chCnt <= 0)
 			throw new Exception(Message.EXCEPTION_CHANNEL_COUNT_ZERO_OR_NEG);
-		
+
+		if (valueX < 0 || valueY < 0 || valueX > 1 || valueY > 1)
+			throw new Exception(Message.EXCEPTION_MARGIN_NOT_BETWEEN_ZERO_AND_ONE);
+
 		var tracker = 1;
 		var yMargin = 0.0d;
 		var xMargin = 0.0d;
@@ -329,7 +334,17 @@ public partial class PlotBuilderFluent {
 			yMargin += valueY;
 			xMargin += valueX;
 			tracker++;
-		} while (tracker <= channelCount);
+		} while (tracker <= chCnt);
+
+		if (xMargin > 1)
+			xMargin = 1;
+		else if (xMargin < 0)
+			xMargin = 0;
+
+		if (yMargin > 1)
+			yMargin = 1;
+		else if (yMargin < 0)
+			yMargin = 0;
 
 		SetDataPadding(xMargin, yMargin);
 
@@ -337,14 +352,14 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentConfiguration SetDataPaddingWrtChannels(double valueX = 1.0, double valueY = 1.0) {
+	public IPlotBuilderFluentConfiguration SetDataPaddingWrtChannels(double valueX = 0.05, double valueY = 0.05) {
 		SetDataPadding(_data.Count, valueX, valueY);
 
 		return this;
 	}
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentConfiguration SetDataPadding(float right, float top, float bottom, float left) {
+	public IPlotBuilderFluentConfiguration SetDataLayout(float right, float top, float bottom, float left) {
 		foreach (var plot in _plots) {
 			plot.Layout(left, right, bottom, top);
 		}
