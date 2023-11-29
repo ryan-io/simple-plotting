@@ -5,7 +5,7 @@ namespace simple_plotting {
 	/// Manages a cyclic iterator for colors in a palette. Visual plot colors of each
 	/// channel are determined by this class.
 	/// </summary>
-	public class PlotColorPaletteManager {
+	public class PlotColorPaletteManager : Singleton<PlotColorPaletteManager> {
 		/// <summary>
 		/// The color palette used for plotting.
 		/// </summary>

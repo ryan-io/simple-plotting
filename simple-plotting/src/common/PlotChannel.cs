@@ -6,7 +6,10 @@ namespace simple_plotting;
 ///  Defines characteristics for a channel in a plot.
 /// </summary>
 public class PlotChannel {
-    static PlotColorPaletteManager ColorPaletteManager = new();
+    /// <summary>
+    ///  Static readonly field for managing the color palette of the plot. This is a reference to a singleton.
+    /// </summary>
+    static readonly PlotColorPaletteManager ColorPaletteManager = new();
 
     /// <summary>
     ///  The identifier of the channel. Should be parsed from CsvHelper
