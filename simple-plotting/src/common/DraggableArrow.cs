@@ -68,7 +68,7 @@ namespace simple_plotting {
         /// </summary>
         public Color LineColor {
             get => Color;
-            set { Color = value; }
+            set => Color = value;
         }
 
         /// <summary>

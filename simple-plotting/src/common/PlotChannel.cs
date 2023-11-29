@@ -1,4 +1,6 @@
-﻿namespace simple_plotting;
+﻿using simple_plotting.runtime;
+
+namespace simple_plotting;
 
 /// <summary>
 ///  Defines characteristics for a channel in a plot.

@@ -6,7 +6,7 @@ namespace simple_plotting {
 	/// </summary>
 	internal class InstanceTracker : Singleton<InstanceTracker> {
 		/// <summary>
-		///  Internal ConcurrenBag that tracks instances of PlotBuilderFluent.
+		///  Internal ConcurrentBag that tracks instances of PlotBuilderFluent.
 		/// </summary>
 		ConcurrentBag<PlotBuilderFluent> BuilderInstances { get; set; } = new();
 

@@ -22,8 +22,14 @@ public partial class PlotBuilderFluent {
     }
 
     /// <inheritdoc />
-    public IPlotBuilderFluentPlottables AddDraggableLine (int plotIndex, double posX, double posY,
-        out DraggableArrow marker, float arrowTailSize = 3.0f, float arrowHeadWidth = 1.0f, float arrowHeadLength = 5.0f, bool isSnap = false,
+    public IPlotBuilderFluentPlottables AddDraggableLine (
+        int plotIndex, 
+        double posX, double posY,
+        out DraggableArrow marker, 
+        float arrowTailSize = 3.0f, 
+        float arrowHeadWidth = 1.0f, 
+        float arrowHeadLength = 5.0f, 
+        bool isSnap = false,
         double? arrowTipXLocation = null, double? arrowTipYLocation = null) {
         plotIndex.ValidateInRange(_plots);
 
@@ -33,15 +39,12 @@ public partial class PlotBuilderFluent {
         var tipLocY = arrowTipXLocation == null ? posY + 0.2d : arrowTipYLocation;
 
         marker = new DraggableArrow(posX, posY, tipLocX.Value, tipLocY.Value) {
-            //marker = plot.AddMarkerDraggable(posX, posY, MarkerShape.verticalBar);
             Color = Color.Black,
             MarkerSize = arrowTailSize,
             DragEnabled = true,
             ArrowheadWidth = arrowHeadWidth,
             ArrowheadLength = arrowHeadLength
         };
-
-        //marker.MarkerLineWidth = width;
 
         // TODO - data is ALWAYS pulled from channel with index 0. this is not necessarily the correct logic
         if (isSnap) {

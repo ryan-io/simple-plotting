@@ -1,5 +1,18 @@
 ﻿namespace simple_plotting {
+	/// <summary>
+	/// Contains helpers for CSV parsing.
+	/// </summary>
 	public static class CsvParserHelper {
+		/// <summary>
+		/// Extracts the sample rate from a string formatted as 'hh:mm:ss'. 
+		/// The string represents a duration, and this method converts that duration into total seconds.
+		/// If the input is null, empty, or not following the pattern, the method returns null.
+		/// </summary>
+		/// <param name="parsed">The string to be parsed, must be in 'hh:mm:ss' format.</param>
+		/// <returns>
+		/// The sample rate represented as total seconds of the input 'hh:mm:ss' duration string.
+		/// Returns null if the input is null, empty, or not formatted correctly.
+		/// </returns>
 		public static double? ExtractSampleRate(string? parsed) {
 			if (string.IsNullOrEmpty(parsed))
 				return default;

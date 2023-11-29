@@ -1,5 +1,13 @@
 ﻿namespace simple_plotting {
+	/// <summary>
+	/// Provides mapping between <see cref="PlotAxisRotation"/> and its actual rotation value.
+	/// </summary>
 	internal static class PlotAxisRotationMapper {
+		/// <summary>
+		/// Maps a <see cref="PlotAxisRotation"/> enum value to its corresponding rotation magnitude in degrees.
+		/// </summary>
+		/// <param name="plotAxisRotation">The <see cref="PlotAxisRotation"/> enum that represents specific rotation.</param>
+		/// <returns>The rotation magnitude in degrees corresponding to the <see cref="PlotAxisRotation"/> enum value.</returns>
 		internal static int Map(PlotAxisRotation plotAxisRotation) {
 			var rotation = 0;
 
