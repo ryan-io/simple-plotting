@@ -7,11 +7,6 @@ namespace simple_plotting;
 /// </summary>
 public class PlotChannel {
     /// <summary>
-    ///  Static readonly field for managing the color palette of the plot. This is a reference to a singleton.
-    /// </summary>
-    static readonly PlotColorPaletteManager ColorPaletteManager = new();
-
-    /// <summary>
     ///  The identifier of the channel. Should be parsed from CsvHelper
     /// </summary>
     public string ChannelIdentifier { get; set; }
@@ -62,12 +57,12 @@ public class PlotChannel {
 	}
 
     public PlotChannel (string channelIdentifier, PlotChannelType channelType, double? sampleRate = default) {
-        _records = new List<PlotChannelRecord>();
-        ChannelIdentifier = channelIdentifier;
+        _records                  = new List<PlotChannelRecord>();
+        ChannelIdentifier         = channelIdentifier;
         ChannelIdentifierOriginal = channelIdentifier;
-        ChannelType = channelType;
-        SampleRate = sampleRate;
-        Color = ColorPaletteManager.GetNext();
+        ChannelType               = channelType;
+        SampleRate                = sampleRate;
+        Color                     = PlotColorPaletteManager.Global.GetNext();
     }
 
     readonly List<PlotChannelRecord> _records;
