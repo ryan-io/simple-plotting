@@ -7,10 +7,16 @@ namespace simple_plotting;
 
 public partial class PlotBuilderFluent {
 	/// <inheritdoc />
-	public IEnumerable<Plot> GetPlots() => _plots;
+	public IEnumerable<Plot> GetPlots() {
+		return _plots;
+	}
+
+	// public ref Plot GetPlotsRef() {
+	// 	return ref _plotArray[0];
+	// }
 
 	/// <inheritdoc />
-	public IReadOnlyList<PlotChannel> GetPlotChannels () => _data;
+	public IReadOnlyList<PlotChannel> GetPlotChannels() => _data;
 
 	/// <inheritdoc />
 	public Plot GetPlot(int plotIndex) {
@@ -64,7 +70,6 @@ public partial class PlotBuilderFluent {
 
 		try {
 			await Task.Run(
-				
 				() => {
 					var plotTracker = new IntSafe(1);
 
@@ -146,7 +151,7 @@ public partial class PlotBuilderFluent {
 
 	/// <inheritdoc />
 	public IPlotBuilderFluentOfType Reset(IReadOnlyList<PlotChannel> data) {
-		return StartNew(data);
+		return StartNewPlot(data);
 	}
 
 	/// <inheritdoc />

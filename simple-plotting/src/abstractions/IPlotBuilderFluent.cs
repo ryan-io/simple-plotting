@@ -7,5 +7,10 @@
 		///  This ensures a the Produce() method has been invoked before allowing you to save a plot.
 		/// </summary>
 		bool CanSave { get; }
+		
+		/// <summary>
+		/// Gets the type of the plot being built.
+		/// </summary>
+		Type? PlotType { get; }
 	}
 }

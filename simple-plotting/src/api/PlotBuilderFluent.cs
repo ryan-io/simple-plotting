@@ -55,7 +55,7 @@ namespace simple_plotting {
 		/// <param name="data">Parsed data</param>
 		/// <param name="plotInitializer">Collection of ScottPlot.Plot</param>
 		/// <returns>New instance of PlotBuilderFluent (this)</returns>
-		public static IPlotBuilderFluentOfType StartNew(
+		public static IPlotBuilderFluentOfType StartNewPlot(
 			IReadOnlyList<PlotChannel> data, IReadOnlyCollection<Plot> plotInitializer)
 			=> new PlotBuilderFluent(data, plotInitializer);
 
@@ -66,8 +66,20 @@ namespace simple_plotting {
 		/// <param name="data">Parsed data</param>
 		/// <param name="numOfPlots">Number of plots to generate</param>
 		/// <returns>New instance of PlotBuilderFluent (this)</returns>
-		public static IPlotBuilderFluentOfType StartNew(IReadOnlyList<PlotChannel> data, int numOfPlots = 1)
+		public static IPlotBuilderFluentOfType StartNewPlot(IReadOnlyList<PlotChannel> data, int numOfPlots = 1)
 			=> new PlotBuilderFluent(data, numOfPlots);
+
+		/// <summary>
+		/// Creates a new canvas with the specified width and height.
+		/// </summary>
+		/// <param name="width">The width of the canvas in pixels.</param>
+		/// <param name="height">The height of the canvas in pixels.</param>
+		/// <returns>Returns a new instance of the <see cref="PlotBuilderFluentPlotBuilderFluentCanvas"/> class with a plot within the specified width and height.</returns>
+		public static IPlotBuilderFluentCanvas StartNewCanva
+			(int width, int height) => new PlotBuilderFluentPlotBuilderFluentCanvas(new Plot(width, height));
+
+		///	<inheritdoc />
+		public Type? PlotType { get; private set; }
 		
 		/// <summary>
 		///  Dispose of the cancellation token source. This should be invoked on application exit or stop.

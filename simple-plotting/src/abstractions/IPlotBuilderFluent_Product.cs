@@ -12,31 +12,31 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// <summary>
 	///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.
 	/// </summary>
-	IEnumerable<Plot> GetPlots();
+	 IEnumerable<Plot> GetPlots();
 
     /// <summary>
     /// Gets a readonly collection of type PlotChannels
     /// A call to this method should only be made once plots have been generated
     /// </summary>
     /// <returns></returns>
-    IReadOnlyList<PlotChannel> GetPlotChannels ();
+     IReadOnlyList<PlotChannel> GetPlotChannels ();
 
     /// <summary>
     ///  The generated plots. Queries the plot collection and returns the plot at the specified index.
     /// </summary>
-    Plot GetPlot(int plotIndex);
+     Plot GetPlot(int plotIndex);
 
 	/// <summary>
 	///  Extracts actual channel names from the plots. 
 	/// </summary>
 	/// <returns>Enumerable of strings containing names extracted from plots</returns>
-	IEnumerable<string> GetScatterPlottableLabels(int plotIndex);
+	 IEnumerable<string> GetScatterPlottableLabels(int plotIndex);
 
 	/// <summary>
 	///  Extracts actual channel names from the plots. 
 	/// </summary>
 	/// <returns>Enumerable of strings containing names extracted from plots</returns>
-	IEnumerable<string> GetSignalPlottableLabels(int plotIndex);
+	 IEnumerable<string> GetSignalPlottableLabels(int plotIndex);
 
 	/// <summary>
 	///  Helper method that returns an enumerable of an enumerable of type T
@@ -45,7 +45,7 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// </summary>
 	/// <typeparam name="T">Class that implements IPlottable</typeparam>
 	/// <returns>Enumerable of enumerables containing the plottables as type T</returns>
-	IEnumerable<T> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable;
+	 IEnumerable<T> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable;
 
 	/// <summary>
 	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
