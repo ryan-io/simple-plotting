@@ -279,7 +279,7 @@ public partial class PlotBuilderFluent {
 
 		return this;
 	}
-	
+
 	/// <inheritdoc />
 	public IPlotBuilderFluentConfiguration ShowLegend(PlotAlignment alignment, Orientation orientation) {
 		foreach (var plot in _plots) {
@@ -346,7 +346,7 @@ public partial class PlotBuilderFluent {
 
 		xMargin = Math.Clamp(xMargin, MIN_MARGIN, MAX_MARGIN);
 		yMargin = Math.Clamp(yMargin, MIN_MARGIN, MAX_MARGIN);
-		
+
 		SetDataPadding(xMargin, yMargin);
 
 		return this;
@@ -410,7 +410,7 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="IPlotBuilderFluentConfiguration.FinalizeConfiguration" />
 	public IPlotBuilderFluentReadyToProduce FinalizeConfiguration() => this;
 
 	/// <inheritdoc />

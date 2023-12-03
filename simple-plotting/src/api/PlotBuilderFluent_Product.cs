@@ -11,9 +11,13 @@ public partial class PlotBuilderFluent {
 		return _plots;
 	}
 
-	// public ref Plot GetPlotsRef() {
-	// 	return ref _plotArray[0];
-	// }
+	/// <inheritdoc />
+	public ref Plot GetPlotRef(int index) {
+		if (index > _plots.Length - 1)
+			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
+		
+		return ref _plots[index];
+	}
 
 	/// <inheritdoc />
 	public IReadOnlyList<PlotChannel> GetPlotChannels() => _data;
@@ -52,7 +56,7 @@ public partial class PlotBuilderFluent {
 
 	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlottablesAs{T}" />
 	public IEnumerable<T> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable {
-		if (plotIndex > _plots.Count)
+		if (plotIndex > _plots.Length - 1)
 			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
 
 		var plottables = new List<T>();
@@ -64,7 +68,7 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public async Task<SaveStatus> TrySaveAsync(string savePath, string name) {
+	public async Task<PlotSaveStatus> TrySaveAsync(string savePath, string name) {
 		ValidateCancellationTokenSource(true);
 		CachedPlotPaths.Clear();
 
@@ -80,15 +84,15 @@ public partial class PlotBuilderFluent {
 					}
 				});
 
-			return new SaveStatus(true, CachedPlotPaths);
+			return new PlotSaveStatus(true, CachedPlotPaths);
 		}
 		catch (Exception) {
-			return new SaveStatus(false, Enumerable.Empty<string>());
+			return new PlotSaveStatus(false, Enumerable.Empty<string>());
 		}
 	}
 
 	/// <inheritdoc />
-	public async Task<SaveStatus?> TrySaveAsyncAtSource(string name) {
+	public async Task<PlotSaveStatus?> TrySaveAsyncAtSource(string name) {
 		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -99,7 +103,7 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public SaveStatus TrySave(string savePath, string name) {
+	public PlotSaveStatus TrySave(string savePath, string name) {
 		if (string.IsNullOrWhiteSpace(savePath) || string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -116,15 +120,15 @@ public partial class PlotBuilderFluent {
 				plotTracker++;
 			}
 
-			return new SaveStatus(true, paths);
+			return new PlotSaveStatus(true, paths);
 		}
 		catch (Exception) {
-			return new SaveStatus(false, Enumerable.Empty<string>());
+			return new PlotSaveStatus(false, Enumerable.Empty<string>());
 		}
 	}
 
 	/// <inheritdoc />
-	public SaveStatus TrySaveAtSource(string name) {
+	public PlotSaveStatus TrySaveAtSource(string name) {
 		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 

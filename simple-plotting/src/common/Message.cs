@@ -71,7 +71,17 @@
 			"The provided plot tracker index was greater than the initialized number of plots.";
 
 		public const string EXCEPTION_CHANNEL_COUNT_ZERO_OR_NEG = "Channel count cannot be zero or negative.";
-		
+
 		public const string EXCEPTION_MARGIN_NOT_BETWEEN_ZERO_AND_ONE = "Margin must be between 0 and 1.";
+
+		public const string EXCEPTION_DATA_NULL_EMPTY = "Data cannot be null or empty.";
+
+		public const string EXCEPTION_NO_IMG_PATHS = "Provided image path array was null or empty.";
+		
+		public const string EXCEPTION_NULL_BITMAP_PATHS = "No paths were provided to load bitmaps from.";
+		
+		public const string EXCEPTION_DIRECTORY_NOT_FOUND = "Directory not found.";
+		
+		public const string EXCEPTION_DISSIMILAR_COLLECTION_SIZE = "Collections are not the same size.";
 	}
 }

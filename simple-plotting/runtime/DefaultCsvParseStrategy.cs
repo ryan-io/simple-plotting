@@ -29,17 +29,17 @@ namespace simple_plotting.runtime {
 			List<PlotChannel> output,
 			CsvReader csvr,
 			CancellationToken? cancellationToken = default) {
-			try {
-				const int SKIP_FOUR_ROWS = 4;
-				const int SKIP_SIX_ROWS  = 6;
+			const int skipFourRows = 4;
+			const int skipSixRows  = 6;
 
-				SkipRowsNumberOfRows(csvr, SKIP_SIX_ROWS);
+			try {
+				SkipRowsNumberOfRows(csvr, skipSixRows);
 
 				await csvr.ReadAsync();
 
 				SampleRate = CsvParserHelper.ExtractSampleRate(csvr[1]); // we could ignore this entirely
 
-				SkipRowsNumberOfRows(csvr, SKIP_FOUR_ROWS);
+				SkipRowsNumberOfRows(csvr, skipFourRows);
 
 				csvr.ReadHeader();
 
@@ -49,14 +49,14 @@ namespace simple_plotting.runtime {
 				var channelsToParse = csvr.HeaderRecord.Length - 3;
 
 				for (var i = 0; i < channelsToParse; i++) {
-					if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested) 
+					if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)
 						break;
 
 					output.Add(new PlotChannel(csvr.HeaderRecord[3 + i], PlotChannelType.Temperature, SampleRate));
 				}
 
 				while (await csvr.ReadAsync()) {
-					if (cancellationToken.WasCancelled()) 
+					if (cancellationToken.WasCancelled())
 						break;
 
 					ParseCurrentReaderIndex(output, csvr, cancellationToken, channelsToParse);
@@ -67,7 +67,8 @@ namespace simple_plotting.runtime {
 			}
 		}
 
-		void ParseCurrentReaderIndex(List<PlotChannel> output, CsvReader csvr, CancellationToken? cancellationToken, int channelsToParse) {
+		void ParseCurrentReaderIndex(List<PlotChannel> output, CsvReader csvr, CancellationToken? cancellationToken,
+			int channelsToParse) {
 			const double EPSILON = 5E-6d;
 
 			Sb.Clear();

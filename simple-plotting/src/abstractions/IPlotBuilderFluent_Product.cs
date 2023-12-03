@@ -14,6 +14,14 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// </summary>
 	 IEnumerable<Plot> GetPlots();
 
+	/// <summary>
+	/// Retrieves a reference to the <see cref="Plot"/> object located at the specified index in the internal plots array.
+	/// </summary>
+	/// <param name="index">The zero-based index in the array at which the desired <see cref="Plot"/> object is located.</param>
+	/// <exception cref="IndexOutOfRangeException">Thrown when the <paramref name="index"/> is not a valid index in the plots array.</exception>
+	/// <returns>A reference to the <see cref="Plot"/> object found at the specified index in the plots array.</returns>
+	ref Plot GetPlotRef(int index);
+
     /// <summary>
     /// Gets a readonly collection of type PlotChannels
     /// A call to this method should only be made once plots have been generated
@@ -54,7 +62,7 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// <param name="name">Name of each plot</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	SaveStatus TrySave(string savePath, string name);
+	PlotSaveStatus TrySave(string savePath, string name);
 
 	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
@@ -63,7 +71,7 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// <param name="name">Name of each plot</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	SaveStatus TrySaveAtSource(string name);
+	PlotSaveStatus TrySaveAtSource(string name);
 
 	/// <summary>
 	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
@@ -72,7 +80,7 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// <param name="name">Name of each plot</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<SaveStatus> TrySaveAsync(string savePath, string name);
+	Task<PlotSaveStatus> TrySaveAsync(string savePath, string name);
 	
 	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
@@ -81,7 +89,7 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// <param name="name">Name of each plot</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<SaveStatus?> TrySaveAsyncAtSource(string name);
+	Task<PlotSaveStatus?> TrySaveAsyncAtSource(string name);
 
 	/// <summary>
 	///  Exposes post processing API.

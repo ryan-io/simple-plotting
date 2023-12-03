@@ -1,7 +1,8 @@
 ﻿using System.Collections.Concurrent;
+using System.Drawing;
 using ScottPlot;
 using ScottPlot.Plottable;
-using simple_plotting.runtime;
+using simple_plotting.runtime ;
 
 namespace simple_plotting {
 	/// <summary>
@@ -16,7 +17,7 @@ namespace simple_plotting {
 	                                         IPlotBuilderFluentPostProcess,
 	                                         IPlotBuilderFluentProduct {
 		/// <inheritdoc />
-		public bool CanSave => _data.Any() && _plotWasProduced;
+		public bool CanSave => _data != null && _data.Any() && _plotWasProduced;
 
 		/// <summary>
 		/// Total number of graphs to generate
@@ -27,7 +28,7 @@ namespace simple_plotting {
 		/// Cancellation source used for saving plots asynchronously
 		/// </summary>
 		CancellationTokenSource CancellationTokenSource { get; set; } = new();
-		
+
 		/// <summary>
 		///  Thread safe collection for plot paths
 		/// </summary>
@@ -70,17 +71,42 @@ namespace simple_plotting {
 			=> new PlotBuilderFluent(data, numOfPlots);
 
 		/// <summary>
-		/// Creates a new canvas with the specified width and height.
+		/// Starts a new canvas for plotting with the given image paths. The method instantiates a new PlotBuilderFluent object and returns it.
 		/// </summary>
-		/// <param name="width">The width of the canvas in pixels.</param>
-		/// <param name="height">The height of the canvas in pixels.</param>
-		/// <returns>Returns a new instance of the <see cref="PlotBuilderFluentPlotBuilderFluentCanvas"/> class with a plot within the specified width and height.</returns>
-		public static IPlotBuilderFluentCanvas StartNewCanva
-			(int width, int height) => new PlotBuilderFluentPlotBuilderFluentCanvas(new Plot(width, height));
+		/// <param name="imagePaths">The paths of images to load into the canvas. This parameter is variadic, so you can input multiple string values without wrapping them into an array.</param>
+ 		/// <param name="lockAxis">If true, cannot pan canvas</param>
+		/// <returns>An instance of IPlotBuilderFluentCanvas which provides a fluent interface for plotting.</returns>
+		/// <example>
+		/// Here is an example of how to use the StartNewCanvas method.
+		/// <code>
+		/// var plotBuilderFluentCanvas = StartNewCanvas("path_to_image1", "path_to_image2");
+		/// </code>
+		/// </example>
+		public static IPlotBuilderFluentCanvas StartNewCanvas(ref Bitmap[] imagePaths, bool lockAxis = false)
+			=> new PlotBuilderFluent(ref imagePaths, lockAxis);
+
+		/// <summary>
+		/// Initializes a new PlotBuilderFluent canvas object with the provided Bitmap images and a collection of initial Plots.
+		/// </summary>
+		/// <param name="images">
+		/// An array of Bitmap images to be manipulated or plotted against. This parameter is passed by reference.
+		/// </param>
+		/// <param name="plotInitializer">
+		/// A collection of Plot objects that serve as the basis for the new PlotBuilderFluent object. This collection could contain initial configurations for plot designs. This parameter is passed by reference.
+		/// </param>
+  		/// <param name="lockAxis">If true, cannot pan canvas</param>
+		/// <returns>
+		/// A new instance of the PlotBuilderFluent class, initialized with the provided Bitmap images and initial Plots collection.
+		/// </returns>
+		public static IPlotBuilderFluentCanvas StartNewCanvas(
+			ref Bitmap[] images,
+			ref HashSet<Plot> plotInitializer,
+			bool lockAxis = false)
+			=> new PlotBuilderFluent(ref images, ref plotInitializer, lockAxis);
 
 		///	<inheritdoc />
 		public Type? PlotType { get; private set; }
-		
+
 		/// <summary>
 		///  Dispose of the cancellation token source. This should be invoked on application exit or stop.
 		/// </summary>
@@ -94,15 +120,18 @@ namespace simple_plotting {
 		/// </summary>
 		void SetInitialState(Action<IEnumerable<PlotChannelRecord>, int, PlotChannel> actionDelegate) {
 			// ReSharper disable once ForCanBeConvertedToForeach
+			if (_data == null)
+				throw new ArgumentException(Message.EXCEPTION_DATA_NULL_EMPTY);
+
 			for (var index = 0; index < _data.Count; index++) {
-				var channel   = _data[index];
-				var batch     = channel.Records.Batch(PlotCount).ToArray();
+				var channel     = _data[index];
+				var batch       = channel.Records.Batch(PlotCount).ToArray();
 				var plotTracker = 0;
 
 				foreach (var batchedRecord in batch) {
 					if (batchedRecord.Value.IsNullOrEmpty())
 						continue;
-				
+
 					actionDelegate.Invoke(batchedRecord.Value, plotTracker, channel);
 					plotTracker++;
 				}
@@ -117,6 +146,9 @@ namespace simple_plotting {
 		/// <typeparam name="T">Class that implements IPlottable</typeparam>
 		/// <returns>Enumerable of enumerables containing the plottables as type T</returns>
 		IEnumerable<List<T>> GetPlottablesAs<T>() where T : class, IPlottable {
+			if (_plots == null)
+				throw new ArgumentException(Message.EXCEPTION_PLOT_IS_NULL);
+
 			var plottables = new List<List<T>>();
 
 			foreach (var p in _plots) {
@@ -125,13 +157,13 @@ namespace simple_plotting {
 
 			return plottables;
 		}
-		
+
 		void ValidateCancellationTokenSource(bool createNewIfDisposed = false) {
 			if (!CancellationTokenSource.IsCancellationRequested)
 				CancellationTokenSource.Cancel();
-			
+
 			CancellationTokenSource.Dispose();
-			
+
 			if (createNewIfDisposed)
 				CancellationTokenSource = new CancellationTokenSource();
 		}
@@ -148,13 +180,14 @@ namespace simple_plotting {
 				throw new ArgumentException("Data cannot be null or empty.");
 
 			_data  = data;
-			_plots = new List<Plot>();
+			_plots = new Plot[numOfPlots];
 
 			for (var i = 0; i < numOfPlots; i++) {
-				_plots.Add(new Plot(Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT));
+				_plots[i] = new Plot(Constants.DEFAULT_WIDTH, Constants.DEFAULT_HEIGHT);
 			}
 
 			PlotCount = numOfPlots;
+			_type     = InternalType.PLOT;
 		}
 
 		/// <summary>
@@ -167,21 +200,116 @@ namespace simple_plotting {
 		/// <exception cref="ArgumentException">Thrown if data is null or empty</exception>
 		PlotBuilderFluent(IReadOnlyList<PlotChannel> data, IReadOnlyCollection<Plot> plotInitializer) {
 			if (data == null || !data.Any())
-				throw new ArgumentException("Data cannot be null or empty.");
+				throw new ArgumentException(Message.EXCEPTION_DATA_NULL_EMPTY);
 
 			_data  = data;
-			_plots = new List<Plot>(plotInitializer);
+			_plots = new Plot[plotInitializer.Count];
 
-			foreach (var p in _plots) {
-				p.Width  = Constants.DEFAULT_WIDTH;
-				p.Height = Constants.DEFAULT_HEIGHT;
+			var i = 0;
+			foreach (var p in plotInitializer) {
+				_plots[i]        = p;
+				_plots[i].Width  = Constants.DEFAULT_WIDTH;
+				_plots[i].Height = Constants.DEFAULT_HEIGHT;
+				i++;
 			}
 
 			PlotCount = plotInitializer.Count;
+			_type     = InternalType.PLOT;
 		}
 
-		bool                                _plotWasProduced;
-		readonly List<Plot>                 _plots;
-		readonly IReadOnlyList<PlotChannel> _data;
+		/// <summary>
+		/// Instantiates a new instance of `PlotBuilderFluent` for an array of Bitmap objects by creating
+		/// plot for each item.
+		/// </summary>
+		/// <param name="images">An array of Bitmap images to be assigned to the plots. Cannot be null or empty.</param>
+		/// <param name="lockAxis">If true, cannot pan canvas</param>
+		/// <exception cref="ArgumentException">Thrown when the images array is null or empty.</exception>
+		/// <remarks>
+		/// This constructor initializes a plot for each Bitmap in the "images" array.
+		/// It sets the width and height of each plot to match the associated Bitmap.
+		/// The frames of all the plots are set to Frameless.
+		/// </remarks>
+		PlotBuilderFluent(ref Bitmap[] images, bool lockAxis = false) {
+			if (images.IsNullOrEmpty())
+				throw new ArgumentException(Message.EXCEPTION_NO_IMG_PATHS);
+			
+			_plots = new Plot[images.Length];
+			
+			for (var i = 0; i < images.Length; i++) {
+				var img = images[i];
+				
+				_plots[i] = new Plot(img.Width, img.Height);
+				AddImgToCanvas(lockAxis, i, img);
+
+				i++;
+			}
+
+			_type = InternalType.CANVAS;
+		}
+
+		/// <summary>
+		/// Constructor for the PlotBuilderFluent class which initializes internal plots with given images and plot initializers.
+		/// </summary>
+		/// <param name="images">A reference to an array of Bitmap objects.</param>
+		/// <param name="plotInitializer">A reference to a collection of Plot objects serving as initializers.</param>
+		/// <param name="lockAxis">If true, cannot pan canvas</param>
+		/// <exception cref="ArgumentException">Thrown when images array is null or empty.</exception>
+		/// <exception cref="ArgumentException">Thrown when plotInitializer is null or empty.</exception>
+		/// <exception cref="Exception">Thrown when the sizes of images array and plotInitializer collection are not equal.</exception>
+		PlotBuilderFluent(ref Bitmap[] images, ref HashSet<Plot> plotInitializer, bool lockAxis = false) {
+			if (images.IsNullOrEmpty())
+				throw new ArgumentException(Message.EXCEPTION_NO_IMG_PATHS);
+
+			if (plotInitializer == null || !plotInitializer.Any())
+				throw new ArgumentException(Message.EXCEPTION_DATA_NULL_EMPTY);
+
+			if (images.Length != plotInitializer.Count)
+				throw new Exception(Message.EXCEPTION_DISSIMILAR_COLLECTION_SIZE);
+
+			_plots = new Plot[plotInitializer.Count];
+
+			var i = 0;
+
+			foreach (var p in plotInitializer) {
+				var img = images[i];
+
+				_plots[i] = p;
+				AddImgToCanvas(lockAxis, i, img);
+
+				i++;
+			}
+
+			PlotCount = plotInitializer.Count;
+			_type     = InternalType.CANVAS;
+		}
+
+		void AddImgToCanvas(bool lockAxis, int i, Bitmap img) {
+			if (_plots == null || !_plots.Any())
+				throw new Exception(Message.EXCEPTION_PLOT_IS_NULL);
+			
+			_plots[i].Frameless();
+			_plots[i].AddImage(img, 0, 0, anchor: Alignment.MiddleCenter);
+			_plots[i].Width  = img.Width;
+			_plots[i].Height = img.Height;
+			_plots[i].Frameless();
+			_plots[i].Grid(false);
+			_plots[i].AxisAuto();
+
+			if (lockAxis) {
+				_plots[i].XAxis.LockLimits();
+				_plots[i].YAxis.LockLimits();
+			}
+		}
+
+		bool _plotWasProduced;
+
+		readonly Plot[]?                     _plots;
+		readonly IReadOnlyList<PlotChannel>? _data;
+		readonly byte                        _type;
+	}
+
+	internal static class InternalType {
+		public const byte PLOT   = 1 << 0;
+		public const byte CANVAS = 1 << 1;
 	}
 }

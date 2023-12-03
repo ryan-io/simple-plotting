@@ -19,6 +19,15 @@
         <PackageReleaseNotes></PackageReleaseNotes>
         <AssemblyVersion>1.0.32</AssemblyVersion>
         <FileVersion>1.0.32</FileVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DefineConstants>TRACE; UNSAFE</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DefineConstants>TRACE; UNSAFE</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
