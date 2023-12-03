@@ -19,8 +19,12 @@ namespace simple_plotting.runtime {
 		public ref readonly string[] GetAllPaths() => ref _paths;
 
 		/// <summary>
-		/// Retrieves a specific Bitmap object based on an index.
+		/// Retrieves a specific Bitmap object from the BitmapParser's array, using a provided index.
 		/// </summary>
+		/// <param name="bitmapIndex">The index of the Bitmap object to be retrieved.</param>
+		/// <returns>A reference to the Bitmap object at the specified index.</returns>
+		/// <exception cref="NullReferenceException">Thrown when the internal Bitmap array has not been initialized.</exception>
+		/// <exception cref="IndexOutOfRangeException">Thrown when the provided index is outside the bounds of the Bitmap array.</exception>
 		public ref Bitmap GetBitmap(int bitmapIndex) {
 			if (_bitmaps == null)
 				throw new NullReferenceException();
@@ -32,8 +36,12 @@ namespace simple_plotting.runtime {
 		}
 
 		/// <summary>
-		/// Retrieves the path for a specific bitmap based on an index.
+		/// Retrieves the path of a specific bitmap image.
 		/// </summary>
+		/// <param name="index">Index position of the image path in the list of paths.</param>
+		/// <returns>Returns a reference to the path string of the image.</returns>
+		/// <exception cref="NullReferenceException">Thrown when the list of paths is null.</exception>
+		/// <exception cref="IndexOutOfRangeException">Thrown when index is out of the range of the list of paths.</exception>
 		public ref string GetPath(int index) {
 			if (_paths == null)
 				throw new NullReferenceException();
@@ -62,8 +70,11 @@ namespace simple_plotting.runtime {
 		}
 
 		/// <summary>
-		/// Modifies the RGB values of the pixels in a bitmap unsafely and concurrently.
+		/// Modifies the RGB values of a Bitmap at a specific index in an unsafe and concurrent manner. 
 		/// </summary>
+		/// <param name="bitmapIndex">The index of the Bitmap in the internal array.</param>
+		/// <param name="functor">A delegate function that performs the desired modifications on the pixel data.</param>
+		/// <returns>Returns reference to the internal array of Bitmap objects.</returns>
 		public unsafe ref Bitmap[] ModifyRgbUnsafe(int bitmapIndex, BitmapProcessDelegate functor) {
 			ref var bmp = ref GetBitmap(bitmapIndex);
 
@@ -109,9 +120,13 @@ namespace simple_plotting.runtime {
 		}
 
 		/// <summary>
-		/// Asynchronously saves all the Bitmap objects in the _bitmap array to disk.
+		/// Asynchronously saves Bitmap objects to the files at a specified path.
 		/// </summary>
-		public async Task SaveBitmapsAsync(string path) {
+		/// <param name="path">The directory path where the Bitmaps should be saved.</param>
+		/// <param name="disposeOnSuccess">Optional parameter determining whether to dispose the BitmapParser on successful save. Default is false.</param>
+		/// <returns>Returns a Task that represents the asynchronous operation. The task result contains void.</returns>
+		/// <exception cref="DirectoryNotFoundException">Thrown when the provided path is null, empty, or consists only of white-space characters.</exception>
+		public async Task SaveBitmapsAsync(string path, bool disposeOnSuccess = false) {
 			if (string.IsNullOrWhiteSpace(path))
 				throw new DirectoryNotFoundException(Message.EXCEPTION_NULL_BITMAP_PATHS);
 
@@ -127,6 +142,9 @@ namespace simple_plotting.runtime {
 			}
 
 			await Task.WhenAll(tasks);
+
+			if (disposeOnSuccess)
+				Dispose();
 		}
 
 		string GetSanitizedPath(string path) {
