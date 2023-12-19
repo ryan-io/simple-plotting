@@ -8,67 +8,80 @@ namespace simple_plotting;
 public partial class PlotBuilderFluent {
 	/// <inheritdoc />
 	public IEnumerable<Plot> GetPlots() {
-		return _plots;
+		return _plots ?? throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
 	}
 
 	/// <inheritdoc />
 	public ref Plot GetPlotRef(int index) {
+		if (_plots == null) 
+			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
+		
 		if (index > _plots.Length - 1)
 			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
-		
+
 		return ref _plots[index];
 	}
 
 	/// <inheritdoc />
-	public IReadOnlyList<PlotChannel> GetPlotChannels() => _data;
+	public IReadOnlyList<PlotChannel> GetPlotChannels() 
+		=> _data ?? throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
 
 	/// <inheritdoc />
 	public Plot GetPlot(int plotIndex) {
+		if (_plots == null)
+			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
+		
 		plotIndex.ValidateInRange(_plots);
 		return _plots[plotIndex];
 	}
 
 	/// <inheritdoc />
 	public IEnumerable<string> GetScatterPlottableLabels(int plotIndex) {
-		List<string> output     = new();
-		var          plottables = GetPlottablesAs<ScatterPlot>(plotIndex);
+		List<string> output = new();
+		_cachedSignalPlottables.Clear();
 
-		foreach (var plottable in plottables) {
+		GetPlottablesAs<ScatterPlot>(plotIndex).CastTo(ref _cachedSignalPlottables);
+
+		foreach (var plottable in _cachedSignalPlottables) 
 			output.Add(plottable.Label);
-		}
 
 		return output;
 	}
 
 	/// <inheritdoc />
 	public IEnumerable<string> GetSignalPlottableLabels(int plotIndex) {
-		List<string> output = new();
+		var output = new List<string>();
+		_cachedSignalPlottables.Clear();
 
-		var plottables =
-			GetPlottablesAs<SignalPlotXYConst<double, double>>(plotIndex);
+		GetPlottablesAs<SignalPlotXYConst<double, double>>(plotIndex).CastTo(ref _cachedSignalPlottables);
 
-		foreach (var plottable in plottables) {
+		foreach (var plottable in _cachedSignalPlottables)
 			output.Add(plottable.Label);
-		}
 
 		return output;
 	}
 
 	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlottablesAs{T}" />
-	public IEnumerable<T> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable {
+	public HashSet<IPlottable> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable {
+		if (_plots == null)
+			throw new ArgumentException(Message.EXCEPTION_PLOT_IS_NULL);
+
 		if (plotIndex > _plots.Length - 1)
 			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
 
-		var plottables = new List<T>();
-		var plot       = _plots[plotIndex];
+		var plot = _plots[plotIndex];
 
-		plottables.AddRange(plot.GetPlottables().OfType<T>().ToList());
+		_returnPlottables.Clear();
+		_returnPlottables.AddRange(plot.GetPlottables().OfType<T>());
 
-		return plottables;
+		return _returnPlottables;
 	}
 
 	/// <inheritdoc />
 	public async Task<PlotSaveStatus> TrySaveAsync(string savePath, string name) {
+		if (_plots == null)
+			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
+		
 		ValidateCancellationTokenSource(true);
 		CachedPlotPaths.Clear();
 
@@ -106,6 +119,9 @@ public partial class PlotBuilderFluent {
 	public PlotSaveStatus TrySave(string savePath, string name) {
 		if (string.IsNullOrWhiteSpace(savePath) || string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
+		
+		if (_plots == null)
+			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
 
 		try {
 			List<string> paths       = new();

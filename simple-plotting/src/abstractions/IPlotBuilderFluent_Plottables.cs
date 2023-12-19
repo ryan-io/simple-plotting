@@ -21,8 +21,9 @@ public interface IPlotBuilderFluentPlottables : IPlotBuilderFluent {
     ///  This method invokes OfType with the generic type T.
     /// </summary>
     /// <typeparam name="T">Class that implements IPlottable</typeparam>
+ 	/// <exception cref="ArgumentException">Thrown if _plots is null</exception>
     /// <returns>Enumerable of enumerables containing the plottables as type T</returns>
-    IEnumerable<T> GetPlottablesAs<T> (int plotIndex) where T : class, IPlottable;
+    HashSet<IPlottable> GetPlottablesAs<T> (int plotIndex) where T : class, IPlottable;
 
     /// <summary>
     ///  Adds an annotation to a plot at xOff, yOff.

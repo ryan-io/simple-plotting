@@ -83,5 +83,7 @@
 		public const string EXCEPTION_DIRECTORY_NOT_FOUND = "Directory not found.";
 		
 		public const string EXCEPTION_DISSIMILAR_COLLECTION_SIZE = "Collections are not the same size.";
+
+		public const string EXCEPTION_INTERNAL_PLOT_COL_NULL = "Internal plot collection is null.";
 	}
 }

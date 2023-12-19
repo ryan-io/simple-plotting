@@ -54,8 +54,8 @@
 			var step     = enumerable.Length / targetSize;
 			var overFlow = enumerable.Length % targetSize;
 
-			var tracker      = int.MaxValue;
-			var plotTracker  = -1;
+			var tracker     = int.MaxValue;
+			var plotTracker = -1;
 			//var totalCounter = 0;
 
 			for (var i = 0; i < enumerable.Length; i++) {
@@ -83,5 +83,29 @@
 		/// <returns>True if collection is null or empty</returns>
 		public static bool IsNullOrEmpty<T>(this IEnumerable<T>? enumerable)
 			=> enumerable == null || !enumerable.Any();
+
+		/// <summary>
+		/// Adds the elements of the specified collection to the HashSet.
+		/// </summary>
+		/// <typeparam name="T">The type of elements in the HashSet.</typeparam>
+		/// <param name="hashSet">The HashSet to add the elements to.</param>
+		/// <param name="enumerable">The collection whose elements should be added to the HashSet.</param>
+		public static void AddRange<T>(this HashSet<T> hashSet, IEnumerable<T> enumerable) {
+			// this is OKAY; _returnPlottables is cached and will not result in an allocation
+			foreach (var item in enumerable)
+				hashSet.Add(item);
+		}
+
+		public static HashSet<TInput> CastTo<TInput, TOutput>
+			(this HashSet<TInput> hashSet, ref HashSet<TOutput> output) 
+			where TOutput : TInput {
+			// foreach IS efficient here
+			// Enumerating a HashSet will only invoke GetEnumerator.MoveNext() 
+			foreach (var element in hashSet) 
+				if (element!=null && element is TOutput outputElement)
+					output.Add(outputElement);
+
+			return hashSet;
+		}
 	}
 }

@@ -2,7 +2,7 @@
 using System.Drawing;
 using ScottPlot;
 using ScottPlot.Plottable;
-using simple_plotting.runtime ;
+using simple_plotting.runtime;
 
 namespace simple_plotting {
 	/// <summary>
@@ -74,7 +74,7 @@ namespace simple_plotting {
 		/// Starts a new canvas for plotting with the given image paths. The method instantiates a new PlotBuilderFluent object and returns it.
 		/// </summary>
 		/// <param name="imagePaths">The paths of images to load into the canvas. This parameter is variadic, so you can input multiple string values without wrapping them into an array.</param>
- 		/// <param name="lockAxis">If true, cannot pan canvas</param>
+		/// <param name="lockAxis">If true, cannot pan canvas</param>
 		/// <returns>An instance of IPlotBuilderFluentCanvas which provides a fluent interface for plotting.</returns>
 		/// <example>
 		/// Here is an example of how to use the StartNewCanvas method.
@@ -94,7 +94,7 @@ namespace simple_plotting {
 		/// <param name="plotInitializer">
 		/// A collection of Plot objects that serve as the basis for the new PlotBuilderFluent object. This collection could contain initial configurations for plot designs. This parameter is passed by reference.
 		/// </param>
-  		/// <param name="lockAxis">If true, cannot pan canvas</param>
+		/// <param name="lockAxis">If true, cannot pan canvas</param>
 		/// <returns>
 		/// A new instance of the PlotBuilderFluent class, initialized with the provided Bitmap images and initial Plots collection.
 		/// </returns>
@@ -232,12 +232,12 @@ namespace simple_plotting {
 		PlotBuilderFluent(ref Bitmap[] images, bool lockAxis = false) {
 			if (images.IsNullOrEmpty())
 				throw new ArgumentException(Message.EXCEPTION_NO_IMG_PATHS);
-			
+
 			_plots = new Plot[images.Length];
-			
+
 			for (var i = 0; i < images.Length; i++) {
 				var img = images[i];
-				
+
 				_plots[i] = new Plot(img.Width, img.Height);
 				AddImgToCanvas(lockAxis, i, img);
 
@@ -286,7 +286,7 @@ namespace simple_plotting {
 		void AddImgToCanvas(bool lockAxis, int i, Bitmap img) {
 			if (_plots == null || !_plots.Any())
 				throw new Exception(Message.EXCEPTION_PLOT_IS_NULL);
-			
+
 			_plots[i].Frameless();
 			_plots[i].AddImage(img, 0, 0, anchor: Alignment.MiddleCenter);
 			_plots[i].Width  = img.Width;
@@ -301,10 +301,12 @@ namespace simple_plotting {
 			}
 		}
 
-		bool _plotWasProduced;
+		HashSet<SignalPlotXYConst<double, double>> _cachedSignalPlottables = new();
+		bool                                       _plotWasProduced = false;
 
 		readonly Plot[]?                     _plots;
 		readonly IReadOnlyList<PlotChannel>? _data;
+		readonly HashSet<IPlottable>         _returnPlottables = new();
 		readonly byte                        _type;
 	}
 

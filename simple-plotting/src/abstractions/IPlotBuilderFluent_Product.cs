@@ -52,8 +52,8 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	///  This method invokes OfType with the generic type T.
 	/// </summary>
 	/// <typeparam name="T">Class that implements IPlottable</typeparam>
-	/// <returns>Enumerable of enumerables containing the plottables as type T</returns>
-	 IEnumerable<T> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable;
+	/// <returns>HashSet of enumerables containing the plottables as type T</returns>
+	 HashSet<IPlottable> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable;
 
 	/// <summary>
 	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
