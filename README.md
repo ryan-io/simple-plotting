@@ -1,5 +1,5 @@
 # simple-plotting
-A library wrapper for ScottPlot &amp; CsvHelper. This library parses CSV files &amp; interactively plots them in WPF, WinForms, etc. This libray is intended to be used with the MVVM pattern.
+A library wrapper for ScottPlot &amp; CsvHelper. This library parses CSV files &amp; and generates plots and/or interactively plots them (WPF, Winforms, Avalonia, etc.).
 
 ### Dependencies
     - CsvHelper.30.0.1
