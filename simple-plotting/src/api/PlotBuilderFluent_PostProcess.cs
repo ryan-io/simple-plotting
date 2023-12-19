@@ -10,6 +10,9 @@ public partial class PlotBuilderFluent {
 
 	/// <inheritdoc />
 	public IPlotBuilderFluentPostProcess SetSizeOfAll(PlotSize size) {
+		if (_plots == null)
+			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
+		
 		PlotHelper.SetSizeOfAll(_plots, size);
 		return this;
 	}
@@ -30,6 +33,9 @@ public partial class PlotBuilderFluent {
 	public IPlotBuilderFluentPostProcess ChangeTitle(string newTitle, int fontSize = 14, bool isBold = false) {
 		if (string.IsNullOrWhiteSpace(newTitle))
 			throw new Exception(Message.EXCEPTION_TITLE_INVALID);
+		
+		if (_plots== null)
+			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
 
 		var plotTracker = 1;
 		foreach (var plot in _plots) {
@@ -105,6 +111,9 @@ public partial class PlotBuilderFluent {
 
 	/// <inheritdoc />	
 	public IPlotBuilderFluentPostProcess RefreshRenderers() {
+		if (_plots == null)
+			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
+		
 		foreach (var plot in _plots) {
 			plot.Render();
 		}
@@ -117,6 +126,9 @@ public partial class PlotBuilderFluent {
 	/// </summary>
 	/// <returns>Integer array containing indices of each plot, sequential, ascending</returns>
 	int[] GetIndices() {
+		if (_data == null)
+			throw new InvalidOperationException(Message.EXCEPTION_DATA_NULL_EMPTY);
+		
 		var indices = new int[_data.Count];
 
 		for (var i = 0; i < indices.Length; i++) {

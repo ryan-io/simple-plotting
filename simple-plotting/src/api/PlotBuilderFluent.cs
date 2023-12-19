@@ -302,7 +302,7 @@ namespace simple_plotting {
 		}
 
 		HashSet<SignalPlotXYConst<double, double>> _cachedSignalPlottables = new();
-		bool                                       _plotWasProduced = false;
+		bool                                       _plotWasProduced;
 
 		readonly Plot[]?                     _plots;
 		readonly IReadOnlyList<PlotChannel>? _data;

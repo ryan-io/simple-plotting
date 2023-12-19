@@ -56,6 +56,16 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	 HashSet<IPlottable> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable;
 
 	/// <summary>
+	/// Retrieves a set of plottables from a specified plot index and stores them in a cache.
+	/// </summary>
+	/// <typeparam name="T">The type of plottable object to retrieve.</typeparam>
+	/// <param name="plotIndex">The index of the plot to retrieve plottables from.</param>
+	/// <param name="cache">A reference to the cache HashSet where the retrieved plottables will be stored.</param>
+	/// <exception cref="ArgumentException">Thrown when the _plots array is null.</exception>
+	/// <exception cref="IndexOutOfRangeException">Thrown when the plotIndex is out of range.</exception>
+	void GetPlottablesAsCache<T>(int plotIndex, ref HashSet<T> cache) where T : class, IPlottable;
+	
+	/// <summary>
 	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
 	/// </summary>
 	/// <param name="savePath">Directory to save plots</param>

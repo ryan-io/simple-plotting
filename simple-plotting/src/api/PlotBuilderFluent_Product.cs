@@ -77,6 +77,21 @@ public partial class PlotBuilderFluent {
 		return _returnPlottables;
 	}
 
+	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlottablesAsCache{T}" />
+	public void GetPlottablesAsCache<T>(int plotIndex, ref HashSet<T> cache) 
+		where T : class, IPlottable {
+		if (_plots == null)
+			throw new ArgumentException(Message.EXCEPTION_PLOT_IS_NULL);
+
+		if (plotIndex > _plots.Length - 1)
+			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
+
+		var plot = _plots[plotIndex];
+		
+		cache.Clear();
+		cache.AddRange(plot.GetPlottables().OfType<T>());
+	}
+
 	/// <inheritdoc />
 	public async Task<PlotSaveStatus> TrySaveAsync(string savePath, string name) {
 		if (_plots == null)
