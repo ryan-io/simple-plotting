@@ -63,7 +63,7 @@
 
 # Overview
 
-Simple Plotting is a library that acts as a wrapper for [ScottPlot](https://github.com/ScottPlot/ScottPlot] (C# MatPlotLib wrapper) and [CsvHelper](https://github.com/JoshClose/CsvHelper0). This library has been used in the Automotive industry to parse CSV files and plot the data containing data relating to temperature, relative humidity, voltage and current output. This library can be used in conjecture with all types of data.
+Simple Plotting is a library that acts as a wrapper for [ScottPlot](https://github.com/ScottPlot/ScottPlot) (C# MatPlotLib wrapper) and [CsvHelper](https://github.com/JoshClose/CsvHelper0). This library has been used in the Automotive industry to parse CSV files and plot the data containing data relating to temperature, relative humidity, voltage and current output. This library can be used in conjecture with all types of data.
 In addition to generating plots, the API is also used to create interactive plots in various .NET environments. These interactive plots can be annotated, have draggable shapes added to them, have their axes labels, dimensions, colors, ticks, etc. all changed. It is versatile in this regard.
 The primary goals for this project are:
 1) Parse CSV files and load into memory for manipulation
