@@ -112,27 +112,119 @@ Photo Annotation API:
 
 <!-- GETTING STARTED -->
 # Getting Started
-Clone/fork this repository and add a reference to the Command Pipeline project.
+Clone/fork this repository and add a reference to the simple-plotting project.
 OR, add this as a Nuget package to your project.
 
-You can instantiate CommandPipelines as needed:
+##### Csv Parsing
+
+- Start by defining a 'strategy' for how to parse Csv files. This does require knowledge of CsvHelper and how the API works.
+	- The [examples](https://joshclose.github.io/CsvHelper/examples/) provided by Josh (CsvHelper author) is an excellent source for quickly learning what you need
+- A default strategy is provided ONLY as an example:
 
 ```csharp
-var pipeline = new CommandPipeline();
+public class DefaultCsvParseStrategy : CsvParseStrategy {  
+    StringBuilder Sb { get; } = new();  
+  
+    double? SampleRate { get; set; }  
+  
+    public override async Task StrategyAsync(  
+       List<PlotChannel> output,  
+       CsvReader csvr,  
+       CancellationToken? cancellationToken = default) {  
+       const int skipFourRows = 4;  
+       const int skipSixRows  = 6;  
+  
+       try {  
+          SkipRowsNumberOfRows(csvr, skipSixRows);  
+  
+          await csvr.ReadAsync();  
+  
+          SampleRate = CsvParserHelper.ExtractSampleRate(csvr[1]); // we could ignore this entirely  
+  
+          SkipRowsNumberOfRows(csvr, skipFourRows);  
+  
+          csvr.ReadHeader();  
+  
+          if (csvr.HeaderRecord == null)  
+             throw new Exception(Message.EXCEPTION_NO_HEADER);  
+  
+          var channelsToParse = csvr.HeaderRecord.Length - 3;  
+  
+          for (var i = 0; i < channelsToParse; i++) {  
+             if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)  
+                break;  
+  
+             output.Add(new PlotChannel(csvr.HeaderRecord[3 + i], PlotChannelType.Temperature, SampleRate));  
+          }  
+  
+          while (await csvr.ReadAsync()) {  
+             if (cancellationToken.WasCancelled())  
+                break;  
+  
+             ParseCurrentReaderIndex(output, csvr, cancellationToken, channelsToParse);  
+          }  
+       }  
+       catch (Exception e) {  
+          throw new Exception(Message.EXCEPTION_STRATEGY_FAILED, e);  
+       }  
+    }
 ```
 
-This project supports logging via  Microsoft.Extensions.Logging.ILogger. The base constructor for CommandPipeline accepts an ILogger:
+- To implement your own strategy, created a class that derives from CsvParseStrategy or implements ICsvParseStrategy
+	- I'd love to help you define a strategy for your needs
+- Once implemented, simply invoke
 
 ```csharp
-ILogger logger   = new Logger<CommandPipeline>(new LoggerFactory());  
-var     pipeline = new CommandPipeline(logger);
+var initialStrategy = new DefaultCsvParseStrategy(-65d, 165d);  
+var source          = CsvParserFactory.StartNew(initialStrategy, path);
+var output = await source.ExtractAsync(file);
 ```
 
-Once a pipeline instance is created, access to the fluent API becomes available:
+##### Plotting
 
-<p align="center">
-<img  src="https://i.imgur.com/FoHoE4E.png" width="300"/>
-</p>
+- Once a csv file has been parsed, you can now feed the parsed data into the PlotBuilderFluent API.
+	- This API is fluent, meaning you can chain method calls
+
+```csharp
+PlotBuilderFluent.StartNewPlot(output, numOfPlots)
+```
+
+- Review the methods included with the API. These methods help you customize the plot
+
+```csharp
+.WithType<SignalPlot>()  
+.WithTitle("Test title", 24)  
+.WithSize(PlotSize.S1280X800)  
+.WithPrimaryXAxisLabel(Constants.X_AXIS_LABEL_DATE_TIME, 20)  
+.WithPrimaryYAxisLabel(Constants.Y_AXIS_LABEL_TEMP, 20)  
+.WithSecondaryYAxisLabel(Constants.Y_AXIS_LABEL_RH, 20)  
+.ShowLegend(PlotAlignment.UpperRight)  
+.SetDataPadding(valueY: .2, valueX: 0.0)
+
+product.GotoPlottables().AddDraggableLine(0, 50, 40000, out _);  
+product.GotoPostProcess().TrySetLabel("Test label", 0);  
+product.GotoPlottables().WithAnnotationAt("Test annotation", 1, 100, 100, out _);
+```
+
+##### Image Processing
+
+- The image processing API is analogous to the PlotBuilderFluent API and functions identically.
+- Start by creating a new instance of BitmapParser. Once this is instantiated, simply query the PlotBuilderFluent API to create a new canvas.
+
+```csharp
+var parser  = new BitmapParser(ref paths);  
+var builder = PlotBuilderFluent.StartNewCanvas(ref parser.GetAllBitmaps());
+```
+
+- You are ready to manipulate the image(s)
+
+```csharp
+parser.ModifyRgbUnsafe(0, (ref int red, ref int green, ref int blue) => {  
+                              red   -= 25;  
+                              green += 10;  
+                              blue  += 20;  
+                          });
+```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
