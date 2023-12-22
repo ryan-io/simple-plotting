@@ -108,6 +108,14 @@ public partial class PlotBuilderFluent {
     }
 
     /// <inheritdoc />
+    public IPlotBuilderFluentPlottables WithAnnotationAt(string text, int index, double xOff, double yOff, out
+        Annotation annotation) {
+        WithAnnotationAt(text, index, (float)xOff, (float)yOff, out annotation);
+
+        return this;
+    }
+
+    /// <inheritdoc />
     public IPlotBuilderFluentPlottables WithCrosshair (int plotIndex, out Crosshair crosshair, bool isXDataDate = false,
         double positionX = 0, double positionY = 0) {
         plotIndex.ValidateInRange(_plots);

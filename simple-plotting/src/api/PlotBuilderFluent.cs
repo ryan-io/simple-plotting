@@ -15,7 +15,9 @@ namespace simple_plotting {
 	                                         IPlotBuilderFluentReadyToProduce,
 	                                         IPlotBuilderFluentPlottables,
 	                                         IPlotBuilderFluentPostProcess,
-	                                         IPlotBuilderFluentProduct {
+	                                         IPlotBuilderFluentProduct,
+	                                         IPlotBuilderFluentCanvasReadyToProduce,
+	                                         IPlotBuilderFluentCanvasProduct {
 		/// <inheritdoc />
 		public bool CanSave => _data != null && _data.Any() && _plotWasProduced;
 
@@ -32,7 +34,7 @@ namespace simple_plotting {
 		/// <summary>
 		///  Thread safe collection for plot paths
 		/// </summary>
-		ConcurrentBag<string> CachedPlotPaths { get; } = new();
+		ConcurrentBag<string> CachedPlotPaths { get; set; } = new();
 
 		/// <summary>
 		///  Factory for adding graphs to plots

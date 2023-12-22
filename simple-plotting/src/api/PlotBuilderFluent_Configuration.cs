@@ -412,7 +412,7 @@ public partial class PlotBuilderFluent {
 
 	/// <inheritdoc cref="IPlotBuilderFluentConfiguration.FinalizeConfiguration" />
 	public IPlotBuilderFluentReadyToProduce FinalizeConfiguration() => this;
-
+	
 	/// <inheritdoc />
 	public IPlotBuilderFluentConfiguration WithObservable(Action action) {
 		Observables.Add(action);
@@ -429,6 +429,6 @@ public partial class PlotBuilderFluent {
 		return this;
 	}
 
-	const double MAX_MARGIN = 0.99;
-	const double MIN_MARGIN = 0.01;
+	const  double                          MAX_MARGIN = 0.99;
+	const  double                          MIN_MARGIN = 0.01;
 }

@@ -69,7 +69,7 @@ namespace simple_plotting.runtime {
 
 		void ParseCurrentReaderIndex(List<PlotChannel> output, CsvReader csvr, CancellationToken? cancellationToken,
 			int channelsToParse) {
-			const double EPSILON = 5E-6d;
+			const double epsilon = 5E-6d;
 
 			Sb.Clear();
 			Sb.Append(csvr[0]); // csvr[0] = date
@@ -92,7 +92,7 @@ namespace simple_plotting.runtime {
 
 				var  hasValue          = FastDoubleParser.TryParseDouble(csvr[3 + i], out var value);
 				bool isOutside         = value < _lowerValueLimit || value > _upperValueLimit;
-				bool isEssentiallyZero = value >= 0.0d - EPSILON && value  <= 0.0d + EPSILON;
+				bool isEssentiallyZero = value is >= 0.0d - epsilon and <= 0.0d + epsilon;
 
 				if (isOutside || isEssentiallyZero || !hasValue) {
 					continue;

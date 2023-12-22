@@ -98,7 +98,7 @@ public partial class PlotBuilderFluent {
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
 		
 		ValidateCancellationTokenSource(true);
-		CachedPlotPaths.Clear();
+		CachedPlotPaths.Clear(); 
 
 		try {
 			await Task.Run(

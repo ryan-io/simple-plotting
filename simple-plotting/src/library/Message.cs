@@ -85,5 +85,10 @@
 		public const string EXCEPTION_DISSIMILAR_COLLECTION_SIZE = "Collections are not the same size.";
 
 		public const string EXCEPTION_INTERNAL_PLOT_COL_NULL = "Internal plot collection is null.";
+
+		public const string EXCEPTION_NO_BITMAP_PARSER = "Cannot save bitmaps. No bitmap parser has been assigned.";
+
+		public const string EXCEPTION_BITMAP_PARSER_DISPOSED =
+			"Instance of BitmapParser has been disposed. No further actions can be taken. Please create a new parser.";
 	}
 }

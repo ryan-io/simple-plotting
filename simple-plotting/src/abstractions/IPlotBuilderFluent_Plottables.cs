@@ -36,6 +36,18 @@ public interface IPlotBuilderFluentPlottables : IPlotBuilderFluent {
     /// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
     IPlotBuilderFluentPlottables WithAnnotationAt (string text, int index, float xOff, float yOff, out Annotation
         annotation);
+    
+    /// <summary>
+    ///  Adds an annotation to a plot at xOff, yOff.
+    /// </summary>
+    /// <param name="text">String text to display in annotation</param>
+    /// <param name="index">Index of plot to annotate</param>
+    /// <param name="xOff">x-offset (from lower-left of plot)</param>
+    /// <param name="yOff">y-offset (from the lower-left of the plot)</param>
+    /// <param name="annotation">Instance of Annotation plottable</param>
+    /// <returns>Fluent builder as IPlotBuilderFluent_PostProcess</returns>
+    IPlotBuilderFluentPlottables WithAnnotationAt (string text, int index, double xOff, double yOff, out Annotation
+        annotation);
 
     /// <summary>
     ///  Adds a text plottable to the plot at xCoord, yCoord.

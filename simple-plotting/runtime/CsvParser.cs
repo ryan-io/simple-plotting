@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
 
@@ -10,8 +9,6 @@ namespace simple_plotting.runtime {
 	///  https://github.com/CarlVerret/csFastFloat is used for parsing double values.
 	/// </summary>
 	public class CsvParser : ICsvParser {
-		StringBuilder Sb { get; } = new StringBuilder();
-
 		/// <summary>
 		///   The path to the CSV file.
 		/// </summary>
@@ -21,7 +18,7 @@ namespace simple_plotting.runtime {
 		///  Parses, extracts, and returns the data from the CSV file.  
 		/// </summary>
 		/// <param name="fileName">Name of file to parse</param>
-		/// <param name="cancellationToken">Optional cancelltation token to stop the task</param>
+		/// <param name="cancellationToken">Optional cancellation token to stop the task</param>
 		/// <returns>Readonly list of PlotChannel</returns>
 		public async Task<IReadOnlyList<PlotChannel>?> ExtractAsync(string fileName,
 			CancellationToken? cancellationToken = default) {

@@ -6,8 +6,16 @@ namespace simple_plotting.runtime {
 		/// <summary>
 		/// A delegate type for manipulating the RGB values of a particular pixel in a bitmap.
 		/// </summary>
-		public delegate void BitmapProcessDelegate(ref int red, ref int green, ref int blue);
-		
+		public delegate void BitmapRgbDelegate(ref int red, ref int green, ref int blue);
+
+		/// <summary>
+		/// Gets a value indicating whether the object has been disposed.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if the object has been disposed; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsDisposed { get; private set; }
+
 		/// <summary>
 		/// Returns a reference to the internal array of Bitmap objects.
 		/// </summary>
@@ -26,6 +34,9 @@ namespace simple_plotting.runtime {
 		/// <exception cref="NullReferenceException">Thrown when the internal Bitmap array has not been initialized.</exception>
 		/// <exception cref="IndexOutOfRangeException">Thrown when the provided index is outside the bounds of the Bitmap array.</exception>
 		public ref Bitmap GetBitmap(int bitmapIndex) {
+			if (IsDisposed)
+				throw new BitMapParserDisposedException();
+			
 			if (_bitmaps == null)
 				throw new NullReferenceException();
 
@@ -56,7 +67,7 @@ namespace simple_plotting.runtime {
 		/// Releases the resources used by the BitmapParser class.
 		/// </summary>
 		public void Dispose() {
-			if (_isDisposed)
+			if (IsDisposed)
 				return;
 
 			//TODO: research the need for GC.SuppressFinalize(this);
@@ -66,7 +77,7 @@ namespace simple_plotting.runtime {
 				bitmap.Dispose();
 
 			_bitmaps    = default!;
-			_isDisposed = true;
+			IsDisposed = true;
 		}
 
 		/// <summary>
@@ -78,7 +89,10 @@ namespace simple_plotting.runtime {
 		/// <param name="bitmapIndex">The index of the Bitmap in the internal array.</param>
 		/// <param name="functor">A delegate function that performs the desired modifications on the pixel data.</param>
 		/// <returns>Returns reference to the internal array of Bitmap objects.</returns>
-		public unsafe ref Bitmap[] ModifyRgbUnsafe(int bitmapIndex, BitmapProcessDelegate functor) {
+		public unsafe ref Bitmap[] ModifyRgbUnsafe(int bitmapIndex, BitmapRgbDelegate functor) {
+			if (IsDisposed)
+				throw new BitMapParserDisposedException();
+			
 			ref var bmp = ref GetBitmap(bitmapIndex);
 
 			// Lock the bitmap bits. This will allow us to modify the bitmap data.
@@ -94,21 +108,20 @@ namespace simple_plotting.runtime {
 			var   height        = bitmapData.Height;
 			var   width         = bitmapData.Width * bytesPerPixel;
 			byte* pxlPtr        = (byte*)bitmapData.Scan0;
-
 			
 			// note documentation for Parallel.For
 			//		from INCLUSIVE ::: to EXCLUSIVE
 			//		okay to pass 0, height
 			Parallel.For(0, height,
-				integer => {
-					byte* row = pxlPtr + integer * bitmapData.Stride;
+				pxlIndex => {
+					byte* row = pxlPtr + pxlIndex * bitmapData.Stride;
 
 					for (var i = 0; i < width; i += bytesPerPixel) {
 						// the current pixel to work on; passes rgb values to a delegate
 						int red   = row[i + 2];
 						int green = row[i + 1];
 						int blue  = row[i];
-
+						
 						functor.Invoke(ref red, ref green, ref blue);
 						GuardRgbValue(ref red); GuardRgbValue(ref green); GuardRgbValue(ref blue);
 						
@@ -130,7 +143,10 @@ namespace simple_plotting.runtime {
 		/// <param name="disposeOnSuccess">Optional parameter determining whether to dispose the BitmapParser on successful save. Default is false.</param>
 		/// <returns>Returns a Task that represents the asynchronous operation. The task result contains void.</returns>
 		/// <exception cref="DirectoryNotFoundException">Thrown when the provided path is null, empty, or consists only of white-space characters.</exception>
-		public async Task SaveBitmapsAsync(string path, bool disposeOnSuccess = false) {
+		public async Task<List<string>> SaveBitmapsAsync(string path, bool disposeOnSuccess = false) {
+			if (IsDisposed)
+				throw new BitMapParserDisposedException();
+			
 			if (string.IsNullOrWhiteSpace(path))
 				throw new DirectoryNotFoundException(Message.EXCEPTION_NULL_BITMAP_PATHS);
 
@@ -138,20 +154,25 @@ namespace simple_plotting.runtime {
 				Directory.CreateDirectory(path);
 			}
 
-			var count = _bitmaps.Length;
-			var tasks = new Task[count];
+			var output = new List<string>();
+			var count  = _bitmaps.Length;
+			var tasks  = new Task[count];
 
 			for (var i = 0; i < count; i++) {
-				tasks[i] = SaveBitmapTask(_bitmaps[i], GetSanitizedPath(path));
+				var sanitizedPath = GetSanitizedPath(ref path);
+				output.Add(sanitizedPath);
+				tasks[i] = SaveBitmapTask(_bitmaps[i],sanitizedPath);
 			}
 
 			await Task.WhenAll(tasks);
 
 			if (disposeOnSuccess)
 				Dispose();
+
+			return output;
 		}
 
-		string GetSanitizedPath(string path) {
+		string GetSanitizedPath(ref string path) {
 			var newPath = Path.Combine(path, Path.GetFileNameWithoutExtension(GetPath(0)) + "_bmpParsed.png");
 			return newPath;
 		}
@@ -164,7 +185,8 @@ namespace simple_plotting.runtime {
 				value = 255;
 		}
 		
-		static Task SaveBitmapTask(Bitmap bmp, string path) => Task.Run(() => bmp.Save(path, ImageFormat.Png));
+		static Task SaveBitmapTask(Bitmap bmp, string path) 
+			=> Task.Run(() => bmp.Save(path, ImageFormat.Png));
 
 		static Rectangle GetNewRect(ref Bitmap bmp) => new(0, 0, bmp.Width, bmp.Height);
 
@@ -184,7 +206,6 @@ namespace simple_plotting.runtime {
 		}
 
 		Bitmap[]          _bitmaps;
-		bool              _isDisposed;
 		readonly string[] _paths;
 
 #endregion
