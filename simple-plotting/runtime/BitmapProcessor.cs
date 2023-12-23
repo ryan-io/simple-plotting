@@ -6,7 +6,7 @@ namespace simple_plotting.runtime {
 		/// <summary>
 		/// A delegate type for manipulating the RGB values of a particular pixel in a bitmap.
 		/// </summary>
-		public delegate void BitmapRgbDelegate(ref int red, ref int green, ref int blue);
+		public delegate void BitmapRgbDelegate(ref int pxlIndex, ref int red, ref int green, ref int blue);
 
 		/// <summary>
 		/// Gets a value indicating whether the object has been disposed.
@@ -20,7 +20,7 @@ namespace simple_plotting.runtime {
 		/// Returns a reference to the internal array of Bitmap objects.
 		/// </summary>
 		public ref Bitmap[] GetAllBitmaps() => ref _bitmaps;
-		
+
 		/// <summary>
 		/// Returns a read-only reference to the array of the paths to all images.
 		/// </summary>
@@ -36,7 +36,7 @@ namespace simple_plotting.runtime {
 		public ref Bitmap GetBitmap(int bitmapIndex) {
 			if (IsDisposed)
 				throw new BitMapParserDisposedException();
-			
+
 			if (_bitmaps == null)
 				throw new NullReferenceException();
 
@@ -76,7 +76,7 @@ namespace simple_plotting.runtime {
 			foreach (var bitmap in _bitmaps)
 				bitmap.Dispose();
 
-			_bitmaps    = default!;
+			_bitmaps   = default!;
 			IsDisposed = true;
 		}
 
@@ -92,47 +92,49 @@ namespace simple_plotting.runtime {
 		public unsafe ref Bitmap[] ModifyRgbUnsafe(int bitmapIndex, BitmapRgbDelegate functor) {
 			if (IsDisposed)
 				throw new BitMapParserDisposedException();
-			
+
 			ref var bmp = ref GetBitmap(bitmapIndex);
 
 			// Lock the bitmap bits. This will allow us to modify the bitmap data.
 			// Data is modified by traversing bitmap data (created in this method) and invoking functor.
 
-			var bitmapData = bmp.LockBits(
+			var bmpData = bmp.LockBits(
 				GetNewRect(ref bmp),
 				ImageLockMode.ReadWrite,
 				bmp.PixelFormat);
 
 			// this gives us size in bits... divide by 8 to get size in bytes
 			var   bytesPerPixel = Image.GetPixelFormatSize(bmp.PixelFormat) / 8;
-			var   height        = bitmapData.Height;
-			var   width         = bitmapData.Width * bytesPerPixel;
-			byte* pxlPtr        = (byte*)bitmapData.Scan0;
-			
+			var   imgHeight     = bmpData.Height;
+			var   imgWidth      = bmpData.Width * bytesPerPixel;
+			byte* headPtr       = (byte*)bmpData.Scan0;
+
 			// note documentation for Parallel.For
 			//		from INCLUSIVE ::: to EXCLUSIVE
 			//		okay to pass 0, height
-			Parallel.For(0, height,
+			Parallel.For(0, imgHeight, _parallelism,
 				pxlIndex => {
-					byte* row = pxlPtr + pxlIndex * bitmapData.Stride;
+					byte* row = headPtr + pxlIndex * bmpData.Stride;
 
-					for (var i = 0; i < width; i += bytesPerPixel) {
+					for (var i = 0; i < imgWidth; i += bytesPerPixel) {
 						// the current pixel to work on; passes rgb values to a delegate
 						int red   = row[i + 2];
 						int green = row[i + 1];
 						int blue  = row[i];
-						
-						functor.Invoke(ref red, ref green, ref blue);
-						GuardRgbValue(ref red); GuardRgbValue(ref green); GuardRgbValue(ref blue);
-						
+
+						functor.Invoke(ref pxlIndex, ref red, ref green, ref blue);
+						GuardRgbValue(ref red);
+						GuardRgbValue(ref green);
+						GuardRgbValue(ref blue);
+
 						row[i + 2] = (byte)red;
 						row[i + 1] = (byte)green;
 						row[i]     = (byte)blue;
 					}
 				});
 
-			bmp.UnlockBits(bitmapData);
-			
+			bmp.UnlockBits(bmpData);
+
 			return ref _bitmaps;
 		}
 
@@ -146,7 +148,7 @@ namespace simple_plotting.runtime {
 		public async Task<List<string>> SaveBitmapsAsync(string path, bool disposeOnSuccess = false) {
 			if (IsDisposed)
 				throw new BitMapParserDisposedException();
-			
+
 			if (string.IsNullOrWhiteSpace(path))
 				throw new DirectoryNotFoundException(Message.EXCEPTION_NULL_BITMAP_PATHS);
 
@@ -161,7 +163,7 @@ namespace simple_plotting.runtime {
 			for (var i = 0; i < count; i++) {
 				var sanitizedPath = GetSanitizedPath(ref path);
 				output.Add(sanitizedPath);
-				tasks[i] = SaveBitmapTask(_bitmaps[i],sanitizedPath);
+				tasks[i] = SaveBitmapTask(_bitmaps[i], sanitizedPath);
 			}
 
 			await Task.WhenAll(tasks);
@@ -184,8 +186,8 @@ namespace simple_plotting.runtime {
 			if (value > 255)
 				value = 255;
 		}
-		
-		static Task SaveBitmapTask(Bitmap bmp, string path) 
+
+		static Task SaveBitmapTask(Bitmap bmp, string path)
 			=> Task.Run(() => bmp.Save(path, ImageFormat.Png));
 
 		static Rectangle GetNewRect(ref Bitmap bmp) => new(0, 0, bmp.Width, bmp.Height);
@@ -193,8 +195,10 @@ namespace simple_plotting.runtime {
 #region PLUMBING
 
 		public BitmapParser(ref string[] imgPaths) {
-			_paths   = imgPaths;
-			_bitmaps = new Bitmap[imgPaths.Length];
+			_paths      = imgPaths;
+			_bitmaps    = new Bitmap[imgPaths.Length];
+			_parallelism = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
+
 
 			for (var i = 0; i < imgPaths.Length; i++) {
 				if (!File.Exists(imgPaths[i]))
@@ -205,8 +209,9 @@ namespace simple_plotting.runtime {
 			}
 		}
 
-		Bitmap[]          _bitmaps;
-		readonly string[] _paths;
+		Bitmap[]                 _bitmaps;
+		readonly ParallelOptions _parallelism;
+		readonly string[]        _paths;
 
 #endregion
 	}

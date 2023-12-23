@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v7.0": {
-      "simple-plotting/1.0.32": {
+      "simple-plotting/1.1.17": {
         "dependencies": {
           "CsvHelper": "30.0.1",
           "Microsoft.Tpl.Dataflow": "4.5.24",
@@ -96,7 +96,7 @@
     }
   },
   "libraries": {
-    "simple-plotting/1.0.32": {
+    "simple-plotting/1.1.17": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
