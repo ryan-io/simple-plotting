@@ -185,9 +185,7 @@ public partial class PlotBuilderFluent {
 	public IPlotBuilderFluentConfiguration GotoConfiguration() => this;
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentOfType Reset(IReadOnlyList<PlotChannel> data) {
-		return StartNewPlot(data);
-	}
+	public IPlotBuilderFluentOfType Reset(IReadOnlyList<PlotChannel> data) => StartNewPlot(data);
 
 	/// <inheritdoc />
 	public PlotSizeContainer GetPlotSizeContainer(PlotSize size) => PlotSizeMapper.Map(size);

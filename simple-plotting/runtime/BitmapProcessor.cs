@@ -199,7 +199,6 @@ namespace simple_plotting.runtime {
 			_bitmaps    = new Bitmap[imgPaths.Length];
 			_parallelism = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
 
-
 			for (var i = 0; i < imgPaths.Length; i++) {
 				if (!File.Exists(imgPaths[i]))
 					throw new FileNotFoundException(Message.EXCEPTION_FILE_NOT_FOUND + " " + imgPaths[i]);
