@@ -17,11 +17,11 @@ public partial class PlotBuilderFluent : IPlotBuilderFluentCanvas {
 	BitmapParser? BitmapParser { get; set; }
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentCanvas AddText(string text, int plotIndex, double xPosition, double yPosition) {
+	public IPlotBuilderFluentCanvas AddText(string text, int plotIndex, double xPosition, double yPosition, Color? color = null) {
 		if (_plots == null || plotIndex >= _plots.Length)
 			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
 		
-		_plots[plotIndex].AddText(text, xPosition, yPosition);
+		_plots[plotIndex].AddText(text, xPosition, yPosition, color: color);
 		return this;
 	}
 

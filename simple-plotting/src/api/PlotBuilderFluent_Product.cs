@@ -6,12 +6,12 @@ using ScottPlot.Plottable;
 namespace simple_plotting;
 
 public partial class PlotBuilderFluent {
-	/// <inheritdoc />
+	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlots" />
 	public IEnumerable<Plot> GetPlots() {
 		return _plots ?? throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
 	}
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlots" />
 	public ref Plot GetPlotRef(int index) {
 		if (_plots == null) 
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
@@ -22,11 +22,11 @@ public partial class PlotBuilderFluent {
 		return ref _plots[index];
 	}
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlots" />
 	public IReadOnlyList<PlotChannel> GetPlotChannels() 
 		=> _data ?? throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlots" />
 	public Plot GetPlot(int plotIndex) {
 		if (_plots == null)
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
@@ -35,7 +35,7 @@ public partial class PlotBuilderFluent {
 		return _plots[plotIndex];
 	}
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlots" />
 	public IEnumerable<string> GetScatterPlottableLabels(int plotIndex) {
 		List<string> output = new();
 		_cachedSignalPlottables.Clear();
@@ -48,7 +48,7 @@ public partial class PlotBuilderFluent {
 		return output;
 	}
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlots" />
 	public IEnumerable<string> GetSignalPlottableLabels(int plotIndex) {
 		var output = new List<string>();
 		_cachedSignalPlottables.Clear();
