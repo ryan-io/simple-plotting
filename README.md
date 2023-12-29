@@ -336,10 +336,11 @@ async Task<int> GeneratePlots() {
 ```csharp
 async Task ModifyImages() {  
 	// get location of the image you want to annotate/process
-    var path  = @"C:\Users\stane\Pictures\FWG_3440x1440.jpg";
-
+    var path  = @"C:\my-folder\";
+	var file = path + "\my-pic.my-ext";
+	
 	// define a path array; include as many image paths as you want
-    var paths = new[] { path };  
+    var paths = new[] { file };  
 
 	// instantiate a new instance of the BitmapParser
 	// the default constructor takes a reference to an allocated array of strings
@@ -362,7 +363,7 @@ async Task ModifyImages() {
                                  blue  += 20;  
                               });  
 	// Save the processed bitmaps
-    await parser.SaveBitmapsAsync(@"C:\Users\stane\Pictures\");  
+    await parser.SaveBitmapsAsync(path);  
 	
 	// this example manually invokes Dipose
 	// a 'using' statement is also appropriate
@@ -424,8 +425,8 @@ Distributed under the MIT License.
 <!-- ACKNOWLEDGMENTS -->
 # Acknowledgments and Credit
 
-* [Stephen Cleary's Blog](https://blog.stephencleary.com/)
-	* In particular, his blog on [Async Events in OOP](https://blog.stephencleary.com/2013/02/async-oop-5-events.html) provided me with inspiration for this.
+* Scott over at [ScottPlot](https://scottplot.net/) for his library.
+* [Turgay](https://csharpexamples.com/author/turgay/) for fast image processing
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
