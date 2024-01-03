@@ -17,11 +17,12 @@ public partial class PlotBuilderFluent : IPlotBuilderFluentCanvas {
 	BitmapParser? BitmapParser { get; set; }
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentCanvas AddText(string text, int plotIndex, double xPosition, double yPosition, Color? color = null) {
+	public IPlotBuilderFluentCanvas AddText(string text, int plotIndex, double xPosition, double yPosition, Color? 
+            color = null, float fontSize = 12f) {
 		if (_plots == null || plotIndex >= _plots.Length)
 			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
 		
-		_plots[plotIndex].AddText(text, xPosition, yPosition, color: color);
+		_plots[plotIndex].AddText(text, xPosition, yPosition, color: color, size: fontSize);
 		return this;
 	}
 
@@ -43,4 +44,13 @@ public partial class PlotBuilderFluent : IPlotBuilderFluentCanvas {
 
 	/// <inheritdoc cref="IPlotBuilderFluentCanvasConfiguration"/>
 	public IPlotBuilderFluentCanvasReadyToProduce FinalizeCanvasConfiguration() => this;
+
+	/// <inheritdoc />
+	public IPlotBuilderFluentCanvas SetSourcePath(string path) {
+		if (string.IsNullOrWhiteSpace(path))
+			throw new NullReferenceException(Message.EXCEPTION_INVALID_SOURCE);
+
+		SourcePath = path;
+		return this;
+	}
 }

@@ -1,3 +1,4 @@
+using System.Drawing;
 using simple_plotting.runtime;
 
 namespace simple_plotting;
@@ -37,9 +38,45 @@ public partial class PlotBuilderFluent {
 			return new CanvasSaveStatus(false, Enumerable.Empty<string>());
 		}
 	}
-	
+
 	/// <inheritdoc />
-	async Task<CanvasSaveStatus> IPlotBuilderFluentCanvasProduct.TrySaveAtSourceAsync(
+	public  CanvasSaveStatus TrySaveAtSource(string name, bool disposeOnSuccess) {
+		if (string.IsNullOrWhiteSpace(name))
+			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
+
+		if (string.IsNullOrWhiteSpace(SourcePath))
+			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
+		
+		if (_plots == null)
+			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
+		
+		ValidateCancellationTokenSource(true);
+
+		try {
+			List<string> paths       = new();
+			var          plotTracker = 1;
+
+			foreach (var plot in _plots) {
+				var path = plot.SaveFig($@"{SourcePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
+
+				if (!string.IsNullOrWhiteSpace(path))
+					paths.Add(path);
+
+				plotTracker++;
+			}
+
+			if (disposeOnSuccess && BitmapParser != null) 
+				BitmapParser.Dispose();
+			
+			return new CanvasSaveStatus(true, paths);
+		}
+		catch (Exception e) {
+			return new CanvasSaveStatus(false, Enumerable.Empty<string>());
+		}
+	}
+
+	/// <inheritdoc />
+	async Task<CanvasSaveStatus> IPlotBuilderFluentCanvasProduct.TrySaveAtBmpParserAsync(
 		string name, bool disposeOnSuccess) {
 		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);

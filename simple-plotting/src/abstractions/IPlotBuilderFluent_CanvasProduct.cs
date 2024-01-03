@@ -26,6 +26,17 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
 	Task<CanvasSaveStatus> TrySaveAsync(string savePath, string name , bool disposeOnSuccess);
+	
+	/// <summary>
+	///  Attempts to save the plot to the specified source path path.
+	/// *** NOTE: SetSource MUST be invoked for this method invocation to be successful. ***
+	///  This will throw an <see cref="Exception"/> if the save fails.
+	/// </summary>
+	/// <param name="name">Name of each plot</param>
+	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
+	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
+	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
+	CanvasSaveStatus TrySaveAtSource(string name , bool disposeOnSuccess);
 
 	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
@@ -35,7 +46,7 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<CanvasSaveStatus> TrySaveAtSourceAsync(string name, bool disposeOnSuccess);
+	Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string name, bool disposeOnSuccess);
 	
 		/// <summary>
 	///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.

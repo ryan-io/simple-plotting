@@ -27,8 +27,9 @@ public interface IPlotBuilderFluentCanvasConfigurationMinimal {
 	/// <param name="xPosition">The x-coordinate at which to place the text.</param>
 	/// <param name="yPosition">The y-coordinate at which to place the text.</param>
 	/// <param name="color">Color of the annotation</param>
+	/// <param name="fontSize">Size of the annotation text</param>
 	/// <returns>Returns the current <see cref="IPlotBuilderFluentCanvas"/> instance to allow for method chaining.</returns>
-	IPlotBuilderFluentCanvas AddText(string text, int plotIndex, double xPosition, double yPosition, Color? color = null);
+	IPlotBuilderFluentCanvas AddText(string text, int plotIndex, double xPosition, double yPosition, Color? color = null, float fontSize = 12f);
 		
 	/// <summary>
 	/// Adds an image to the plot at the specified x and y coordinates.
