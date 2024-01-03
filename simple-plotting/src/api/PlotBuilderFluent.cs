@@ -106,15 +106,26 @@ namespace simple_plotting {
 			bool lockAxis = false)
 			=> new PlotBuilderFluent(ref images, ref plotInitializer, lockAxis);
 
+		/// <summary>
+		/// Starts a new canvas for plotting.
+		/// </summary>
+		/// <param name="plotInitializer">A reference to a <see cref="HashSet{Plot}"/> object for storing initialized plots.</param>
+		/// <param name="lockAxis">A boolean value indicating whether to lock the axis. Default is false.</param>
+		/// <param name="images">An array of <see cref="Bitmap"/> objects to be used as background images.</param>
+		/// <returns>A new instance of <see cref="IPlotBuilderFluentCanvas"/>.</returns>
+		public static IPlotBuilderFluentCanvas StartNewCanvas(
+			ref HashSet<Plot> plotInitializer,
+			bool lockAxis = false, 	
+			params Bitmap[] images)
+			=> new PlotBuilderFluent(ref images, ref plotInitializer, lockAxis);
+
 		///	<inheritdoc />
 		public Type? PlotType { get; private set; }
 
 		/// <summary>
 		///  Dispose of the cancellation token source. This should be invoked on application exit or stop.
 		/// </summary>
-		public void Dispose() {
-			ValidateCancellationTokenSource();
-		}
+		public void Dispose() => ValidateCancellationTokenSource();
 
 		/// <summary>
 		///  Helper method to set the initial state of the plot. This is called in the constructor.
@@ -189,7 +200,7 @@ namespace simple_plotting {
 			}
 
 			PlotCount = numOfPlots;
-			_type     = InternalType.PLOT;
+			//_type     = InternalType.PLOT;
 		}
 
 		/// <summary>
@@ -216,7 +227,7 @@ namespace simple_plotting {
 			}
 
 			PlotCount = plotInitializer.Count;
-			_type     = InternalType.PLOT;
+			//_type     = InternalType.PLOT;
 		}
 
 		/// <summary>
@@ -246,7 +257,7 @@ namespace simple_plotting {
 				i++;
 			}
 
-			_type = InternalType.CANVAS;
+			//_type = InternalType.CANVAS;
 		}
 
 		/// <summary>
@@ -282,7 +293,7 @@ namespace simple_plotting {
 			}
 
 			PlotCount = plotInitializer.Count;
-			_type     = InternalType.CANVAS;
+			//_type     = InternalType.CANVAS;
 		}
 
 		void AddImgToCanvas(bool lockAxis, int i, Bitmap img) {
@@ -306,10 +317,9 @@ namespace simple_plotting {
 		HashSet<SignalPlotXYConst<double, double>> _cachedSignalPlottables = new();
 		bool                                       _plotWasProduced;
 
-		readonly Plot[]?                     _plots;
+		readonly Plot[]                     _plots;
 		readonly IReadOnlyList<PlotChannel>? _data;
 		readonly HashSet<IPlottable>         _returnPlottables = new();
-		readonly byte                        _type;
 	}
 
 	internal static class InternalType {

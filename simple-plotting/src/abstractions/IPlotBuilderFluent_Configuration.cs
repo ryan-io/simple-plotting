@@ -161,7 +161,7 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="orientation">The orientation of the legend elements. Could be horizontal or vertical.</param>
 	/// <returns>IPlotBuilderFluentConfiguration: A reference to this instance after the operation completed.</returns>
 	IPlotBuilderFluentConfiguration ShowLegend(PlotAlignment alignment, Orientation orientation);
-	
+
 	/// <summary>
 	/// Configures to show the plot legend outside at the top right corner of the plot.
 	/// </summary>

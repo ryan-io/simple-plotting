@@ -25,8 +25,8 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<CanvasSaveStatus> TrySaveAsync(string savePath, string name , bool disposeOnSuccess);
-	
+	Task<CanvasSaveStatus> TrySaveAsync(string savePath, string name, bool disposeOnSuccess);
+
 	/// <summary>
 	///  Attempts to save the plot to the specified source path path.
 	/// *** NOTE: SetSource MUST be invoked for this method invocation to be successful. ***
@@ -36,7 +36,7 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	CanvasSaveStatus TrySaveAtSource(string name , bool disposeOnSuccess);
+	CanvasSaveStatus TrySaveAtSource(string name, bool disposeOnSuccess);
 
 	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
@@ -47,11 +47,11 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
 	Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string name, bool disposeOnSuccess);
-	
-		/// <summary>
+
+	/// <summary>
 	///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.
 	/// </summary>
-	 IEnumerable<Plot> GetPlots();
+	IEnumerable<Plot> GetPlots();
 
 	/// <summary>
 	/// Retrieves a reference to the <see cref="Plot"/> object located at the specified index in the internal plots array.
@@ -61,29 +61,29 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <returns>A reference to the <see cref="Plot"/> object found at the specified index in the plots array.</returns>
 	ref Plot GetPlotRef(int index);
 
-    /// <summary>
-    /// Gets a readonly collection of type PlotChannels
-    /// A call to this method should only be made once plots have been generated
-    /// </summary>
-    /// <returns></returns>
-     IReadOnlyList<PlotChannel> GetPlotChannels ();
+	/// <summary>
+	/// Gets a readonly collection of type PlotChannels
+	/// A call to this method should only be made once plots have been generated
+	/// </summary>
+	/// <returns></returns>
+	IReadOnlyList<PlotChannel> GetPlotChannels();
 
-    /// <summary>
-    ///  The generated plots. Queries the plot collection and returns the plot at the specified index.
-    /// </summary>
-     Plot GetPlot(int plotIndex);
+	/// <summary>
+	///  The generated plots. Queries the plot collection and returns the plot at the specified index.
+	/// </summary>
+	Plot GetPlot(int plotIndex);
 
 	/// <summary>
 	///  Extracts actual channel names from the plots. 
 	/// </summary>
 	/// <returns>Enumerable of strings containing names extracted from plots</returns>
-	 IEnumerable<string> GetScatterPlottableLabels(int plotIndex);
+	IEnumerable<string> GetScatterPlottableLabels(int plotIndex);
 
 	/// <summary>
 	///  Extracts actual channel names from the plots. 
 	/// </summary>
 	/// <returns>Enumerable of strings containing names extracted from plots</returns>
-	 IEnumerable<string> GetSignalPlottableLabels(int plotIndex);
+	IEnumerable<string> GetSignalPlottableLabels(int plotIndex);
 
 	/// <summary>
 	///  Helper method that returns an enumerable of an enumerable of type T
@@ -92,5 +92,5 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// </summary>
 	/// <typeparam name="T">Class that implements IPlottable</typeparam>
 	/// <returns>HashSet of enumerables containing the plottables as type T</returns>
-	 HashSet<IPlottable> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable;
+	HashSet<IPlottable> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable;
 }

@@ -63,14 +63,14 @@ public interface IPlotBuilderFluentPostProcess {
 	/// </summary>
 	IPlotBuilderFluentPostProcess RefreshRenderers();
 
-    /// <summary>
-    ///  Generically sets labels defined in plottableIndices for ALL plots.
-    /// </summary>
-    /// <param name="newLabel">New label</param>
-    /// <param name="plottableIndices">Array of label indices to change</param>
-    /// <returns>Fluent builder</returns>
-    /// <exception cref="NullReferenceException">Thrown if newLabel is null or whitespace</exception>
-    IPlotBuilderFluentPostProcess TrySetLabel (string newLabel, params int[] plottableIndices);
+	/// <summary>
+	///  Generically sets labels defined in plottableIndices for ALL plots.
+	/// </summary>
+	/// <param name="newLabel">New label</param>
+	/// <param name="plottableIndices">Array of label indices to change</param>
+	/// <returns>Fluent builder</returns>
+	/// <exception cref="NullReferenceException">Thrown if newLabel is null or whitespace</exception>
+	IPlotBuilderFluentPostProcess TrySetLabel(string newLabel, params int[] plottableIndices);
 
 	/// <summary>
 	///  Generically sets labels defined in plottableIndices for ALL plots.
@@ -78,5 +78,5 @@ public interface IPlotBuilderFluentPostProcess {
 	/// <param name="newLabel">New label</param>
 	/// <returns>Fluent builder</returns>
 	/// <exception cref="NullReferenceException">Thrown if newLabel is null or whitespace</exception>
-	public IPlotBuilderFluentPostProcess TrySetLabelAll (string newLabel);
+	public IPlotBuilderFluentPostProcess TrySetLabelAll(string newLabel);
 }

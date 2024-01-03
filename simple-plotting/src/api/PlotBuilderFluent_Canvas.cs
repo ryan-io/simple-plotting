@@ -1,6 +1,5 @@
 using System.Drawing;
 using ScottPlot;
-using simple_plotting.runtime;
 
 namespace simple_plotting;
 

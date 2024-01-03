@@ -1,7 +1,8 @@
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
-namespace simple_plotting.runtime {
+namespace simple_plotting {
 	public class BitmapParser : IDisposable {
 		/// <summary>
 		/// A delegate type for manipulating the RGB values of a particular pixel in a bitmap.
@@ -44,6 +45,60 @@ namespace simple_plotting.runtime {
 				throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
 
 			return ref _bitmaps[bitmapIndex];
+		}
+
+		/// <summary>
+		/// Returns a new scaled Bitmap based on the specified bitmap index, scale and criteria.
+		/// </summary>
+		/// <param name="bitmapIndex">The index of the bitmap.</param>
+		/// <param name="scale">The scale factor.</param>
+		/// <param name="criteria">The criteria for resizing.</param>
+		/// <returns>A new scaled Bitmap.</returns>
+		/// <exception cref="IndexOutOfRangeException">Thrown if the bitmap index is less than zero.</exception>
+		/// Reference -> //https://stackoverflow.com/questions/1922040/how-to-resize-an-image-c-sharp
+		public Bitmap GetNewScaledBitmap(int bitmapIndex, float scale, BitmapResizeCriteria criteria) {
+			if (bitmapIndex < 0)
+				throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_LESS_THAN_ZERO);
+
+			ref var bmp = ref GetBitmap(bitmapIndex);
+			
+			return GetNewScaledBitmap(ref bmp, scale, criteria);
+		}
+
+		/// <summary>
+		/// Scales the given bitmap to a new size based on the specified scale and resizing criteria.
+		/// </summary>
+		/// <param name="bmp">The original bitmap to be scaled.</param>
+		/// <param name="scale">The scaling factor. Must be a positive value.</param>
+		/// <param name="criteria">The criteria used for resizing. Determines the quality of the resized image.</param>
+		/// <returns>
+		/// The new scaled bitmap with the specified size and quality settings.
+		/// </returns>
+		/// Reference -> https://stackoverflow.com/questions/1922040/how-to-resize-an-image-c-sharp
+		public Bitmap GetNewScaledBitmap(ref Bitmap bmp, float scale, BitmapResizeCriteria criteria) {
+			scale = MathF.Abs(scale);
+			var scaledWidth  = (int)(bmp.Width  * scale);
+			var scaledHeight = (int)(bmp.Height * scale);
+
+			var scaledBmp  = new Bitmap(scaledWidth, scaledHeight);
+			var scaledRect = GetNewRect(ref scaledBmp);
+			scaledBmp.SetResolution(bmp.HorizontalResolution, bmp.VerticalResolution);
+
+			using var graphics = Graphics.FromImage(scaledBmp);
+			
+			graphics.CompositingMode    = criteria.CompositingMode;
+			graphics.CompositingQuality = criteria.CompositingQuality;
+			graphics.InterpolationMode  = criteria.InterpolationMode;
+			graphics.SmoothingMode      = criteria.SmoothingMode;
+			graphics.PixelOffsetMode    = criteria.PixelOffsetMode;
+
+			using var wrap = new ImageAttributes();
+			
+			wrap.SetWrapMode(WrapMode.TileFlipXY);
+			graphics.DrawImage(bmp, scaledRect, 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel,
+				wrap);
+
+			return scaledBmp;
 		}
 
 		/// <summary>
@@ -195,8 +250,8 @@ namespace simple_plotting.runtime {
 #region PLUMBING
 
 		public BitmapParser(ref string[] imgPaths) {
-			_paths      = imgPaths;
-			_bitmaps    = new Bitmap[imgPaths.Length];
+			_paths       = imgPaths;
+			_bitmaps     = new Bitmap[imgPaths.Length];
 			_parallelism = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
 
 			for (var i = 0; i < imgPaths.Length; i++) {
