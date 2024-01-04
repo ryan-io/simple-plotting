@@ -103,4 +103,12 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <exception cref="Exception">Thrown when the canvas plot at the specified index does not exist or when the bitmap parser is null.</exception>
 	/// <returns>The <see cref="IPlotBuilderFluentCanvasProduct"/> instance for chaining.</returns>
 	IPlotBuilderFluentCanvasProduct ResizeCanvasImage(int plotIndex, float scale, BitmapResizeCriteria criteria);
+
+	/// <summary>
+	/// Resizes all canvas images.
+	/// </summary>
+	/// <param name="scale">The scaling factor for the image.</param>
+	/// <param name="criteria">The criteria used for resizing the image.</param>
+	/// <returns>The updated plot builder fluent canvas product.</returns>
+	IPlotBuilderFluentCanvasProduct ResizeAllCanvasImage(float scale, BitmapResizeCriteria criteria);
 }

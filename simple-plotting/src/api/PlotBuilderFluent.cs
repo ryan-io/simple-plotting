@@ -331,8 +331,8 @@ namespace simple_plotting {
 		readonly HashSet<IPlottable>         _returnPlottables = new();
 	}
 
-	internal static class InternalType {
-		public const byte PLOT   = 1 << 0;
-		public const byte CANVAS = 1 << 1;
-	}
+	// internal static class InternalType {
+	// 	public const byte PLOT   = 1 << 0;
+	// 	public const byte CANVAS = 1 << 1;
+	// }
 }
