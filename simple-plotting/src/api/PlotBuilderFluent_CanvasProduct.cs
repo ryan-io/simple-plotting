@@ -16,9 +16,12 @@ public partial class PlotBuilderFluent {
 			throw new Exception(Message.EXCEPTION_NO_BITMAP_PARSER);
 		
 		var resizedImg = BitmapParser.GetNewScaledBitmap(plotIndex, scale, criteria);
-		var plot       = _plots[plotIndex];
 		
-		plot.Remove(_imageMap[plotIndex]);
+		var mappedImg       = _imageMap[plotIndex];
+		mappedImg.Bitmap.Dispose();
+		
+		_plots[plotIndex].Remove(mappedImg);
+		
 		AddImgToCanvas(true, plotIndex, resizedImg);
 
 		return this;

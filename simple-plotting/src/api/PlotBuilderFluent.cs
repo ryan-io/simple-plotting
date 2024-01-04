@@ -115,7 +115,7 @@ namespace simple_plotting {
 		/// <returns>A new instance of <see cref="IPlotBuilderFluentCanvas"/>.</returns>
 		public static IPlotBuilderFluentCanvas StartNewCanvas(
 			ref HashSet<Plot> plotInitializer,
-			bool lockAxis = false, 	
+			bool lockAxis = false,
 			params Bitmap[] images)
 			=> new PlotBuilderFluent(ref images, ref plotInitializer, lockAxis);
 
@@ -123,9 +123,16 @@ namespace simple_plotting {
 		public Type? PlotType { get; private set; }
 
 		/// <summary>
-		///  Dispose of the cancellation token source. This should be invoked on application exit or stop.
+		/// Disposes resources used by the object.
 		/// </summary>
-		public void Dispose() => ValidateCancellationTokenSource();
+		public void Dispose() {
+			ValidateCancellationTokenSource();
+
+			foreach (var bmp in _imageMap.Values)
+				bmp.Bitmap.Dispose();
+			
+			BitmapParser?.Dispose();
+		}
 
 		/// <summary>
 		///  Helper method to set the initial state of the plot. This is called in the constructor.
@@ -319,7 +326,7 @@ namespace simple_plotting {
 		HashSet<SignalPlotXYConst<double, double>> _cachedSignalPlottables = new();
 		bool                                       _plotWasProduced;
 
-		readonly Plot[]                     _plots;
+		readonly Plot[]                      _plots;
 		readonly IReadOnlyList<PlotChannel>? _data;
 		readonly HashSet<IPlottable>         _returnPlottables = new();
 	}
