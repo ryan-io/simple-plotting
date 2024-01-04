@@ -3,6 +3,9 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
 namespace simple_plotting {
+	/// <summary>
+	/// Parses and manipulates bitmap images.
+	/// </summary>
 	public class BitmapParser : IDisposable {
 		/// <summary>
 		/// A delegate type for manipulating the RGB values of a particular pixel in a bitmap.
@@ -61,7 +64,7 @@ namespace simple_plotting {
 				throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_LESS_THAN_ZERO);
 
 			ref var bmp = ref GetBitmap(bitmapIndex);
-			
+
 			return GetNewScaledBitmap(ref bmp, scale, criteria);
 		}
 
@@ -75,7 +78,7 @@ namespace simple_plotting {
 		/// The new scaled bitmap with the specified size and quality settings.
 		/// </returns>
 		/// Reference -> https://stackoverflow.com/questions/1922040/how-to-resize-an-image-c-sharp
-		public Bitmap GetNewScaledBitmap(ref Bitmap bmp, float scale, BitmapResizeCriteria criteria) {
+		public static Bitmap GetNewScaledBitmap(ref Bitmap bmp, float scale, BitmapResizeCriteria criteria) {
 			scale = MathF.Abs(scale);
 			var scaledWidth  = (int)(bmp.Width  * scale);
 			var scaledHeight = (int)(bmp.Height * scale);
@@ -85,7 +88,7 @@ namespace simple_plotting {
 			scaledBmp.SetResolution(bmp.HorizontalResolution, bmp.VerticalResolution);
 
 			using var graphics = Graphics.FromImage(scaledBmp);
-			
+
 			graphics.CompositingMode    = criteria.CompositingMode;
 			graphics.CompositingQuality = criteria.CompositingQuality;
 			graphics.InterpolationMode  = criteria.InterpolationMode;
@@ -93,10 +96,9 @@ namespace simple_plotting {
 			graphics.PixelOffsetMode    = criteria.PixelOffsetMode;
 
 			using var wrap = new ImageAttributes();
-			
+
 			wrap.SetWrapMode(WrapMode.TileFlipXY);
-			graphics.DrawImage(bmp, scaledRect, 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel,
-				wrap);
+			graphics.DrawImage(bmp, scaledRect, 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, wrap);
 
 			return scaledBmp;
 		}
@@ -218,7 +220,7 @@ namespace simple_plotting {
 			for (var i = 0; i < count; i++) {
 				var sanitizedPath = GetSanitizedPath(ref path);
 				output.Add(sanitizedPath);
-				tasks[i] = SaveBitmapTask(_bitmaps[i], sanitizedPath);
+				tasks[i] = SaveImageTask(_bitmaps[i], sanitizedPath);
 			}
 
 			await Task.WhenAll(tasks);
@@ -229,11 +231,25 @@ namespace simple_plotting {
 			return output;
 		}
 
+		/// <summary>
+		/// Gets a sanitized path by combining the given path with the filename without extension of the path at index 0, and appends "_bmpParsed.png" extension to it.
+		/// </summary>
+		/// <param name="path">The path to be sanitized. This parameter is passed by reference and will be modified to the sanitized path.</param>
+		/// <returns>The sanitized path.</returns>
 		string GetSanitizedPath(ref string path) {
 			var newPath = Path.Combine(path, Path.GetFileNameWithoutExtension(GetPath(0)) + "_bmpParsed.png");
 			return newPath;
 		}
 
+		/// <summary>
+		/// Guards the RGB value to ensure it is within the valid range.
+		/// </summary>
+		/// <remarks>
+		/// If the <paramref name="value"/> is less than 0, it will be set to 0.
+		/// If the <paramref name="value"/> is greater than 255, it will be set to 255.
+		/// </remarks>
+		/// <param name="value">The RGB value to be guarded.</param>
+		/// <returns>None.</returns>
 		static void GuardRgbValue(ref int value) {
 			if (value < 0)
 				value = 0;
@@ -242,13 +258,25 @@ namespace simple_plotting {
 				value = 255;
 		}
 
-		static Task SaveBitmapTask(Bitmap bmp, string path)
-			=> Task.Run(() => bmp.Save(path, ImageFormat.Png));
+		/// <summary>
+		/// Saves an image to the specified path asynchronously.
+		/// </summary>
+		/// <param name="bmp">The image to be saved.</param>
+		/// <param name="path">The path where the image will be saved.</param>
+		/// <returns>A task that represents the asynchronous operation.</returns>
+		static Task SaveImageTask(Image bmp, string path) => Task.Run(() => bmp.Save(path, ImageFormat.Png));
 
+		/// <summary>
+		/// Creates a new <see cref="Rectangle"/> object with the specified dimensions based on the provided <see cref="Bitmap"/>.
+		/// </summary>
+		/// <param name="bmp">The <see cref="Bitmap"/> used to determine the width and height of the rectangle.</param>
+		/// <returns>A new <see cref="Rectangle"/> object with the specified dimensions.</returns>
 		static Rectangle GetNewRect(ref Bitmap bmp) => new(0, 0, bmp.Width, bmp.Height);
 
 #region PLUMBING
 
+		/// Represents a bitmap parser used to load and parse a collection of image paths.
+		/// /
 		public BitmapParser(ref string[] imgPaths) {
 			_paths       = imgPaths;
 			_bitmaps     = new Bitmap[imgPaths.Length];

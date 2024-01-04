@@ -301,7 +301,7 @@ namespace simple_plotting {
 				throw new Exception(Message.EXCEPTION_PLOT_IS_NULL);
 
 			_plots[i].Frameless();
-			_plots[i].AddImage(img, 0, 0, anchor: Alignment.MiddleCenter);
+			var plotImg = _plots[i].AddImage(img, 0, 0, anchor: Alignment.MiddleCenter);
 			_plots[i].Width  = img.Width;
 			_plots[i].Height = img.Height;
 			_plots[i].Frameless();
@@ -312,6 +312,8 @@ namespace simple_plotting {
 				_plots[i].XAxis.LockLimits();
 				_plots[i].YAxis.LockLimits();
 			}
+
+			_imageMap[i] = plotImg;
 		}
 
 		HashSet<SignalPlotXYConst<double, double>> _cachedSignalPlottables = new();

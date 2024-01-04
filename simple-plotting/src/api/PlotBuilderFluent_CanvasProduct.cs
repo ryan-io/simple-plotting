@@ -1,6 +1,3 @@
-using System.Drawing;
-using simple_plotting.runtime;
-
 namespace simple_plotting;
 
 /// <summary>
@@ -9,6 +6,23 @@ namespace simple_plotting;
 public partial class PlotBuilderFluent {
 	/// <inheritdoc />
 	IPlotBuilderFluentCanvasConfigurationMinimal IPlotBuilderFluentCanvasProduct.GotoConfiguration() => this;
+
+	/// <inheritdoc />
+	public IPlotBuilderFluentCanvasProduct ResizeCanvasImage(int plotIndex, float scale, BitmapResizeCriteria criteria) {
+		if (!_imageMap.ContainsKey(plotIndex))
+			throw new Exception(Message.EXCEPTION_DOES_NOT_CONTAIN_CANVAS_INDEX);
+
+		if (BitmapParser == null)
+			throw new Exception(Message.EXCEPTION_NO_BITMAP_PARSER);
+		
+		var resizedImg = BitmapParser.GetNewScaledBitmap(plotIndex, scale, criteria);
+		var plot       = _plots[plotIndex];
+		
+		plot.Remove(_imageMap[plotIndex]);
+		AddImgToCanvas(true, plotIndex, resizedImg);
+
+		return this;
+	}
 	
 	/// <inheritdoc />
 	async Task<CanvasSaveStatus> IPlotBuilderFluentCanvasProduct.TrySaveAsync(string savePath, string name, bool disposeOnSuccess) {
@@ -20,6 +34,7 @@ public partial class PlotBuilderFluent {
 		
 		if (_plots == null)
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
+		
 		
 		if (BitmapParser == null)
 			throw new NoBitmapParserException();

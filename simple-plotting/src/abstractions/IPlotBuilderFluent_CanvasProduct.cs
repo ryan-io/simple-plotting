@@ -93,4 +93,14 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <typeparam name="T">Class that implements IPlottable</typeparam>
 	/// <returns>HashSet of enumerables containing the plottables as type T</returns>
 	HashSet<IPlottable> GetPlottablesAs<T>(int plotIndex) where T : class, IPlottable;
+
+	/// <summary>
+	/// Resizes the canvas image at the specified plot index with the given scale and resize criteria.
+	/// </summary>
+	/// <param name="plotIndex">The index of the canvas plot.</param>
+	/// <param name="scale">The scale to resize the image by.</param>
+	/// <param name="criteria">The criteria for resizing the image.</param>
+	/// <exception cref="Exception">Thrown when the canvas plot at the specified index does not exist or when the bitmap parser is null.</exception>
+	/// <returns>The <see cref="IPlotBuilderFluentCanvasProduct"/> instance for chaining.</returns>
+	IPlotBuilderFluentCanvasProduct ResizeCanvasImage(int plotIndex, float scale, BitmapResizeCriteria criteria);
 }

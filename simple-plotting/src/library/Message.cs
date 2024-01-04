@@ -92,5 +92,7 @@
 			"Instance of BitmapParser has been disposed. No further actions can be taken. Please create a new parser.";
 		
 		public const string EXCEPTION_INDEX_LESS_THAN_ZERO = "Index cannot be less than zero.";
+		
+		public const string EXCEPTION_DOES_NOT_CONTAIN_CANVAS_INDEX = "Canvas does not contain the specified index.";
 	}
 }

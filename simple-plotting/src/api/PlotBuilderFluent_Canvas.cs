@@ -1,5 +1,6 @@
 using System.Drawing;
 using ScottPlot;
+using Image = ScottPlot.Plottable.Image;
 
 namespace simple_plotting;
 
@@ -30,7 +31,8 @@ public partial class PlotBuilderFluent : IPlotBuilderFluentCanvas {
 		if (_plots == null || plotIndex >= _plots.Length)
 			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
 		
-		_plots[plotIndex].AddImage(img, xPosition, yPosition);
+		var plotImg = _plots[plotIndex].AddImage(img, xPosition, yPosition);
+		_imageMap[plotIndex] = plotImg;
 		
 		return this;
 	}
@@ -52,4 +54,6 @@ public partial class PlotBuilderFluent : IPlotBuilderFluentCanvas {
 		SourcePath = path;
 		return this;
 	}
+	
+	readonly Dictionary<int, Image> _imageMap = new();
 }
