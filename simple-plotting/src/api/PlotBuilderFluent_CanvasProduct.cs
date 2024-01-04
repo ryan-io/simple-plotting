@@ -8,8 +8,7 @@ public partial class PlotBuilderFluent {
 	IPlotBuilderFluentCanvasConfigurationMinimal IPlotBuilderFluentCanvasProduct.GotoConfiguration() => this;
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentCanvasProduct
-		ResizeCanvasImage(int plotIndex, float scale, BitmapResizeCriteria criteria) {
+	public IPlotBuilderFluentCanvasProduct ResizeCanvasImage(int plotIndex, float scale, BitmapResizeCriteria criteria) {
 		if (!_imageMap.ContainsKey(plotIndex))
 			throw new Exception(Message.EXCEPTION_DOES_NOT_CONTAIN_CANVAS_INDEX);
 
@@ -22,9 +21,9 @@ public partial class PlotBuilderFluent {
 		mappedImg.Bitmap.Dispose();
 
 		_plots[plotIndex].Remove(mappedImg);
-
 		AddImgToCanvas(true, plotIndex, resizedImg);
-
+		BitmapParser.SetNewBitmap(plotIndex, resizedImg);
+		
 		return this;
 	}
 
@@ -33,9 +32,10 @@ public partial class PlotBuilderFluent {
 		if (BitmapParser == null)
 			throw new Exception(Message.EXCEPTION_NO_BITMAP_PARSER);
 
-		for (var i = 0; i < _plots.Length; i++) 
+		for (var i = 0; i < _plots.Length; i++) {
 			ResizeCanvasImage(i, scale, criteria);
-		
+		}
+
 		return this;
 	}
 

@@ -50,6 +50,18 @@ namespace simple_plotting {
 			return ref _bitmaps[bitmapIndex];
 		}
 
+		public void ScaleBitmapAndSetNew(int bitmapIndex, float scale, BitmapResizeCriteria criteria) {
+			var newBmp = GetNewScaledBitmap(bitmapIndex, scale, criteria);
+			
+			_bitmaps[bitmapIndex].Dispose();
+			_bitmaps[bitmapIndex] = newBmp;
+		}
+		
+		public void SetNewBitmap(int bitmapIndex, Bitmap newBmp) {
+			_bitmaps[bitmapIndex]?.Dispose();
+			_bitmaps[bitmapIndex] = newBmp;
+		}
+
 		/// <summary>
 		/// Returns a new scaled Bitmap based on the specified bitmap index, scale and criteria.
 		/// </summary>
