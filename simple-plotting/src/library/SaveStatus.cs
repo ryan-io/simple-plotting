@@ -28,6 +28,9 @@ public readonly struct PlotSaveStatus {
 	}
 }
 
+/// <summary>
+/// Represents the status of a save operation for a canvas.
+/// </summary>
 public readonly struct CanvasSaveStatus {
 	/// <summary>
 	/// Represents the status of the save operation. True represents a successful save, while false represents a failed save.
@@ -40,12 +43,19 @@ public readonly struct CanvasSaveStatus {
 	public IEnumerable<string> Paths { get; }
 
 	/// <summary>
+	/// If an exception was thrown, this optional property can be set with the error message.
+	/// </summary>
+	public string? ErrorMessage { get; }
+
+	/// <summary>
 	/// Represents the save status of a canvas.
 	/// </summary>
 	/// <param name="state">The state of the save status.</param>
 	/// <param name="paths">The paths of the saved canvases.</param>
-	public CanvasSaveStatus(bool state, IEnumerable<string> paths) {
-		State = state;
-		Paths = paths;
+	/// <param name="errorMessage">Optional error message (if exception thrown)</param>
+	public CanvasSaveStatus(bool state, IEnumerable<string> paths, string? errorMessage = default) {
+		State             = state;
+		Paths             = paths;
+		ErrorMessage = errorMessage;
 	}
 }

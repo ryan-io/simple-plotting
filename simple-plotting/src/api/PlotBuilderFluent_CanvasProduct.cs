@@ -1,3 +1,5 @@
+using ScottPlot.Plottable;
+
 namespace simple_plotting;
 
 /// <summary>
@@ -8,7 +10,8 @@ public partial class PlotBuilderFluent {
 	IPlotBuilderFluentCanvasConfigurationMinimal IPlotBuilderFluentCanvasProduct.GotoConfiguration() => this;
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentCanvasProduct ResizeCanvasImage(int plotIndex, float scale, BitmapResizeCriteria criteria) {
+	public IPlotBuilderFluentCanvasProduct
+		ResizeCanvasImage(int plotIndex, float scale, BitmapResizeCriteria criteria) {
 		if (!_imageMap.ContainsKey(plotIndex))
 			throw new Exception(Message.EXCEPTION_DOES_NOT_CONTAIN_CANVAS_INDEX);
 
@@ -23,7 +26,8 @@ public partial class PlotBuilderFluent {
 		_plots[plotIndex].Remove(mappedImg);
 		AddImgToCanvas(true, plotIndex, resizedImg);
 		BitmapParser.SetNewBitmap(plotIndex, resizedImg);
-		
+		RenderImagePlottablesBack(plotIndex);
+
 		return this;
 	}
 
@@ -51,10 +55,8 @@ public partial class PlotBuilderFluent {
 		if (_plots == null)
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
 
-
 		if (BitmapParser == null)
 			throw new NoBitmapParserException();
-
 
 		if (BitmapParser.IsDisposed)
 			return new CanvasSaveStatus(false, Enumerable.Empty<string>());
@@ -65,8 +67,8 @@ public partial class PlotBuilderFluent {
 			var paths = await BitmapParser.SaveBitmapsAsync(savePath, disposeOnSuccess);
 			return new CanvasSaveStatus(true, paths);
 		}
-		catch (Exception) {
-			return new CanvasSaveStatus(false, Enumerable.Empty<string>());
+		catch (Exception e) {
+			return new CanvasSaveStatus(false, Enumerable.Empty<string>(), e.Message);
 		}
 	}
 
@@ -102,7 +104,7 @@ public partial class PlotBuilderFluent {
 			return new CanvasSaveStatus(true, paths);
 		}
 		catch (Exception e) {
-			return new CanvasSaveStatus(false, Enumerable.Empty<string>());
+			return new CanvasSaveStatus(false, Enumerable.Empty<string>(), e.Message);
 		}
 	}
 
@@ -130,8 +132,22 @@ public partial class PlotBuilderFluent {
 			var paths = await BitmapParser.SaveBitmapsAsync(SourcePath, disposeOnSuccess);
 			return new CanvasSaveStatus(true, paths);
 		}
-		catch (Exception) {
-			return new CanvasSaveStatus(false, Enumerable.Empty<string>());
+		catch (Exception e) {
+			return new CanvasSaveStatus(false, Enumerable.Empty<string>(), e.Message);
 		}
+	}
+
+	/// <summary>
+	/// Renders specified image to the back of the plot.
+	/// </summary>
+	/// <param name="plotIndex">The index of the plot in which the image should be rendered.</param>
+	void RenderImagePlottablesBack(int plotIndex) {
+		var plottables = GetPlottablesAs<Image>(plotIndex);
+
+		if (!plottables.Any())
+			return;
+
+		foreach (var plottable in plottables)
+			_plots[plotIndex].MoveFirst(plottable);
 	}
 }
