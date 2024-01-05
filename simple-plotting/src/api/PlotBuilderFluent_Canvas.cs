@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Drawing;
 using ScottPlot;
 using Image = ScottPlot.Plottable.Image;
@@ -55,5 +56,5 @@ public partial class PlotBuilderFluent : IPlotBuilderFluentCanvas {
 		return this;
 	}
 	
-	readonly Dictionary<int, Image> _imageMap = new();
+	readonly ConcurrentDictionary<int, Image> _imageMap = new();
 }

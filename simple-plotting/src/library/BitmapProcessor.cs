@@ -50,15 +50,31 @@ namespace simple_plotting {
 			return ref _bitmaps[bitmapIndex];
 		}
 
+		/// <summary>
+		/// Scales the specified bitmap at the given index and replaces it with the new scaled bitmap.
+		/// </summary>
+		/// <param name="bitmapIndex">The index of the bitmap to be scaled.</param>
+		/// <param name="scale">The scale factor to be applied to the bitmap.</param>
+		/// <param name="criteria">The criteria to be used for resizing the bitmap.</param>
+		/// <remarks>
+		/// This method retrieves the specified bitmap at the given index, scales it according to the provided scale factor and criteria,
+		/// disposes the original bitmap, and replaces it with the new scaled bitmap.
+		/// </remarks>
 		public void ScaleBitmapAndSetNew(int bitmapIndex, float scale, BitmapResizeCriteria criteria) {
 			var newBmp = GetNewScaledBitmap(bitmapIndex, scale, criteria);
 			
 			_bitmaps[bitmapIndex].Dispose();
 			_bitmaps[bitmapIndex] = newBmp;
 		}
-		
+
+		/// <summary>
+		/// Sets a new bitmap at the specified index in the array of bitmaps.
+		/// If there is an existing bitmap at the specified index, it is disposed before setting the new bitmap.
+		/// </summary>
+		/// <param name="bitmapIndex">The index at which to set the new bitmap.</param>
+		/// <param name="newBmp">The new bitmap to set at the specified index.</param>
 		public void SetNewBitmap(int bitmapIndex, Bitmap newBmp) {
-			_bitmaps[bitmapIndex]?.Dispose();
+			_bitmaps[bitmapIndex].Dispose();
 			_bitmaps[bitmapIndex] = newBmp;
 		}
 
