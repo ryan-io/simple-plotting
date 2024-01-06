@@ -326,6 +326,7 @@ public interface IPlotBuilderFluentConfiguration : IPlotBuilderFluent {
 	/// <param name="bottom">Bottom padding</param>
 	/// <param name="padding">Additional padding</param>
 	/// <returns>Fluent builder</returns>
+	/// <returns>Fluent builder</returns>
 	IPlotBuilderFluentConfiguration SetLayout(
 		float? left = 50f
 		, float? right = 50f

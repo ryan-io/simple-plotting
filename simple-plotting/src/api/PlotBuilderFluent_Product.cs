@@ -13,9 +13,9 @@ public partial class PlotBuilderFluent {
 
 	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlots" />
 	public ref Plot GetPlotRef(int index) {
-		if (_plots == null) 
+		if (_plots == null)
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
-		
+
 		if (index > _plots.Length - 1)
 			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
 
@@ -23,14 +23,14 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlots" />
-	public IReadOnlyList<PlotChannel> GetPlotChannels() 
+	public IReadOnlyList<PlotChannel> GetPlotChannels()
 		=> _data ?? throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
 
 	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlots" />
 	public Plot GetPlot(int plotIndex) {
 		if (_plots == null)
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
-		
+
 		plotIndex.ValidateInRange(_plots);
 		return _plots[plotIndex];
 	}
@@ -42,7 +42,7 @@ public partial class PlotBuilderFluent {
 
 		GetPlottablesAs<ScatterPlot>(plotIndex).CastTo(ref _cachedSignalPlottables);
 
-		foreach (var plottable in _cachedSignalPlottables) 
+		foreach (var plottable in _cachedSignalPlottables)
 			output.Add(plottable.Label);
 
 		return output;
@@ -78,7 +78,7 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlottablesAsCache{T}" />
-	public void GetPlottablesAsCache<T>(int plotIndex, ref HashSet<T> cache) 
+	public void GetPlottablesAsCache<T>(int plotIndex, ref HashSet<T> cache)
 		where T : class, IPlottable {
 		if (_plots == null)
 			throw new ArgumentException(Message.EXCEPTION_PLOT_IS_NULL);
@@ -87,30 +87,34 @@ public partial class PlotBuilderFluent {
 			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
 
 		var plot = _plots[plotIndex];
-		
+
 		cache.Clear();
 		cache.AddRange(plot.GetPlottables().OfType<T>());
 	}
 
-	/// <inheritdoc />
-	public async Task<PlotSaveStatus> TrySaveAsync(string savePath, string name) {
+	/// <inheritdoc/>
+	public async Task<PlotSaveStatus> TrySaveAsync(string savePath, string name, CancellationToken? token = default) {
 		if (_plots == null)
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
-		
-		ValidateCancellationTokenSource(true);
-		CachedPlotPaths.Clear(); 
+
+		if (token == null) {
+			ValidateCancellationTokenSource(true);
+			token = CancellationTokenSource.Token;
+		}
+
+		CachedPlotPaths.Clear();
 
 		try {
-			await Task.Run(
-				() => {
-					var plotTracker = new IntSafe(1);
+			await Task.Run(() => {
+				               var plotTracker = new IntSafe(1);
 
-					foreach (var plot in _plots) {
-						var result = plot.SaveFig($@"{savePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
-						CachedPlotPaths.Add(result);
-						plotTracker++;
-					}
-				});
+				               foreach (var plot in _plots) {
+					               var result =
+						               plot.SaveFig($@"{savePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
+					               CachedPlotPaths.Add(result);
+					               plotTracker++;
+				               }
+			               }, token.Value);
 
 			return new PlotSaveStatus(true, CachedPlotPaths);
 		}
@@ -120,21 +124,26 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public async Task<PlotSaveStatus?> TrySaveAsyncAtSource(string name) {
+	public async Task<PlotSaveStatus?> TrySaveAsyncAtSource(string name, CancellationToken? token = default) {
 		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
 		if (string.IsNullOrWhiteSpace(SourcePath))
 			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
 
-		return await Task.Run(() => TrySaveAsync(SourcePath, name));
+		if (token == null) {
+			ValidateCancellationTokenSource(true);
+			token = CancellationTokenSource.Token;
+		}
+		
+		return await Task.Run(() => TrySaveAsync(SourcePath, name, token.Value), token.Value);
 	}
 
 	/// <inheritdoc />
 	public PlotSaveStatus TrySave(string savePath, string name) {
 		if (string.IsNullOrWhiteSpace(savePath) || string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
-		
+
 		if (_plots == null)
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
 

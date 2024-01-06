@@ -44,8 +44,7 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	async Task<CanvasSaveStatus> IPlotBuilderFluentCanvasProduct.TrySaveAsync(string savePath, string name,
-		bool disposeOnSuccess) {
+	public async Task<CanvasSaveStatus> TrySaveAsync(string savePath, string name, bool disposeOnSuccess, CancellationToken? token) {
 		if (string.IsNullOrWhiteSpace(savePath))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -61,10 +60,13 @@ public partial class PlotBuilderFluent {
 		if (BitmapParser.IsDisposed)
 			return new CanvasSaveStatus(false, Enumerable.Empty<string>());
 
-		ValidateCancellationTokenSource(true);
-
+		if (token == null) {
+			ValidateCancellationTokenSource(true);
+			token = CancellationTokenSource.Token;
+		}
+		
 		try {
-			var paths = await BitmapParser.SaveBitmapsAsync(savePath, disposeOnSuccess);
+			var paths = await BitmapParser.SaveBitmapsAsync(savePath, token.Value, disposeOnSuccess);
 			return new CanvasSaveStatus(true, paths);
 		}
 		catch (Exception e) {
@@ -82,8 +84,6 @@ public partial class PlotBuilderFluent {
 
 		if (_plots == null)
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
-
-		ValidateCancellationTokenSource(true);
 
 		try {
 			List<string> paths       = new();
@@ -109,8 +109,7 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	async Task<CanvasSaveStatus> IPlotBuilderFluentCanvasProduct.TrySaveAtBmpParserAsync(
-		string name, bool disposeOnSuccess) {
+	public async Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string name, bool disposeOnSuccess, CancellationToken? token) {
 		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -126,10 +125,13 @@ public partial class PlotBuilderFluent {
 		if (BitmapParser.IsDisposed)
 			return new CanvasSaveStatus(false, Enumerable.Empty<string>());
 
-		ValidateCancellationTokenSource(true);
+		if (token == null) {
+			ValidateCancellationTokenSource(true);
+			token = CancellationTokenSource.Token;
+		}
 
 		try {
-			var paths = await BitmapParser.SaveBitmapsAsync(SourcePath, disposeOnSuccess);
+			var paths = await BitmapParser.SaveBitmapsAsync(SourcePath, token.Value,disposeOnSuccess);
 			return new CanvasSaveStatus(true, paths);
 		}
 		catch (Exception e) {

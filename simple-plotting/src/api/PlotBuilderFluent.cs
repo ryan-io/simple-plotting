@@ -130,8 +130,14 @@ namespace simple_plotting {
 
 			foreach (var bmp in _imageMap.Values)
 				bmp.Bitmap.Dispose();
-			
+
 			BitmapParser?.Dispose();
+		}
+
+		/// <inheritdoc cref="IPlotBuilderFluentProduct.CancelAllOperations" />
+		public void CancelAllOperations() {
+			CancellationTokenSource.Cancel();
+			CancellationTokenSource.Dispose();
 		}
 
 		/// <summary>

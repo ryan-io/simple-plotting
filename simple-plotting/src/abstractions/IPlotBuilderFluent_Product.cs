@@ -10,6 +10,11 @@ namespace simple_plotting;
 /// </summary>
 public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// <summary>
+	/// Cancels all ongoing operations and disposes the cancellation token source.
+	/// </summary>
+	void CancelAllOperations();
+
+	/// <summary>
 	///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.
 	/// </summary>
 	IEnumerable<Plot> GetPlots();
@@ -88,18 +93,20 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// </summary>
 	/// <param name="savePath">Directory to save plots</param>
 	/// <param name="name">Name of each plot</param>
+	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<PlotSaveStatus> TrySaveAsync(string savePath, string name);
+	Task<PlotSaveStatus> TrySaveAsync(string savePath, string name, CancellationToken? token = default);
 
 	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
 	///  This method requires you to call DefineSource.
 	/// </summary>
 	/// <param name="name">Name of each plot</param>
+	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<PlotSaveStatus?> TrySaveAsyncAtSource(string name);
+	Task<PlotSaveStatus?> TrySaveAsyncAtSource(string name, CancellationToken? token = default);
 
 	/// <summary>
 	///  Exposes post processing API.

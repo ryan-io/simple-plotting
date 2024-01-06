@@ -10,6 +10,11 @@ namespace simple_plotting;
 /// </summary>
 public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <summary>
+	/// Cancels all ongoing operations and disposes the cancellation token source.
+	/// </summary>
+	void CancelAllOperations();
+	
+	/// <summary>
 	/// Navigates to the configuration of the plot builder fluent canvas.
 	/// </summary>
 	/// <returns>
@@ -22,10 +27,11 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// </summary>
 	/// <param name="savePath">Directory to save plots</param>
 	/// <param name="name">Name of each plot</param>
+	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
 	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<CanvasSaveStatus> TrySaveAsync(string savePath, string name, bool disposeOnSuccess);
+	Task<CanvasSaveStatus> TrySaveAsync(string savePath, string name, bool disposeOnSuccess, CancellationToken? token);
 
 	/// <summary>
 	///  Attempts to save the plot to the specified source path path.
@@ -44,9 +50,10 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// </summary>
 	/// <param name="name">Name of each plot</param>
 	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
+	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string name, bool disposeOnSuccess);
+	Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string name, bool disposeOnSuccess, CancellationToken? token);
 
 	/// <summary>
 	///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.
