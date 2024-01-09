@@ -1,7 +1,6 @@
 // simple-plotting
 
 using System.Drawing;
-using simple_plotting.runtime;
 
 namespace simple_plotting;
 
@@ -9,6 +8,13 @@ namespace simple_plotting;
 /// Represents the configuration for a fluent canvas plot builder.
 /// </summary>
 public interface IPlotBuilderFluentCanvasConfiguration : IPlotBuilderFluentCanvasConfigurationMinimal {
+	/// <summary>
+	/// Sets the source path for the object.
+	/// </summary>
+	/// <param name="path">A string representing the source path.</param>
+	/// <exception cref="NullReferenceException">Thrown if the path is null, empty, or consists only of whitespace.</exception>
+	IPlotBuilderFluentCanvas SetSourcePath(string path);
+	
 	/// <summary>
 	/// Finalizes the configuration of the canvas for plotting and returns the plot builder object.
 	/// </summary>

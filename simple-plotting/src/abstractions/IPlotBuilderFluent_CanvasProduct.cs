@@ -31,7 +31,7 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<CanvasSaveStatus> TrySaveAsync(string savePath, string name, bool disposeOnSuccess, CancellationToken? token);
+	Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string savePath, string name, bool disposeOnSuccess, CancellationToken? token);
 
 	/// <summary>
 	///  Attempts to save the plot to the specified source path path.

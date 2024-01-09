@@ -7,6 +7,7 @@ using static simple_plotting.Constants;
 namespace simple_plotting.runtime {
 	/// <summary>
 	///  Base class for implementing Csv parsing logic. This class implements ICsvParseStrategy
+	///  THIS IS A DEMONSTRATION; THERE IS A VERY HIGH LIKELY HOOD STRATEGY WILL NOT SUIT YOUR NEEDS
 	/// </summary>
 	public abstract class CsvParseStrategy : ICsvParseStrategy {
 		/// <summary>
@@ -86,17 +87,15 @@ namespace simple_plotting.runtime {
 				if (string.IsNullOrWhiteSpace(csvr[i]))
 					continue;
 
-				if (cancellationToken.WasCancelled()) {
+				if (cancellationToken.WasCancelled()) 
 					break;
-				}
 
 				var  hasValue          = FastDoubleParser.TryParseDouble(csvr[3 + i], out var value);
 				bool isOutside         = value < _lowerValueLimit || value > _upperValueLimit;
 				bool isEssentiallyZero = value is >= 0.0d - epsilon and <= 0.0d + epsilon;
 
-				if (isOutside || isEssentiallyZero || !hasValue) {
+				if (isOutside || isEssentiallyZero || !hasValue) 
 					continue;
-				}
 
 				var record    = new PlotChannelRecord(date, value);
 				var eventData = new PlotEventData(output[i].ChannelIdentifier, record);

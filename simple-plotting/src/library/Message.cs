@@ -20,7 +20,7 @@
 			"Interface comparer is not the same as the comparer used in the collection.";
 
 		public const string EXCEPTION_DEFINE_SOURCE_NOT_INVOKED =
-			"Cannot save via TrySaveAtSource without defining a source path. Call DefineSource first.";
+			"Cannot save at SourcePath without setting a source path. Call DefineSource first.";
 
 		public const string EXCEPTION_INVALID_SOURCE = "Source cannot be null, empty or whitespace.";
 

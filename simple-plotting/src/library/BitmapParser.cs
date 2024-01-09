@@ -229,16 +229,18 @@ namespace simple_plotting {
 		/// <param name="path">The directory path where the Bitmaps should be saved.</param>
 		/// <param name="disposeOnSuccess">Optional parameter determining whether to dispose the BitmapParser on successful save. Default is false.</param>
 		/// <param name="token">Optional cancellation token</param>
+		/// <param name="createPathIfNotExit">If true, will create the directory if it does not exist</param>
 		/// <returns>Returns a Task that represents the asynchronous operation. The task result contains void.</returns>
 		/// <exception cref="DirectoryNotFoundException">Thrown when the provided path is null, empty, or consists only of white-space characters.</exception>
-		public async Task<List<string>> SaveBitmapsAsync(string path, CancellationToken token, bool disposeOnSuccess = false) {
+		public async Task<List<string>> SaveBitmapsAsync(string path, CancellationToken token, bool disposeOnSuccess 
+                = false, bool createPathIfNotExit =false) {
 			if (IsDisposed)
 				throw new BitMapParserDisposedException();
 
 			if (string.IsNullOrWhiteSpace(path))
 				throw new DirectoryNotFoundException(Message.EXCEPTION_NULL_BITMAP_PATHS);
 
-			if (!Directory.Exists(path)) 
+			if (createPathIfNotExit && !Directory.Exists(path)) 
 				Directory.CreateDirectory(path);
 
 			var output = new List<string>();

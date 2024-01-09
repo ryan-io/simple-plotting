@@ -44,7 +44,8 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public async Task<CanvasSaveStatus> TrySaveAsync(string savePath, string name, bool disposeOnSuccess, CancellationToken? token) {
+	public async Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string savePath, string name, bool disposeOnSuccess,
+		CancellationToken? token) {
 		if (string.IsNullOrWhiteSpace(savePath))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -64,7 +65,7 @@ public partial class PlotBuilderFluent {
 			ValidateCancellationTokenSource(true);
 			token = CancellationTokenSource.Token;
 		}
-		
+
 		try {
 			var paths = await BitmapParser.SaveBitmapsAsync(savePath, token.Value, disposeOnSuccess);
 			return new CanvasSaveStatus(true, paths);
@@ -72,6 +73,15 @@ public partial class PlotBuilderFluent {
 		catch (Exception e) {
 			return new CanvasSaveStatus(false, Enumerable.Empty<string>(), e.Message);
 		}
+	}
+
+	/// <inheritdoc />
+	public async Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string name, bool disposeOnSuccess,
+		CancellationToken? token) {
+		if (string.IsNullOrWhiteSpace(SourcePath))
+			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
+		
+		return await TrySaveAtBmpParserAsync(SourcePath, name, disposeOnSuccess, token);
 	}
 
 	/// <inheritdoc />
@@ -101,37 +111,6 @@ public partial class PlotBuilderFluent {
 			if (disposeOnSuccess && BitmapParser != null)
 				BitmapParser.Dispose();
 
-			return new CanvasSaveStatus(true, paths);
-		}
-		catch (Exception e) {
-			return new CanvasSaveStatus(false, Enumerable.Empty<string>(), e.Message);
-		}
-	}
-
-	/// <inheritdoc />
-	public async Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string name, bool disposeOnSuccess, CancellationToken? token) {
-		if (string.IsNullOrWhiteSpace(name))
-			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
-
-		if (string.IsNullOrWhiteSpace(SourcePath))
-			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
-
-		if (_plots == null)
-			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
-
-		if (BitmapParser == null)
-			throw new NoBitmapParserException();
-
-		if (BitmapParser.IsDisposed)
-			return new CanvasSaveStatus(false, Enumerable.Empty<string>());
-
-		if (token == null) {
-			ValidateCancellationTokenSource(true);
-			token = CancellationTokenSource.Token;
-		}
-
-		try {
-			var paths = await BitmapParser.SaveBitmapsAsync(SourcePath, token.Value,disposeOnSuccess);
 			return new CanvasSaveStatus(true, paths);
 		}
 		catch (Exception e) {
