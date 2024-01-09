@@ -23,17 +23,6 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	IPlotBuilderFluentCanvasConfiguration GotoConfiguration();
 
 	/// <summary>
-	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
-	/// </summary>
-	/// <param name="savePath">Directory to save plots</param>
-	/// <param name="name">Name of each plot</param>
-	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
-	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
-	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
-	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string savePath, string name, bool disposeOnSuccess, CancellationToken? token);
-
-	/// <summary>
 	///  Attempts to save the plot to the specified source path path.
 	/// *** NOTE: SetSource MUST be invoked for this method invocation to be successful. ***
 	///  This will throw an <see cref="Exception"/> if the save fails.
@@ -45,15 +34,24 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	CanvasSaveStatus TrySaveAtSource(string name, bool disposeOnSuccess);
 
 	/// <summary>
+	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
+	/// </summary>
+	/// <param name="savePath">Directory to save plots</param>
+	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
+	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
+	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
+	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
+	Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string savePath, bool disposeOnSuccess, CancellationToken? token);
+
+	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
 	///  This method requires you to call DefineSource.
 	/// </summary>
-	/// <param name="name">Name of each plot</param>
 	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
 	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string name, bool disposeOnSuccess, CancellationToken? token);
+	Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(bool disposeOnSuccess, CancellationToken? token);
 
 	/// <summary>
 	///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.

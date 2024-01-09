@@ -44,12 +44,9 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public async Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string savePath, string name, bool disposeOnSuccess,
+	public async Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string savePath, bool disposeOnSuccess,
 		CancellationToken? token) {
 		if (string.IsNullOrWhiteSpace(savePath))
-			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
-
-		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
 		if (_plots == null)
@@ -76,12 +73,12 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public async Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string name, bool disposeOnSuccess,
+	public async Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(bool disposeOnSuccess,
 		CancellationToken? token) {
 		if (string.IsNullOrWhiteSpace(SourcePath))
 			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
 		
-		return await TrySaveAtBmpParserAsync(SourcePath, name, disposeOnSuccess, token);
+		return await TrySaveAtBmpParserAsync(SourcePath, disposeOnSuccess, token);
 	}
 
 	/// <inheritdoc />
