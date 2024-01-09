@@ -18,7 +18,7 @@ public partial class PlotBuilderFluent : IPlotBuilderFluentCanvas {
 	BitmapParser? BitmapParser { get; set; }
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentCanvas AddText(string text, int plotIndex, double xPosition, double yPosition, Color? 
+	public IPlotBuilderFluentCanvasConfiguration AddText(string text, int plotIndex, double xPosition, double yPosition, Color? 
             color = null, float fontSize = 12f) {
 		if (_plots == null || plotIndex >= _plots.Length)
 			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
@@ -28,7 +28,7 @@ public partial class PlotBuilderFluent : IPlotBuilderFluentCanvas {
 	}
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentCanvas AddImage(Bitmap img, int plotIndex, double xPosition, double yPosition) {
+	public IPlotBuilderFluentCanvasConfiguration AddImage(Bitmap img, int plotIndex, double xPosition, double yPosition) {
 		if (_plots == null || plotIndex >= _plots.Length)
 			throw new IndexOutOfRangeException(Message.EXCEPTION_INDEX_OUT_OF_RANGE);
 		
@@ -39,7 +39,7 @@ public partial class PlotBuilderFluent : IPlotBuilderFluentCanvas {
 	}
 	
 	/// <inheritdoc />
-	public IPlotBuilderFluentCanvas SetBitmapParser(BitmapParser bitmapParser) {
+	public IPlotBuilderFluentCanvasConfiguration SetBitmapParser(BitmapParser bitmapParser) {
 		BitmapParser = bitmapParser;
 		return this;
 	}
@@ -48,7 +48,7 @@ public partial class PlotBuilderFluent : IPlotBuilderFluentCanvas {
 	public IPlotBuilderFluentCanvasReadyToProduce FinalizeCanvasConfiguration() => this;
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentCanvas SetSourcePath(string path) {
+	public IPlotBuilderFluentCanvasConfiguration SetSourcePath(string path) {
 		if (string.IsNullOrWhiteSpace(path))
 			throw new NullReferenceException(Message.EXCEPTION_INVALID_SOURCE);
 

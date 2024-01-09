@@ -7,7 +7,7 @@ namespace simple_plotting;
 /// </summary>
 public partial class PlotBuilderFluent {
 	/// <inheritdoc />
-	IPlotBuilderFluentCanvasConfigurationMinimal IPlotBuilderFluentCanvasProduct.GotoConfiguration() => this;
+	IPlotBuilderFluentCanvasConfiguration IPlotBuilderFluentCanvasProduct.GotoConfiguration() => this;
 
 	/// <inheritdoc />
 	public IPlotBuilderFluentCanvasProduct

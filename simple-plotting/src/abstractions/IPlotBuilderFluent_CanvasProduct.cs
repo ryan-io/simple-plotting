@@ -20,7 +20,7 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <returns>
 	/// An instance of IPlotBuilderFluentCanvasConfigurationMinimal that represents the configuration of the plot builder fluent canvas.
 	/// </returns>
-	IPlotBuilderFluentCanvasConfigurationMinimal GotoConfiguration();
+	IPlotBuilderFluentCanvasConfiguration GotoConfiguration();
 
 	/// <summary>
 	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
