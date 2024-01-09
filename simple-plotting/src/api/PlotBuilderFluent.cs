@@ -139,6 +139,39 @@ namespace simple_plotting {
 		}
 
 		/// <summary>
+		/// Saves the plots to the specified directory with the given name.
+		/// </summary>
+		/// <param name="name">The name of the plots.</param>
+		/// <param name="token">The cancellation token (optional).</param>
+		/// <returns>A task that represents the asynchronous saving of plots.</returns>
+		/// <exception cref="InvalidOperationException">Thrown when _plots is null.</exception>
+		async Task InternalSavePlots(string name, CancellationToken? token) {
+			if (_plots == null)
+				throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
+		
+			if (token == null) {
+				ValidateCancellationTokenSource(true);
+				token = CancellationTokenSource.Token;
+			}
+
+			CachedPlotPaths.Clear();
+
+			await Task.Run(() => {
+				               var plotTracker = new IntSafe(1);
+
+				               foreach (var plot in _plots) {
+					               var path = plot.SaveFig(
+						               $@"{SourcePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
+
+					               if (!string.IsNullOrWhiteSpace(path))
+						               CachedPlotPaths.Add(path);
+
+					               plotTracker++;
+				               }
+			               }, token.Value);
+		}
+
+		/// <summary>
 		///  Helper method to set the initial state of the plot. This is called in the constructor.
 		///  This method will divvy up the data into separate plots based on on the number of plots specified in the constructor.
 		/// </summary>

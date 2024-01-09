@@ -44,7 +44,7 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public async Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(string savePath, bool disposeOnSuccess,
+	public async Task<SaveStatus> TrySaveAtBmpParserAsync(string savePath, bool disposeOnSuccess,
 		CancellationToken? token) {
 		if (string.IsNullOrWhiteSpace(savePath))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
@@ -56,7 +56,7 @@ public partial class PlotBuilderFluent {
 			throw new NoBitmapParserException();
 
 		if (BitmapParser.IsDisposed)
-			return new CanvasSaveStatus(false, Enumerable.Empty<string>());
+			return new SaveStatus(false, Enumerable.Empty<string>());
 
 		if (token == null) {
 			ValidateCancellationTokenSource(true);
@@ -65,24 +65,45 @@ public partial class PlotBuilderFluent {
 
 		try {
 			var paths = await BitmapParser.SaveBitmapsAsync(savePath, token.Value, disposeOnSuccess);
-			return new CanvasSaveStatus(true, paths);
+			return new SaveStatus(true, paths);
 		}
 		catch (Exception e) {
-			return new CanvasSaveStatus(false, Enumerable.Empty<string>(), e.Message);
+			return new SaveStatus(false, Enumerable.Empty<string>(), e.Message);
 		}
 	}
 
 	/// <inheritdoc />
-	public async Task<CanvasSaveStatus> TrySaveAtBmpParserAsync(bool disposeOnSuccess,
+	public async Task<SaveStatus> TrySaveAtBmpParserAsync(bool disposeOnSuccess,
 		CancellationToken? token) {
 		if (string.IsNullOrWhiteSpace(SourcePath))
 			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
-		
+
 		return await TrySaveAtBmpParserAsync(SourcePath, disposeOnSuccess, token);
 	}
 
 	/// <inheritdoc />
-	public CanvasSaveStatus TrySaveAtSource(string name, bool disposeOnSuccess) {
+	public async Task<SaveStatus> TrySaveAtSourceAsync(string name, bool disposeOnSuccess, CancellationToken? token) {
+		if (string.IsNullOrWhiteSpace(name))
+			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
+
+		if (string.IsNullOrWhiteSpace(SourcePath))
+			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
+		
+		try {
+			await InternalSavePlots(name, token);
+
+			if (disposeOnSuccess && BitmapParser != null)
+				BitmapParser.Dispose();
+
+			return new SaveStatus(true, CachedPlotPaths);
+		}
+		catch (Exception e) {
+			return new SaveStatus(false, Enumerable.Empty<string>(), e.Message);
+		}
+	}
+
+	/// <inheritdoc />
+	public SaveStatus TrySaveAtSource(string name, bool disposeOnSuccess) {
 		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -97,7 +118,7 @@ public partial class PlotBuilderFluent {
 			var          plotTracker = 1;
 
 			foreach (var plot in _plots) {
-				var path = plot.SaveFig($@"{SourcePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
+				var path = plot.SaveFig($@"{SourcePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION }");
 
 				if (!string.IsNullOrWhiteSpace(path))
 					paths.Add(path);
@@ -108,10 +129,10 @@ public partial class PlotBuilderFluent {
 			if (disposeOnSuccess && BitmapParser != null)
 				BitmapParser.Dispose();
 
-			return new CanvasSaveStatus(true, paths);
+			return new SaveStatus(true, paths);
 		}
 		catch (Exception e) {
-			return new CanvasSaveStatus(false, Enumerable.Empty<string>(), e.Message);
+			return new SaveStatus(false, Enumerable.Empty<string>(), e.Message);
 		}
 	}
 

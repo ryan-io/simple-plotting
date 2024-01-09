@@ -82,7 +82,7 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// <param name="name">Name of each plot</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	PlotSaveStatus TrySave(string savePath, string name);
+	SaveStatus TrySave(string savePath, string name);
 
 	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
@@ -91,7 +91,7 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// <param name="name">Name of each plot</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	PlotSaveStatus TrySaveAtSource(string name);
+	SaveStatus TrySaveAtSource(string name);
 
 	/// <summary>
 	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
@@ -101,7 +101,7 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<PlotSaveStatus> TrySaveAsync(string savePath, string name, CancellationToken? token = default);
+	Task<SaveStatus> TrySaveAsync(string savePath, string name, CancellationToken? token = default);
 
 	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
@@ -111,7 +111,7 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<PlotSaveStatus?> TrySaveAsyncAtSource(string name, CancellationToken? token = default);
+	Task<SaveStatus?> TrySaveAsyncAtSource(string name, CancellationToken? token = default);
 
 	/// <summary>
 	///  Exposes post processing API.
