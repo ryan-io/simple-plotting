@@ -46,10 +46,8 @@ namespace simple_plotting {
 		/// </summary>
 		HashSet<Action> Observables { get; } = new();
 
-		/// <summary>
-		///  The path to the CSV file.
-		/// </summary>
-		string SourcePath { get; set; } = string.Empty;
+		///	<inheritdoc />
+		public string? SourcePath { get; private set; } = string.Empty;
 
 		/// <summary>
 		/// Create a new PlotBuilderFluent instance. This is the entry point for the fluent API. Requires parsed CSV data

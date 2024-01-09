@@ -10,6 +10,11 @@ namespace simple_plotting;
 /// </summary>
 public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <summary>
+	///  The path to the CSV file.
+	/// </summary>
+	string? SourcePath { get; }
+	
+	/// <summary>
 	/// Cancels all ongoing operations and disposes the cancellation token source.
 	/// </summary>
 	void CancelAllOperations();
