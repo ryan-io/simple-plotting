@@ -43,7 +43,7 @@ public interface IPlotBuilderFluentCanvasConfiguration {
 	/// </summary>
 	/// <param name="bitmapParser">The BitmapParser to be set.</param>
 	/// <returns>The PlotBuilderFluentCanvas with the specified BitmapParser set.</returns>
-	IPlotBuilderFluentCanvasConfiguration SetBitmapParser(BitmapParser bitmapParser);
+	IPlotBuilderFluentCanvasConfiguration SetBitmapParser(BitmapParser? bitmapParser);
 	
 	/// <summary>
 	/// Finalizes the configuration of the canvas for plotting and returns the plot builder object.

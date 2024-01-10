@@ -2,7 +2,6 @@
 using System.Drawing;
 using ScottPlot;
 using ScottPlot.Plottable;
-using simple_plotting.runtime;
 
 namespace simple_plotting {
 	/// <summary>
@@ -46,7 +45,7 @@ namespace simple_plotting {
 		/// </summary>
 		HashSet<Action> Observables { get; } = new();
 
-		///	<inheritdoc />
+		/// <inheritdoc cref="IPlotBuilderFluentProduct.SourcePath" />
 		public string? SourcePath { get; private set; } = string.Empty;
 
 		/// <summary>
@@ -148,9 +147,10 @@ namespace simple_plotting {
 		async Task InternalSavePlots(string name, CancellationToken? token) {
 			if (_plots == null)
 				throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
-		
+
 			if (token == null) {
 				ValidateCancellationTokenSource(true);
+
 				token = CancellationTokenSource.Token;
 			}
 
@@ -160,15 +160,39 @@ namespace simple_plotting {
 				               var plotTracker = new IntSafe(1);
 
 				               foreach (var plot in _plots) {
-					               var path = plot.SaveFig(
-						               $@"{SourcePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
+					               var expectedPath = InternalGetSavePath(name, plotTracker);
+					               var actualPath   = plot.SaveFig(expectedPath);
 
-					               if (!string.IsNullOrWhiteSpace(path))
-						               CachedPlotPaths.Add(path);
+					               if (!string.IsNullOrWhiteSpace(actualPath))
+						               CachedPlotPaths.Add(actualPath);
 
 					               plotTracker++;
 				               }
 			               }, token.Value);
+		}
+
+		/// <summary>
+		/// Constructs a save path for a given name and plot tracker.
+		/// </summary>
+		/// <param name="name">The name of the file.</param>
+		/// <param name="plotTracker">The plot tracker.</param>
+		/// <returns>The constructed save path.</returns>
+		/// <remarks>
+		/// The save path is constructed by appending the file name and plot tracker to the source path,
+		/// and then checking if a file with the same name already exists. If it does, a unique identifier
+		/// is appended to the save path to avoid overwriting existing files. Finally, the ".png" extension
+		/// is added to the save path.
+		/// </remarks>
+		string InternalGetSavePath(string name, IntSafe plotTracker) {
+			var targetPath = $@"{SourcePath}\{name}_{plotTracker}";
+
+			if (File.Exists(targetPath + Constants.PNG_EXTENSION)) {
+				var guid = Guid.NewGuid();
+				targetPath += $"_{guid.ToString()}";
+			}
+
+			targetPath += Constants.PNG_EXTENSION;
+			return targetPath;
 		}
 
 		/// <summary>

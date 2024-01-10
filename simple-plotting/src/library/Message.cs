@@ -94,5 +94,10 @@
 		public const string EXCEPTION_INDEX_LESS_THAN_ZERO = "Index cannot be less than zero.";
 		
 		public const string EXCEPTION_DOES_NOT_CONTAIN_CANVAS_INDEX = "Canvas does not contain the specified index.";
+
+		public const string EXCEPTION_IMAGE_GRABBER_NOT_PRIMED =
+			"An instance of ImageGrabber exists, but no file directory has been provided.";
+
+		public const string EXCEPTION_NO_IMAGE_PARSER_ASSIGNED = "No image parser has been assigned";
 	}
 }

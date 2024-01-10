@@ -1,4 +1,4 @@
-namespace simple_plotting.tests {
+namespace simple_plotting.test {
 	public class TestPlaceHolder {
 	}
 }

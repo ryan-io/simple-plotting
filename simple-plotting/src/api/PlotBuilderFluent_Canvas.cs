@@ -39,7 +39,7 @@ public partial class PlotBuilderFluent : IPlotBuilderFluentCanvas {
 	}
 	
 	/// <inheritdoc />
-	public IPlotBuilderFluentCanvasConfiguration SetBitmapParser(BitmapParser bitmapParser) {
+	public IPlotBuilderFluentCanvasConfiguration SetBitmapParser(BitmapParser? bitmapParser) {
 		BitmapParser = bitmapParser;
 		return this;
 	}
