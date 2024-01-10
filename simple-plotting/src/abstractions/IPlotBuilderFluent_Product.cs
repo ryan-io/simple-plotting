@@ -25,6 +25,11 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	IEnumerable<Plot> GetPlots();
 
 	/// <summary>
+	/// Renders all plots.
+	/// </summary>
+	IPlotBuilderFluentProduct RenderAllPlots();
+
+	/// <summary>
 	/// Retrieves a reference to the <see cref="Plot"/> object located at the specified index in the internal plots array.
 	/// </summary>
 	/// <param name="index">The zero-based index in the array at which the desired <see cref="Plot"/> object is located.</param>

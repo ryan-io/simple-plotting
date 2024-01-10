@@ -39,6 +39,7 @@ public struct IntSafe {
 		safe.Value--;
 		return safe;
 	}
+	
  
 	/// <summary>
 	///  Implicit conversion from IntSafe to string.

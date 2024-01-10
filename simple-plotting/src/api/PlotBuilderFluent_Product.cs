@@ -6,6 +6,17 @@ using ScottPlot.Plottable;
 namespace simple_plotting;
 
 public partial class PlotBuilderFluent {
+	/// <summary>
+	/// Renders all plots.
+	/// </summary>
+	/// ///	<inheritdoc />
+	public IPlotBuilderFluentProduct RenderAllPlots() {
+		foreach (var plot in _plots) 
+			plot.Render();
+
+		return this;
+	}
+	
 	/// <inheritdoc cref="IPlotBuilderFluentProduct.GetPlots" />
 	public IEnumerable<Plot> GetPlots() {
 		return _plots ?? throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);

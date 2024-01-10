@@ -9,6 +9,15 @@ public partial class PlotBuilderFluent {
 	/// <inheritdoc />
 	IPlotBuilderFluentCanvasConfiguration IPlotBuilderFluentCanvasProduct.GotoConfiguration() => this;
 
+
+	/// <inheritdoc />
+	public IPlotBuilderFluentCanvasProduct RenderAllCanvasPlots() {
+		foreach (var plot in _plots) 
+			plot.Render();
+
+		return this;
+	}
+	
 	/// <inheritdoc />
 	public IPlotBuilderFluentCanvasProduct
 		ResizeCanvasImage(int plotIndex, float scale, BitmapResizeCriteria criteria) {

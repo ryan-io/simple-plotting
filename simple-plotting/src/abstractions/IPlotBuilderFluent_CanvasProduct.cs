@@ -131,4 +131,9 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	/// <param name="criteria">The criteria used for resizing the image.</param>
 	/// <returns>The updated plot builder fluent canvas product.</returns>
 	IPlotBuilderFluentCanvasProduct ResizeAllCanvasImage(float scale, BitmapResizeCriteria criteria);
+
+	/// <summary>
+	/// Renders all plots.
+	/// </summary>
+	IPlotBuilderFluentCanvasProduct RenderAllCanvasPlots();
 }
