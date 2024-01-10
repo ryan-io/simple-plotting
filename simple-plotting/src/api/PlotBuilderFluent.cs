@@ -138,6 +138,14 @@ namespace simple_plotting {
 		}
 
 		/// <summary>
+		/// Renders all plots.
+		/// </summary>
+		public void RenderAllPlots() {
+			foreach (var plot in _plots) 
+				plot.Render();
+		}
+		
+		/// <summary>
 		/// Saves the plots to the specified directory with the given name.
 		/// </summary>
 		/// <param name="name">The name of the plots.</param>

@@ -83,13 +83,13 @@ public partial class PlotBuilderFluent {
 
 	/// <inheritdoc />
 	public async Task<SaveStatus> TrySaveAtSourceAsync(string name, bool disposeOnSuccess, CancellationToken? token) {
-		if (string.IsNullOrWhiteSpace(name))
-			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
-
-		if (string.IsNullOrWhiteSpace(SourcePath))
-			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
-		
 		try {
+			if (string.IsNullOrWhiteSpace(name))
+				throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
+
+			if (string.IsNullOrWhiteSpace(SourcePath))
+				throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
+
 			await InternalSavePlots(name, token);
 
 			if (disposeOnSuccess && BitmapParser != null)
@@ -98,8 +98,8 @@ public partial class PlotBuilderFluent {
 			return new SaveStatus(true, CachedPlotPaths);
 		}
 		catch (Exception e) {
-			return new SaveStatus(false, Enumerable.Empty<string>(), e.Message);
-		}
+            return new SaveStatus(false, Enumerable.Empty<string>(), e.Message);
+        }
 	}
 
 	/// <inheritdoc />
@@ -118,7 +118,7 @@ public partial class PlotBuilderFluent {
 			var          plotTracker = 1;
 
 			foreach (var plot in _plots) {
-				var path = plot.SaveFig($@"{SourcePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION }");
+				var path = plot.SaveFig($@"{SourcePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
 
 				if (!string.IsNullOrWhiteSpace(path))
 					paths.Add(path);
