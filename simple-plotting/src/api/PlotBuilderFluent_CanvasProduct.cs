@@ -1,3 +1,4 @@
+using System.Drawing.Imaging;
 using ScottPlot.Plottable;
 
 namespace simple_plotting;
@@ -53,7 +54,7 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public async Task<SaveStatus> TrySaveAtBmpParserAsync(string savePath, bool disposeOnSuccess,
+	public async Task<SaveStatus> TrySaveAtBmpParserAsync(string savePath, ImageFormat format, bool disposeOnSuccess,
 		CancellationToken? token) {
 		if (string.IsNullOrWhiteSpace(savePath))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
@@ -73,7 +74,7 @@ public partial class PlotBuilderFluent {
 		}
 
 		try {
-			var paths = await BitmapParser.SaveBitmapsAsync(savePath, token.Value, disposeOnSuccess);
+			var paths = await BitmapParser.SaveBitmapsAsync(savePath, format, token.Value, disposeOnSuccess);
 			return new SaveStatus(true, paths);
 		}
 		catch (Exception e) {
@@ -82,16 +83,18 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public async Task<SaveStatus> TrySaveAtBmpParserAsync(bool disposeOnSuccess,
-		CancellationToken? token) {
+	public async Task<SaveStatus> TrySaveAtBmpParserAsync(ImageFormat format, bool disposeOnSuccess, CancellationToken? 
+            token) {
 		if (string.IsNullOrWhiteSpace(SourcePath))
 			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
 
-		return await TrySaveAtBmpParserAsync(SourcePath, disposeOnSuccess, token);
+		return await TrySaveAtBmpParserAsync(SourcePath, format, disposeOnSuccess, token);
 	}
 
 	/// <inheritdoc />
-	public async Task<SaveStatus> TrySaveAtSourceAsync(string name, bool disposeOnSuccess, CancellationToken? token) {
+	public async Task<SaveStatus> TrySaveAtSourceAsync(string name, ImageFormat format, bool disposeOnSuccess, 
+        CancellationToken? 
+            token) {
 		try {
 			if (string.IsNullOrWhiteSpace(name))
 				throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
@@ -99,7 +102,7 @@ public partial class PlotBuilderFluent {
 			if (string.IsNullOrWhiteSpace(SourcePath))
 				throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
 
-			await InternalSavePlots(name, token);
+			await InternalSavePlots(name, format, token);
 
 			if (disposeOnSuccess && BitmapParser != null)
 				BitmapParser.Dispose();
@@ -112,7 +115,7 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public SaveStatus TrySaveAtSource(string name, bool disposeOnSuccess) {
+	public SaveStatus TrySaveAtSource(string name, ImageFormat format, bool disposeOnSuccess) {
 		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -127,7 +130,7 @@ public partial class PlotBuilderFluent {
 			var          plotTracker = 1;
 
 			foreach (var plot in _plots) {
-				var path = plot.SaveFig($@"{SourcePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
+				var path = plot.SaveFig($@"{SourcePath}\{name}_{plotTracker}.{format}");
 
 				if (!string.IsNullOrWhiteSpace(path))
 					paths.Add(path);

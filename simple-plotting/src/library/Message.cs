@@ -99,5 +99,8 @@
 			"An instance of ImageGrabber exists, but no file directory has been provided.";
 
 		public const string EXCEPTION_NO_IMAGE_PARSER_ASSIGNED = "No image parser has been assigned";
+
+		public const string EXCEPTION_CANNOT_RETURN_IMG_EXT_ALL =
+			"Cannot return an image extension when 'imageExtension' is 'ALL'";
 	}
 }

@@ -1,5 +1,6 @@
 // simple-plotting
 
+using System.Drawing.Imaging;
 using ScottPlot;
 using ScottPlot.Plottable;
 
@@ -104,7 +105,9 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc/>
-	public async Task<SaveStatus> TrySaveAsync(string savePath, string name, CancellationToken? token = default) {
+	public async Task<SaveStatus> TrySaveAsync(string savePath, string name, ImageFormat format, CancellationToken? 
+            token = 
+            default) {
 		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -112,7 +115,7 @@ public partial class PlotBuilderFluent {
 			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
 		
 		try {
-			await InternalSavePlots(name, token);
+			await InternalSavePlots(name, format, token);
 			return new SaveStatus(true, CachedPlotPaths);
 		}
 		catch (Exception) {
@@ -121,7 +124,8 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public async Task<SaveStatus?> TrySaveAsyncAtSource(string name, CancellationToken? token = default) {
+	public async Task<SaveStatus?> TrySaveAsyncAtSource(string name, ImageFormat format, CancellationToken? token = 
+            default) {
 		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -133,11 +137,11 @@ public partial class PlotBuilderFluent {
 			token = CancellationTokenSource.Token;
 		}
 		
-		return await Task.Run(() => TrySaveAsync(SourcePath, name, token.Value), token.Value);
+		return await Task.Run(() => TrySaveAsync(SourcePath, name, format, token.Value), token.Value);
 	}
 
 	/// <inheritdoc />
-	public SaveStatus TrySave(string savePath, string name) {
+	public SaveStatus TrySave(string savePath, string name, ImageFormat format) {
 		if (string.IsNullOrWhiteSpace(savePath) || string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -149,7 +153,7 @@ public partial class PlotBuilderFluent {
 			var          plotTracker = 1;
 
 			foreach (var plot in _plots) {
-				var path = plot.SaveFig($@"{savePath}\{name}_{plotTracker}{Constants.PNG_EXTENSION}");
+				var path = plot.SaveFig($@"{savePath}\{name}_{plotTracker}.{format}");
 
 				if (!string.IsNullOrWhiteSpace(path))
 					paths.Add(path);
@@ -165,7 +169,7 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public SaveStatus TrySaveAtSource(string name) {
+	public SaveStatus TrySaveAtSource(string name, ImageFormat format) {
 		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
@@ -173,7 +177,7 @@ public partial class PlotBuilderFluent {
 			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
 
 		try {
-			return TrySave(SourcePath, name);
+			return TrySave(SourcePath, name, format);
 		}
 		catch (Exception e) {
 			Console.WriteLine(e);

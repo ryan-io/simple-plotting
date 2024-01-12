@@ -1,5 +1,6 @@
 // simple-plotting
 
+using System.Drawing.Imaging;
 using ScottPlot;
 using ScottPlot.Plottable;
 
@@ -13,12 +14,12 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	///  The path to the CSV file.
 	/// </summary>
 	string? SourcePath { get; }
-	
+
 	/// <summary>
 	/// Cancels all ongoing operations and disposes the cancellation token source.
 	/// </summary>
 	void CancelAllOperations();
-	
+
 	/// <summary>
 	/// Navigates to the configuration of the plot builder fluent canvas.
 	/// </summary>
@@ -33,40 +34,46 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	///  This will throw an <see cref="Exception"/> if the save fails.
 	/// </summary>
 	/// <param name="name">Name of each plot</param>
+	/// <param name="format">Extension flag to save each plot as.</param>
 	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	SaveStatus TrySaveAtSource(string name, bool disposeOnSuccess = false);
+	SaveStatus TrySaveAtSource(string name, ImageFormat format, bool disposeOnSuccess = false);
 
 	/// <summary>
 	/// Tries to save the plots at the specified source asynchronously.
 	/// </summary>
 	/// <param name="name">The name of the save path.</param>
+	/// <param name="format">Extension flag to save each plot as.</param>
 	/// <param name="disposeOnSuccess">Determines whether to dispose the BitmapParser on success.</param>
 	/// <param name="token">The cancellation token (optional).</param>
 	/// <returns>The save status indicating whether the plots were saved successfully or not.</returns>
 	/// <exception cref="Exception">Thrown when the save path is invalid or the source is not defined.</exception>
-	Task<SaveStatus> TrySaveAtSourceAsync(string name, bool disposeOnSuccess, CancellationToken? token);
-	
+	Task<SaveStatus> TrySaveAtSourceAsync(string name, ImageFormat format, bool disposeOnSuccess, CancellationToken?
+		token);
+
 	/// <summary>
 	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
 	/// </summary>
 	/// <param name="savePath">Directory to save plots</param>
+	/// <param name="format">Extension flag to save each plot as.</param>
 	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
 	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<SaveStatus> TrySaveAtBmpParserAsync(string savePath, bool disposeOnSuccess, CancellationToken? token);
+	Task<SaveStatus> TrySaveAtBmpParserAsync(string savePath, ImageFormat format, bool disposeOnSuccess,
+		CancellationToken? token);
 
 	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
 	///  This method requires you to call DefineSource.
 	/// </summary>
+	/// <param name="format">Format to save each image as.</param>
 	/// <param name="disposeOnSuccess">Will dispose of all bitmap instances. No further modifications can be made.</param>
 	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<SaveStatus> TrySaveAtBmpParserAsync(bool disposeOnSuccess, CancellationToken? token);
+	Task<SaveStatus> TrySaveAtBmpParserAsync(ImageFormat format, bool disposeOnSuccess, CancellationToken? token);
 
 	/// <summary>
 	///  The generated plots. Can call { get; } after Produce() has been invoked and will return as an enumerable.

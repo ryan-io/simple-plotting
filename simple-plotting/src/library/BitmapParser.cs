@@ -228,11 +228,13 @@ namespace simple_plotting {
 		/// </summary>
 		/// <param name="path">The directory path where the Bitmaps should be saved.</param>
 		/// <param name="disposeOnSuccess">Optional parameter determining whether to dispose the BitmapParser on successful save. Default is false.</param>
+		/// <param name="format">Format to save each bitmap as.</param>
 		/// <param name="token">Optional cancellation token</param>
 		/// <param name="createPathIfNotExit">If true, will create the directory if it does not exist</param>
 		/// <returns>Returns a Task that represents the asynchronous operation. The task result contains void.</returns>
 		/// <exception cref="DirectoryNotFoundException">Thrown when the provided path is null, empty, or consists only of white-space characters.</exception>
-		public async Task<List<string>> SaveBitmapsAsync(string path, CancellationToken token, bool disposeOnSuccess 
+		public async Task<List<string>> SaveBitmapsAsync(string path, ImageFormat format, CancellationToken token, bool 
+                disposeOnSuccess 
                 = false, bool createPathIfNotExit =false) {
 			if (IsDisposed)
 				throw new BitMapParserDisposedException();
@@ -250,7 +252,7 @@ namespace simple_plotting {
 			for (var i = 0; i < count; i++) {
 				var sanitizedPath = GetSanitizedPath(ref path);
 				output.Add(sanitizedPath);
-				tasks[i] = SaveImageTask(_bitmaps[i], sanitizedPath, token);
+				tasks[i] = SaveImageTask(_bitmaps[i], sanitizedPath, format, token);
 			}
 
 			await Task.WhenAll(tasks);
@@ -293,10 +295,11 @@ namespace simple_plotting {
 		/// </summary>
 		/// <param name="bmp">The image to be saved.</param>
 		/// <param name="path">The path where the image will be saved.</param>
+		/// <param name="format">Format to save each image as.</param>
 		/// <param name="token">Cancellation token for cancelling async state machine</param>
 		/// <returns>A task that represents the asynchronous operation.</returns>
-		static Task SaveImageTask(Image bmp, string path, CancellationToken token)
-			=> Task.Run(() => bmp.Save(path, ImageFormat.Png), token);
+		static Task SaveImageTask(Image bmp, string path, ImageFormat format, CancellationToken token)
+			=> Task.Run(() => bmp.Save(path, format), token);
 
 		/// <summary>
 		/// Creates a new <see cref="Rectangle"/> object with the specified dimensions based on the provided <see cref="Bitmap"/>.
@@ -318,6 +321,7 @@ namespace simple_plotting {
 				if (!File.Exists(imgPaths[i]))
 					throw new FileNotFoundException(Message.EXCEPTION_FILE_NOT_FOUND + " " + imgPaths[i]);
 
+				
 				var bmp = new Bitmap(imgPaths[i]);
 				_bitmaps[i] = bmp;
 			}

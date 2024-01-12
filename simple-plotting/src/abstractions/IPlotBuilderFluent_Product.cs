@@ -1,5 +1,6 @@
 // simple-plotting
 
+using System.Drawing.Imaging;
 using ScottPlot;
 using ScottPlot.Plottable;
 
@@ -85,38 +86,42 @@ public interface IPlotBuilderFluentProduct : IPlotBuilderFluent, IDisposable {
 	/// </summary>
 	/// <param name="savePath">Directory to save plots</param>
 	/// <param name="name">Name of each plot</param>
+	/// <param name="format">Format to save each plot image as.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	SaveStatus TrySave(string savePath, string name);
+	SaveStatus TrySave(string savePath, string name,  ImageFormat format);
 
 	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
 	///  This method requires you to call DefineSource.
 	/// </summary>
 	/// <param name="name">Name of each plot</param>
+	/// <param name="format">Format to save each plot image as.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	SaveStatus TrySaveAtSource(string name);
+	SaveStatus TrySaveAtSource(string name,  ImageFormat format);
 
 	/// <summary>
 	///  Attempts to save the plot to the specified path. This will throw an <see cref="Exception"/> if the save fails.
 	/// </summary>
 	/// <param name="savePath">Directory to save plots</param>
 	/// <param name="name">Name of each plot</param>
+	/// <param name="format">Format to save each plot image as.</param>
 	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<SaveStatus> TrySaveAsync(string savePath, string name, CancellationToken? token = default);
+	Task<SaveStatus> TrySaveAsync(string savePath, string name, ImageFormat format, CancellationToken? token = default);
 
 	/// <summary>
 	///  Attempts to save the plot to the defined source path. This will throw an <see cref="Exception"/> if the save fails.
 	///  This method requires you to call DefineSource.
 	/// </summary>
 	/// <param name="name">Name of each plot</param>
+	/// <param name="format">Format to save each plot image as.</param>
 	/// <param name="token">Optional cancellation token to provide to async state machine. If this is not provided, an internal token will be used.</param>
 	/// <returns>Data structure with state (pass/fail) and list of strings containing full paths to each plot saved</returns>
 	/// <exception cref="Exception">Thrown if savePath is null or whitespace</exception>
-	Task<SaveStatus?> TrySaveAsyncAtSource(string name, CancellationToken? token = default);
+	Task<SaveStatus?> TrySaveAsyncAtSource(string name, ImageFormat format, CancellationToken? token = default);
 
 	/// <summary>
 	///  Exposes post processing API.
