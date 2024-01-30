@@ -10,15 +10,14 @@ public partial class PlotBuilderFluent {
 	/// <inheritdoc />
 	IPlotBuilderFluentCanvasConfiguration IPlotBuilderFluentCanvasProduct.GotoConfiguration() => this;
 
-
 	/// <inheritdoc />
 	public IPlotBuilderFluentCanvasProduct RenderAllCanvasPlots() {
-		foreach (var plot in _plots) 
+		foreach (var plot in _plots)
 			plot.Render();
 
 		return this;
 	}
-	
+
 	/// <inheritdoc />
 	public IPlotBuilderFluentCanvasProduct
 		ResizeCanvasImage(int plotIndex, float scale, BitmapResizeCriteria criteria) {
@@ -63,6 +62,9 @@ public partial class PlotBuilderFluent {
 		if (_plots == null)
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
 
+		if (!CanSave)
+			throw new Exception(Message.EXCEPTION_SAVE_PROCESS_RUNNING);
+		
 		if (BitmapParser == null)
 			throw new NoBitmapParserException();
 
@@ -74,6 +76,8 @@ public partial class PlotBuilderFluent {
 			token = CancellationTokenSource.Token;
 		}
 
+		IsSaving = true;
+
 		try {
 			var paths = await BitmapParser.SaveBitmapsAsync(savePath, format, token.Value, disposeOnSuccess);
 			return new SaveStatus(true, paths);
@@ -81,11 +85,14 @@ public partial class PlotBuilderFluent {
 		catch (Exception e) {
 			return new SaveStatus(false, Enumerable.Empty<string>(), e.Message);
 		}
+		finally {
+			IsSaving = false;
+		}
 	}
 
 	/// <inheritdoc />
-	public async Task<SaveStatus> TrySaveAtBmpParserAsync(ImageFormat format, bool disposeOnSuccess, CancellationToken? 
-            token) {
+	public async Task<SaveStatus> TrySaveAtBmpParserAsync(ImageFormat format, bool disposeOnSuccess, CancellationToken?
+		token) {
 		if (string.IsNullOrWhiteSpace(SourcePath))
 			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
 
@@ -93,9 +100,9 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public async Task<SaveStatus> TrySaveAtSourceAsync(string name, ImageFormat format, bool disposeOnSuccess, 
-        CancellationToken? 
-            token) {
+	public async Task<SaveStatus> TrySaveAtSourceAsync(string name, ImageFormat format, bool disposeOnSuccess,
+		CancellationToken?
+			token) {
 		try {
 			if (string.IsNullOrWhiteSpace(name))
 				throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
@@ -111,8 +118,8 @@ public partial class PlotBuilderFluent {
 			return new SaveStatus(true, CachedPlotPaths);
 		}
 		catch (Exception e) {
-            return new SaveStatus(false, Enumerable.Empty<string>(), e.Message);
-        }
+			return new SaveStatus(false, Enumerable.Empty<string>(), e.Message);
+		}
 	}
 
 	/// <inheritdoc />
@@ -125,6 +132,12 @@ public partial class PlotBuilderFluent {
 
 		if (_plots == null)
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
+
+		
+		if (!CanSave)
+			throw new Exception(Message.EXCEPTION_SAVE_PROCESS_RUNNING);
+
+		IsSaving = true;
 
 		try {
 			List<string> paths       = new();
@@ -146,6 +159,9 @@ public partial class PlotBuilderFluent {
 		}
 		catch (Exception e) {
 			return new SaveStatus(false, Enumerable.Empty<string>(), e.Message);
+		}
+		finally {
+			IsSaving = false;
 		}
 	}
 

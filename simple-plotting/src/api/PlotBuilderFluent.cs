@@ -19,8 +19,11 @@ namespace simple_plotting {
 	                                         IPlotBuilderFluentCanvasReadyToProduce,
 	                                         IPlotBuilderFluentCanvasProduct {
 		/// <inheritdoc />
-		public bool CanSave => _data != null && _data.Any() && _plotWasProduced;
+		public bool CanSave => _data != null && _data.Any() && _plotWasProduced && !IsSaving;
 
+		/// <inheritdoc cref="IPlotBuilderFluentProduct.IsSaving" />
+		public bool IsSaving { get; private set; }
+		
 		/// <summary>
 		/// Total number of graphs to generate
 		/// </summary>

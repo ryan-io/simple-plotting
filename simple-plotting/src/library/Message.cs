@@ -102,5 +102,8 @@
 
 		public const string EXCEPTION_CANNOT_RETURN_IMG_EXT_ALL =
 			"Cannot return an image extension when 'imageExtension' is 'ALL'";
+
+		public const string EXCEPTION_SAVE_PROCESS_RUNNING =
+			"A save process is already running. Please wait for this to complete or cancel it.";
 	}
 }

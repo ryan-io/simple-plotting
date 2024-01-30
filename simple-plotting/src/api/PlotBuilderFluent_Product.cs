@@ -113,13 +113,21 @@ public partial class PlotBuilderFluent {
 
 		if (string.IsNullOrWhiteSpace(savePath))
 			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
-		
+
+		if (!CanSave)
+			throw new Exception(Message.EXCEPTION_SAVE_PROCESS_RUNNING);
+
+		IsSaving = true;
+
 		try {
 			await InternalSavePlots(name, format, token);
 			return new SaveStatus(true, CachedPlotPaths);
 		}
 		catch (Exception) {
 			return new SaveStatus(false, Enumerable.Empty<string>());
+		}
+		finally {
+			IsSaving = false;
 		}
 	}
 
@@ -131,7 +139,7 @@ public partial class PlotBuilderFluent {
 
 		if (string.IsNullOrWhiteSpace(SourcePath))
 			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
-
+		
 		if (token == null) {
 			ValidateCancellationTokenSource(true);
 			token = CancellationTokenSource.Token;
@@ -145,8 +153,13 @@ public partial class PlotBuilderFluent {
 		if (string.IsNullOrWhiteSpace(savePath) || string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
+		if (!CanSave)
+			throw new Exception(Message.EXCEPTION_SAVE_PROCESS_RUNNING);
+		
 		if (_plots == null)
 			throw new InvalidOperationException(Message.EXCEPTION_INTERNAL_PLOT_COL_NULL);
+
+		IsSaving = true;
 
 		try {
 			List<string> paths       = new();
@@ -166,6 +179,9 @@ public partial class PlotBuilderFluent {
 		catch (Exception) {
 			return new SaveStatus(false, Enumerable.Empty<string>());
 		}
+		finally {
+			IsSaving = false;
+		}
 	}
 
 	/// <inheritdoc />
@@ -173,8 +189,13 @@ public partial class PlotBuilderFluent {
 		if (string.IsNullOrWhiteSpace(name))
 			throw new Exception(Message.EXCEPTION_SAVE_PATH_INVALID);
 
+		if (!CanSave)
+			throw new Exception(Message.EXCEPTION_SAVE_PROCESS_RUNNING);
+		
 		if (string.IsNullOrWhiteSpace(SourcePath))
 			throw new Exception(Message.EXCEPTION_DEFINE_SOURCE_NOT_INVOKED);
+
+		IsSaving = true;
 
 		try {
 			return TrySave(SourcePath, name, format);
@@ -182,6 +203,9 @@ public partial class PlotBuilderFluent {
 		catch (Exception e) {
 			Console.WriteLine(e);
 			throw;
+		}
+		finally {
+			IsSaving = false;
 		}
 	}
 

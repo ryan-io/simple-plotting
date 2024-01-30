@@ -16,6 +16,12 @@ public interface IPlotBuilderFluentCanvasProduct : IDisposable {
 	string? SourcePath { get; }
 
 	/// <summary>
+	/// Returns true if a save process is currently in progress. This will prevent multiple save
+	/// processes from being started.
+	/// </summary>
+	bool IsSaving { get; }
+	
+	/// <summary>
 	/// Cancels all ongoing operations and disposes the cancellation token source.
 	/// </summary>
 	void CancelAllOperations();
