@@ -42,7 +42,8 @@ public partial class PlotBuilderFluent {
 	}
 
 	/// <inheritdoc />
-	public IPlotBuilderFluentCanvasProduct ResizeAllCanvasImage(float scale, BitmapResizeCriteria criteria) {
+	public IPlotBuilderFluentCanvasProduct ResizeAllCanvasImage(float scale,
+		BitmapResizeCriteria criteria) {
 		if (BitmapParser == null)
 			throw new Exception(Message.EXCEPTION_NO_BITMAP_PARSER);
 

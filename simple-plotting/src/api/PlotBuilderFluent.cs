@@ -390,9 +390,9 @@ namespace simple_plotting {
 		HashSet<SignalPlotXYConst<double, double>> _cachedSignalPlottables = new();
 		bool                                       _plotWasProduced;
 
-		readonly Plot[]                      _plots;
-		readonly IReadOnlyList<PlotChannel>? _data;
-		readonly HashSet<IPlottable>         _returnPlottables = new();
+		readonly Plot[]                                _plots;
+		readonly IReadOnlyList<PlotChannel>?           _data;
+		readonly HashSet<IPlottable>                   _returnPlottables = new();
 	}
 
 	// internal static class InternalType {
